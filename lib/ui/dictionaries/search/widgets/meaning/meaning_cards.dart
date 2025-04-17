@@ -1,15 +1,15 @@
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:apprendre_lsf/routing/routes_name.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/meaning_videos_signs_screen.dart';
+import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
+import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
 
-class DictionariesSingleResultBodyWithSign extends StatefulWidget {
-  const DictionariesSingleResultBodyWithSign({
+class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
+  const MeaningCardBodyWithVideoSigns({
     super.key,
     required this.scopedMeaning,
     required this.isLastMeaning,
@@ -17,27 +17,20 @@ class DictionariesSingleResultBodyWithSign extends StatefulWidget {
   final LsfDictionaryMeaningWithParent scopedMeaning;
   final bool isLastMeaning;
 
-  @override
-  State<DictionariesSingleResultBodyWithSign> createState() =>
-      _DictionariesSingleResultBodyWithSignState();
-}
-
-class _DictionariesSingleResultBodyWithSignState
-    extends State<DictionariesSingleResultBodyWithSign> {
-  @override
-  Widget build(BuildContext context) {
+@override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      margin: EdgeInsets.only(bottom: widget.isLastMeaning ? 15 : 0),
+      margin: EdgeInsets.only(bottom: isLastMeaning ? 15 : 0),
       child: Card(
         child: InkWell(
           borderRadius: BorderRadius.circular(11),
-          onTap: _onCardTap,
+          onTap: () => _onCardTap(context),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               _definition(),
-              _Actions(scopedMeaning: widget.scopedMeaning),
+              _ActionsList(scopedMeaning: scopedMeaning),
             ],
           ),
         ),
@@ -46,19 +39,19 @@ class _DictionariesSingleResultBodyWithSignState
   }
 
   Widget _definition() =>
-      ListTile(title: Text(widget.scopedMeaning.meaning.definition));
+      ListTile(title: Text(scopedMeaning.meaning.definition));
 
-  void _onCardTap() {
+  void _onCardTap(BuildContext context) {
     showDialog(
       context: context,
       builder:
-          (_) => MeaningVideosSignsScreen(scopedMeaning: widget.scopedMeaning),
+          (_) => DialogMeaningVideos(scopedMeaning: scopedMeaning),
     );
   }
 }
 
-class _Actions extends ConsumerWidget {
-  const _Actions({super.key, required this.scopedMeaning});
+class _ActionsList extends ConsumerWidget {
+  const _ActionsList({super.key, required this.scopedMeaning});
 
   final LsfDictionaryMeaningWithParent scopedMeaning;
 
@@ -90,8 +83,9 @@ class _Actions extends ConsumerWidget {
   }
 }
 
-class DictionariesSingleResultBodyWithNoSign extends StatelessWidget {
-  const DictionariesSingleResultBodyWithNoSign({
+
+class MeaningCardBodyWithoutVideoSigns extends StatelessWidget {
+  const MeaningCardBodyWithoutVideoSigns({
     super.key,
     required this.scopedMeaning,
     required this.isLastMeaning,

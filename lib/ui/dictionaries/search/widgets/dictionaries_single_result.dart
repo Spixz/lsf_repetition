@@ -1,13 +1,14 @@
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
+import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/meaning_card.dart';
+import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/meaning_cards.dart';
+import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
 
-/// Display the result title with it's definitions bellow.
+/// Display the title and the definiton of the result [LsfDictionarySearchResult].
 /// A click on a definition open a layer with the videos availaible for
 /// the definition.
 class DictionariesSingleResult extends ConsumerWidget {
@@ -18,32 +19,36 @@ class DictionariesSingleResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverStickyHeader.builder(
       builder:
-          (context, state) => DictionariesSingleResultHeader(
+          (_, state) => DictionariesSingleResultHeader(
             result: result,
             stickyHeaderState: state,
           ),
-      sliver: SliverList.builder(
-        itemCount: result.meanings.length,
-        itemBuilder: (_, index) {
-          final meaning = result.meanings[index];
-          final isLastMeaning = index == result.meanings.length - 1;
-          final scopedMeaning = LsfDictionaryMeaningWithParent(
-            parent: result,
-            meaning: meaning,
-          );
+      sliver: _buildMeaningCardsList(result.meanings),
+    );
+  }
 
-          if (meaning.wordSigns.isEmpty) {
-            return DictionariesSingleResultBodyWithNoSign(
-              scopedMeaning: scopedMeaning,
-              isLastMeaning: isLastMeaning,
-            );
-          }
-          return DictionariesSingleResultBodyWithSign(
+  Widget _buildMeaningCardsList(List<LsfDictionaryMeaning> meanings) {
+    return SliverList.builder(
+      itemCount: result.meanings.length,
+      itemBuilder: (_, index) {
+        final meaning = result.meanings[index];
+        final isLastMeaning = index == result.meanings.length - 1;
+        final scopedMeaning = LsfDictionaryMeaningWithParent(
+          parent: result,
+          meaning: meaning,
+        );
+
+        if (meaning.wordSigns.isEmpty) {
+          return MeaningCardBodyWithoutVideoSigns(
             scopedMeaning: scopedMeaning,
             isLastMeaning: isLastMeaning,
           );
-        },
-      ),
+        }
+        return MeaningCardBodyWithVideoSigns(
+          scopedMeaning: scopedMeaning,
+          isLastMeaning: isLastMeaning,
+        );
+      },
     );
   }
 }

@@ -1,72 +1,51 @@
-import 'package:chewie/chewie.dart';
-import 'package:flutter/material.dart';
+import 'package:apprendre_lsf/core/app_colors.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
-import 'package:video_player/video_player.dart';
+import 'package:apprendre_lsf/ui/core/centered_message.dart';
+import 'package:apprendre_lsf/ui/core/empty.dart';
+import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
+import 'package:chewie/chewie.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 
-class SignVideoPlayer extends StatefulWidget {
-  const SignVideoPlayer({super.key, required this.media});
+import 'package:apprendre_lsf/utils/extensions/extensions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SignVideoPlayer extends ConsumerWidget {
+  const SignVideoPlayer({required this.media, super.key});
+  const SignVideoPlayer.fromMedia(this.media, {super.key});
+
   final LsfDictionaryMedia media;
 
   @override
-  State<SignVideoPlayer> createState() => _SignVideoPlayerState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chewieController = ref.watch(generateVideoControllerProvider(media));
 
-class _SignVideoPlayerState extends State<SignVideoPlayer> {
-  VideoPlayerController? videoController;
-  ChewieController? chewieController;
+    return chewieController.when(
+      data: (controller) {
+        /*final aspectRatio =
+    chewieController.videoPlayerController.value.aspectRatio;
+    final videoHeight = videoWidth / aspectRatio;*/
+        final videoWidth = context.width * 100 / 60;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadVideoControllers();
-  }
-
-  void _loadVideoControllers() async {
-    videoController =
-        VideoPlayerController.networkUrl(Uri.parse(widget.media.videoUrl));
-    await videoController!.initialize();
-    chewieController = ChewieController(
-      videoPlayerController: videoController!,
-      autoPlay: true,
-      looping: true,
-      showControls: false
-    );
-
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _videoOrLoarder();
-  }
-
-  Widget _videoOrLoarder() {
-    return (videoController == null || !videoController!.value.isInitialized)
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : Container(
-            alignment: Alignment.topCenter,
-            // height: 300,
-            child: _buildVideoPlayer(),
-          );
-  }
-
-  Widget _buildVideoPlayer() {
-    final Size screenSize = MediaQuery.of(context).size;
-
-    final width = screenSize.width * 100 / 60;
-    final aspectRatio = videoController!.value.aspectRatio;
-
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue.shade200, width: 4)),
-      child: OverflowBox(
-        maxWidth: width, //_controller.value.size.width,
-        maxHeight: width / aspectRatio,
-        child: Chewie(controller: chewieController!),
-      ),
+        return SizedBox(
+          // decoration: BoxDecoration(
+          // border: Border.all(color: Colors.blue.shade200, width: 4)),
+          child: ClipRect(
+            child: OverflowBox(
+              maxWidth: videoWidth,
+              child: Chewie(controller: controller),
+            ),
+          ),
+        );
+      },
+      error: (err, st) {
+        return CenteredMessage(
+          message: context.tr("ErrorVideoLoading"),
+          color: AppColors.error,
+          fontSize: 20,
+        );
+      },
+      loading: () => Empty(),
     );
   }
 }

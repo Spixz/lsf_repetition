@@ -7,7 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_command/flutter_command.dart';
 
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/ui/core/ui/customs_snackbars.dart';
+import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:apprendre_lsf/ui/decks/create/create_deck_widget_viewmodel.dart';
 import 'package:apprendre_lsf/utils/result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

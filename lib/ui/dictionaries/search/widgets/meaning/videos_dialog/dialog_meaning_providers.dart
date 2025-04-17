@@ -1,15 +1,19 @@
 import 'dart:async';
 
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 
-final generateControllersProvider = AutoDisposeAsyncNotifierProviderFamily<
-  GeneProv,
-  List<ChewieController>,
-  List<LsfDictionaryMedia>
->(GeneProv.new);
+import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
+
+final indexVideoSelectedProvider = StateProvider((ref) => 0);
+
+final generateVideosControllersProvider =
+    AutoDisposeAsyncNotifierProviderFamily<
+      GeneProv,
+      List<ChewieController>,
+      List<LsfDictionaryMedia>
+    >(GeneProv.new);
 
 class GeneProv
     extends
@@ -43,11 +47,24 @@ class GeneProv
   }
 }
 
-// final generateControllersProvider = AutoDisposeFutureProviderFamily<
-//   List<ChewieController>,
-//   List<LsfDictionaryMedia>
-// >((ref, signs) async {
+final generateVideoControllerProvider =
+    AutoDisposeFutureProviderFamily<ChewieController, LsfDictionaryMedia>((
+      ref,
+      media,
+    ) async {
+      final videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.parse(media.videoUrl),
+      );
 
-// });
+      await videoPlayerController.initialize();
 
-final indexVideoSelectedProvider = StateProvider((ref) => 0);
+      final chewieContoller = ChewieController(
+        videoPlayerController: videoPlayerController,
+        autoPlay: true,
+        looping: true,
+        showControls: false,
+      );
+      chewieContoller.play();
+      // throw Exception("erreur mec");
+      return chewieContoller;
+    });

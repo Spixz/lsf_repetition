@@ -1,11 +1,9 @@
-import 'package:apprendre_lsf/data/repositories/decks/decks_repository.dart';
-import 'package:apprendre_lsf/domain/database/drift_database.dart';
-import 'package:apprendre_lsf/utils/provider_observer.dart';
-import 'package:drift/drift.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
+import 'package:easy_localization/easy_localization.dart';
+
 import 'package:apprendre_lsf/routing/router.dart';
-import 'package:apprendre_lsf/ui/core/scroll_behavior.dart';
+import 'package:apprendre_lsf/core/scroll_behavior.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
@@ -15,10 +13,10 @@ void main() async {
 
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('fr')],
+      supportedLocales: [Locale('fr'), Locale('en')],
       path: 'assets/translations',
       fallbackLocale: Locale('fr'),
-      child: ProviderScope(observers: [MyObserver()], child: MyApp()),
+      child: ProviderScope(observers: [/*MyObserver()*/], child: MyApp()),
     ),
   );
 }
@@ -46,25 +44,6 @@ class MyApp extends StatelessWidget {
 
 //   ValueNotifier<int> counter = ValueNotifier<int>(0);
 //   return [
-//     // Provider.value(value: driftDatabase),
 //     // ChangeNotifierProvider<SupabaseRepository>.value(value: supabaseRepository),
-//     // Provider(create: (_) => ElixService()),
-//     // Provider(
-//     //   create:
-//     //       (context) => LsfDictionariesRepository(elixService: context.read()),
-//     // ),
-//     // Provider(
-//     //   create:
-//     //       (context) => DictionariesSearchbarViewModel(
-//     //         dictionariesRepository: context.read(),
-//     //       ),
-//     // ),
-//     // Provider<DecksRepository>(
-//     //   create: (_) => DecksRepository(driftDatabase: driftDatabase),
-//     // ),
-//     // ChangeNotifierProvider(create: (_) => MyUser()),
-//     // Provider<GlobalValues>(create: (_) => GlobalValues()),
-//     // Provider<ValueNotifier<int>>.value(value: counter),
 //   ];
 // }
-

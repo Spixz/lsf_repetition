@@ -1,10 +1,10 @@
 
 import 'package:apprendre_lsf/data/repositories/dictionaries/lsf_dictionaries_providers.dart';
-import 'package:apprendre_lsf/ui/core/ui/empty.dart';
+import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/providers/dictionaries_search_provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:apprendre_lsf/ui/core/scroll_behavior.dart';
+import 'package:apprendre_lsf/core/scroll_behavior.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DictionariesSearchbar extends ConsumerWidget {

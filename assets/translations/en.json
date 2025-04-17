@@ -1,0 +1,29 @@
+{
+    "PAGE-DICTIONARIES_SEARCH_RESULTS_SCREEN": "",
+    "noResults": "No results",
+    "makeASearch": "Make a search",
+    "ErrorVideoLoading": "An error occurred while loading the video",
+    
+    "WIDGET-CREATE_DECK_WIDGET": "",
+    "NameOfTheDeck": {
+      "Hint": "Deck name",
+      "title": "@:NameOfTheDeck.Hint:"
+    },
+    "ErrorDeckCreation": "Error while creating the deck",
+    "CreatedDeck": "Deck created!",
+    "CreateADeck": "Create a deck",
+  
+    "PAGE-CREATE_CARD_SCREEN": "",
+    "CreatedCard": "Card created!",
+    "AnErrorHasOccured": "An error has occurred",
+    "CreateADeckBefore": "Create a deck first by clicking the plus sign.",
+  
+    "SelectAtLeastOneDeck": "Select at least one deck",
+    "Create": "Create",
+    "Deck": "Deck",
+    "Next": "Next",
+  
+    "SNACKBARS": "",
+    "unexpectedErrorHasOccurred": "An unexpected error has occurred",
+    "expectedErrorHasOccurred": "An expected error has occurred"
+  }
