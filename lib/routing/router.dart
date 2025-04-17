@@ -1,19 +1,11 @@
 import 'package:apprendre_lsf/ui/dictionaries/search/dictionaries_search_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:apprendre_lsf/data/repositories/supabase/supabase_repository.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/ui/cards/create/create_card_screen.dart';
 import 'package:apprendre_lsf/ui/cards/create/create_card_viewmodel.dart';
 import 'package:apprendre_lsf/ui/home/home_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-
-import 'dart:io';
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 
 /// https://www.reddit.com/r/FlutterDev/comments/1in53yf/comment/mc84gse/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 GoRouter createRouter() => GoRouter(

@@ -1,13 +1,8 @@
 import 'dart:async';
 
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final selectedSuggestionProvider = StateProvider<String>((ref) => '');
-
-final selectedDefinitionProvider = StateProvider<LsfDictionarySearchResult?>(
-  (ref) => null,
-);
 
 final dictionariesSearchQueryProvider =
     NotifierProvider<DictionariesSearchQueryNotifier, String>(

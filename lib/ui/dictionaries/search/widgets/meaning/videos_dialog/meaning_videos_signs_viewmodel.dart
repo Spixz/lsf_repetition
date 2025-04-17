@@ -24,7 +24,6 @@ class MeaningVideosSignsViewmodel {
       meaning.wordSigns[indexSelectedVideo.value];
 
   Future<Result<List<ChewieController>>> _createVideoControllers() async {
-    print(meaning);
     final futures = meaning.wordSigns.map(_createChewieController);
     final controllers = await Future.wait<ChewieController>(futures);
     return Result.ok(controllers);

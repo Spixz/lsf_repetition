@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class SignVideoPlayer2 extends StatefulWidget {
   const SignVideoPlayer2({super.key, required this.chewieController});
+  const SignVideoPlayer2.fromControllers(ChewieController controller, {super.key}) : chewieController = controller ;
   final ChewieController chewieController;
 
   @override
