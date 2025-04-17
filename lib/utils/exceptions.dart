@@ -25,3 +25,26 @@ class ApiException implements Exception {
         '${endpoint != null ? " - Endpoint: $endpoint" : ""}';
   }
 }
+
+class DetailedException implements Exception {
+  DetailedException({
+    required this.cause,
+    required this.detailedMessage,
+    this.trace,
+  });
+  final String detailedMessage;
+  final Object cause;
+  final StackTrace? trace;
+
+  @override
+  String toString() {
+    final buffer =
+        StringBuffer()
+          ..writeln('Detailed message: $detailedMessage')
+          ..writeln('Original error: $cause');
+    if (trace != null) {
+      buffer.writeln('Stack trace:\n$trace');
+    }
+    return buffer.toString();
+  }
+}

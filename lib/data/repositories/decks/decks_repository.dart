@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/utils/exceptions.dart';
 import 'package:drift/drift.dart';
 import 'package:apprendre_lsf/domain/database/drift_database.dart';
 import 'package:apprendre_lsf/domain/mappers/cards_table_card_model_mapper.dart';
@@ -8,37 +9,46 @@ import 'package:apprendre_lsf/utils/result.dart';
 
 class DecksRepository {
   final AppDriftDatabase _driftDatabase;
-  
-  DecksRepository({required AppDriftDatabase driftDatabase})
-      : _driftDatabase = driftDatabase;
 
-  Future<Result<int>> createDeck({required DeckModel deck}) async {
+  DecksRepository({required AppDriftDatabase driftDatabase})
+    : _driftDatabase = driftDatabase;
+
+  Future<int> createDeck({required DeckModel deck}) async {
     try {
-      final deckId =
-          await _driftDatabase.decksTable.insertOne(deck.toCompanion());
-      return Result.ok(deckId);
+      final deckId = await _driftDatabase.decksTable.insertOne(
+        deck.toCompanion(),
+      );
+      return deckId;
     } catch (err, st) {
       print(st);
-      return Result.error(Exception("Erreur lors de la création du deck."));
+      throw DetailedException(
+        cause: err,
+        detailedMessage: "Erreur lors de la création du deck.",
+        trace: st,
+      );
     }
   }
 
-  Future<Result<List<DeckModel>>> getAllDecks() async {
+  Future<List<DeckModel>> getAllDecks() async {
     try {
       final decksTableData = await _driftDatabase.managers.decksTable.get();
       final decks = decksTableData.map((deckData) => deckData.toDeckModel());
-      return Result.ok(decks.toList());
+      return decks.toList();
     } catch (err, st) {
       print(st);
-      return Result.error(Exception(
-          "Une erreur s'est produite durant la récupération des decks"));
+      throw DetailedException(
+        cause: err,
+        detailedMessage:
+            "Une erreur s'est produite durant la récupération des decks",
+      );
     }
   }
 
   Future<Result<int>> createCard({required CardModel card}) async {
     try {
-      final cardId =
-          await _driftDatabase.cardsTable.insertOne(card.toCompanion());
+      final cardId = await _driftDatabase.cardsTable.insertOne(
+        card.toCompanion(),
+      );
       return Result.ok(cardId);
     } catch (err, st) {
       print(st);
@@ -52,7 +62,9 @@ class DecksRepository {
       await _driftDatabase.batch((batch) {
         // batch.insert(_driftDatabase.cardsTable, cards.first.toCompanion());
         batch.insertAll(
-            _driftDatabase.cardsTable, cards.map((card) => card.toCompanion()));
+          _driftDatabase.cardsTable,
+          cards.map((card) => card.toCompanion()),
+        );
       });
       return Result.ok(null);
     } catch (err, st) {

@@ -23,12 +23,8 @@ GoRouter createRouter() => GoRouter(
       path: Routes.createCard.path,
       name: Routes.createCard.name,
       builder: (context, state) {
-        CardModel card = state.extra as CardModel;
-        final viewModel = CreateCardViewmodel(
-          cardToCreate: card,
-          deckRepository: context.read(),
-        );
-        return CreateCardScreen(viewModel: viewModel);
+        final CardModel card = state.extra as CardModel;
+        return CreateCardScreen(cardToCreate: card);
       },
     ),
     GoRoute(
@@ -85,7 +81,7 @@ GoRouter createRouter() => GoRouter(
         //     ),
         //   ],
         // );
-        //! L> etait la avant      
+        //! L> etait la avant
 
         // return MeaningVideosSignsScreen(
         //   viewModel: MeaningVideosSignsViewmodel(meaning: meaning),

@@ -45,7 +45,9 @@ class DictionariesSearchScreen extends ConsumerWidget {
               if (searchQuery.isEmpty) return _emptyQuery(context);
               if (data.isEmpty) return _noResults(context);
 
-              return MultiSliver(children: data.map(DictionariesSingleResult.new).toList());
+              return MultiSliver(
+                children: data.map(DictionariesSingleResult.new).toList(),
+              );
             },
             error: (error, stackTrace) => SliverToBoxAdapter(child: Empty()),
           ),
@@ -60,15 +62,15 @@ class DictionariesSearchScreen extends ConsumerWidget {
     );
   }
 
-  Widget _noResults(BuildContext context) {
-    return SliverFillRemaining(
-      child: CenteredMessage(message: context.tr("noResults")),
-    );
-  }
-
   Widget _emptyQuery(BuildContext context) {
     return SliverFillRemaining(
       child: CenteredMessage(message: context.tr("makeASearch")),
+    );
+  }
+
+  Widget _noResults(BuildContext context) {
+    return SliverFillRemaining(
+      child: CenteredMessage(message: context.tr("noResults")),
     );
   }
 }

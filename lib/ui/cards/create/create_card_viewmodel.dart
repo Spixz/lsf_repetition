@@ -24,10 +24,10 @@ class CreateCardViewmodel {
   CreateCardViewmodel(
       {required this.cardToCreate, required DecksRepository deckRepository})
       : _decksRepository = deckRepository {
-    getAllDecks = Command.createAsyncNoParam(
-      _getAllDecks,
-      initialValue: const Result.ok([]),
-    );
+    // getAllDecks = Command.createAsyncNoParam(
+    //   _getAllDecks,
+    //   initialValue: const Result.ok([]),
+    // );
     createCards = Command.createAsyncNoParam(_createCards,
         initialValue: const Result.ok(null));
     getAllDecks.execute();
@@ -71,12 +71,12 @@ class CreateCardViewmodel {
     return _decksRepository.createCards(cards: cardsToAdd.toList());
   }
 
-  Future<Result<List<DeckModel>>> _getAllDecks() async {
-    try {
-      return _decksRepository.getAllDecks();
-    } catch (err, st) {
-      print(st);
-      return Result.error(Exception(err));
-    }
-  }
+  // Future<Result<List<DeckModel>>> _getAllDecks() async {
+  //   try {
+  //     return _decksRepository.getAllDecks();
+  //   } catch (err, st) {
+  //     print(st);
+  //     return Result.error(Exception(err));
+  //   }
+  // }
 }

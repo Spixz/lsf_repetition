@@ -1,4 +1,7 @@
+import 'package:apprendre_lsf/data/repositories/decks/decks_repository.dart';
+import 'package:apprendre_lsf/domain/database/drift_database.dart';
 import 'package:apprendre_lsf/utils/provider_observer.dart';
+import 'package:drift/drift.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:apprendre_lsf/routing/router.dart';
@@ -15,7 +18,7 @@ void main() async {
       supportedLocales: [Locale('fr')],
       path: 'assets/translations',
       fallbackLocale: Locale('fr'),
-      child: ProviderScope(observers: [/*MyObserver()*/], child: MyApp()),
+      child: ProviderScope(observers: [MyObserver()], child: MyApp()),
     ),
   );
 }
@@ -64,3 +67,4 @@ class MyApp extends StatelessWidget {
 //     // Provider<ValueNotifier<int>>.value(value: counter),
 //   ];
 // }
+
