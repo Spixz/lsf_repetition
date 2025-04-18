@@ -9,6 +9,7 @@ import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 
+/// An overlay screen showing a video for each different way to sign a word.
 class DialogMeaningVideos extends ConsumerWidget {
   const DialogMeaningVideos({super.key, required this.scopedMeaning});
   final LsfDictionaryMeaningWithParent scopedMeaning;
@@ -24,13 +25,13 @@ class DialogMeaningVideos extends ConsumerWidget {
           children: [
             Column(
               children: [
-                Expanded(child: _Carrousel(signs: videosSign)),
+                Expanded(child: _Carousel(signs: videosSign)),
                 Container(height: 80, color: Colors.blue.shade100),
                 // todo : L> remplacer le container par les boutons pour ajouter
                 // todo : à un deck
               ],
             ),
-            _CarrouselInfos(lenght: videosSign.length),
+            _CarouselPositionIndicator(lenght: videosSign.length),
             _closeButton(context),
           ],
         ),
@@ -50,29 +51,8 @@ class DialogMeaningVideos extends ConsumerWidget {
   }
 }
 
-class _CarrouselInfos extends ConsumerWidget {
-  const _CarrouselInfos({required this.lenght});
-  final int lenght;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      child: SizedBox(
-        height: 50,
-        width: context.width,
-        child: _CarouselSliderInfos(
-          itemCount: lenght,
-          indexSelectedItem: ref.watch(indexVideoSelectedProvider),
-        ),
-      ),
-    );
-  }
-}
-
-class _Carrousel extends ConsumerWidget {
-  const _Carrousel({required this.signs});
+class _Carousel extends ConsumerWidget {
+  const _Carousel({required this.signs, super.key});
 
   final List<LsfDictionaryMedia> signs;
 
@@ -99,8 +79,30 @@ class _Carrousel extends ConsumerWidget {
   }
 }
 
-class _CarouselSliderInfos extends StatelessWidget {
-  _CarouselSliderInfos({
+/// Shows carousel position using a row of dots.
+class _CarouselPositionIndicator extends ConsumerWidget {
+  const _CarouselPositionIndicator({required this.lenght, super.key});
+  final int lenght;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      child: SizedBox(
+        height: 50,
+        width: context.width,
+        child: _CarouselDot(
+          itemCount: lenght,
+          indexSelectedItem: ref.watch(indexVideoSelectedProvider),
+        ),
+      ),
+    );
+  }
+}
+
+class _CarouselDot extends StatelessWidget {
+  _CarouselDot({
     required this.itemCount,
     required this.indexSelectedItem,
   });

@@ -13,8 +13,9 @@ import 'package:apprendre_lsf/data/repositories/dictionaries/lsf_dictionaries_pr
 import 'package:apprendre_lsf/ui/dictionaries/search/providers/dictionaries_search_provider.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_searchbar.dart';
 
-/// A search query will result in a list of results [LsfDictionarySearchResult]
-/// object. It can represent a word or an expression with several defintions.
+/// Dictionary search page.
+/// 
+/// Displays a search bar with results listed below.
 class DictionariesSearchScreen extends ConsumerWidget {
   const DictionariesSearchScreen({super.key});
 

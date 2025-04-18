@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/data/services/dictionaries/dictionary_service.dart';
 import 'package:apprendre_lsf/data/services/dictionaries/elix/model/elix_search_result.dart';
@@ -11,9 +10,7 @@ import 'package:apprendre_lsf/data/services/dictionaries/elix/model/elix_suggest
 import 'package:apprendre_lsf/utils/exceptions.dart';
 import 'package:apprendre_lsf/utils/has_nested_property.dart';
 
-const ELIX_API = 'api.elix-lsf.fr';
-
-
+const elixApi = 'api.elix-lsf.fr';
 
 class ElixService implements DictionaryService {
   ElixService({String? host, int? port, HttpClient Function()? clientFactory})
@@ -85,7 +82,7 @@ class ElixService implements DictionaryService {
 
       final encodedQuery = Uri.encodeQueryComponent(query);
       final HttpClientRequest request = await client.get(
-        ELIX_API,
+        elixApi,
         _port,
         '/suggests?q=$encodedQuery&limit=$limit&fuzzy=$page',
       );

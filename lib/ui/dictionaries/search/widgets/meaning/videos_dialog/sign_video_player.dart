@@ -1,4 +1,5 @@
 import 'package:apprendre_lsf/core/app_colors.dart';
+import 'package:apprendre_lsf/data/services/video_processing/ffmpeg_video_processing.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 import 'package:apprendre_lsf/ui/core/centered_message.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
@@ -10,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Displays a zoomed-in video player centered on the person signing.
+///
+/// Some videos show a black bar on the right due to aspect ratio issues.
+/// See [FfmpegVideoProcessing] for more details.
 class SignVideoPlayer extends ConsumerWidget {
   const SignVideoPlayer({required this.media, super.key});
   const SignVideoPlayer.fromMedia(this.media, {super.key});

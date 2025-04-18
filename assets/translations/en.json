@@ -1,7 +1,10 @@
 {
     "PAGE-DICTIONARIES_SEARCH_RESULTS_SCREEN": "",
+    "Search": "Search",
+    "Loading": "Loading",
     "noResults": "No results",
     "makeASearch": "Make a search",
+    "ErrorHintsSearch": "An error occurred during search",
     "ErrorVideoLoading": "An error occurred while loading the video",
     
     "WIDGET-CREATE_DECK_WIDGET": "",

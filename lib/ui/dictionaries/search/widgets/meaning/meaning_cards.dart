@@ -8,6 +8,7 @@ import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
 
+/// A word or expression meaning with an available video to show its sign.
 class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
   const MeaningCardBodyWithVideoSigns({
     super.key,
@@ -83,7 +84,7 @@ class _ActionsList extends ConsumerWidget {
   }
 }
 
-
+/// A word or expression meaning with no video available for its sign yet.
 class MeaningCardBodyWithoutVideoSigns extends StatelessWidget {
   const MeaningCardBodyWithoutVideoSigns({
     super.key,

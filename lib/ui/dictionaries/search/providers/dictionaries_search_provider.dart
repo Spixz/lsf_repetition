@@ -13,9 +13,7 @@ class DictionariesSearchQueryNotifier extends Notifier<String> {
   Timer? timer;
 
   @override
-  String build() {
-    return "";
-  }
+  String build() => "";
 
   void update(String value, {Duration updateAfter = Duration.zero}) async {
     if (timer != null && timer!.isActive) {

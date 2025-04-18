@@ -1,14 +1,16 @@
+import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/data/repositories/dictionaries/lsf_dictionaries_providers.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/providers/dictionaries_search_provider.dart';
-import 'package:flutter/material.dart';
-
 import 'package:apprendre_lsf/core/scroll_behavior.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:apprendre_lsf/ui/core/centered_message.dart';
 
 class DictionariesSearchbar extends ConsumerWidget {
-  DictionariesSearchbar({super.key});
+  const DictionariesSearchbar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +22,7 @@ class DictionariesSearchbar extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       floating: true,
       title: SearchAnchor.bar(
-        viewHintText: 'Search',
+        viewHintText: context.tr("Search"),
         onChanged:
             (value) => ref
                 .read(dictionariesSearchQueryProvider.notifier)
@@ -30,50 +32,16 @@ class DictionariesSearchbar extends ConsumerWidget {
             (suggestions) =>
                 ListView(children: [_SearchBarFilters(), ...suggestions]),
         suggestionsBuilder:
-            (context, controller) => [SuggestionList(controller: controller)],
+            (context, controller) async => [
+              SuggestionList(controller: controller),
+            ],
       ),
     );
   }
 }
 
-class SuggestionList extends ConsumerWidget {
-  const SuggestionList({super.key, required this.controller});
-  final SearchController controller;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final searchQuery = ref.watch(dictionariesSearchQueryProvider);
-    if (searchQuery.isEmpty) return Empty();
-    final results = ref.watch(searchDefinitionHintsResultsProvider(searchQuery));
-
-    return Column(
-      children: [
-        ...results.when(
-          data: (data) {
-            return data
-                .map(
-                  (result) => ListTile(
-                    title: Text(result.word),
-                    onTap: () {
-                      ref.read(selectedSuggestionProvider.notifier).state =
-                          result.word;
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      controller.closeView(result.word);
-                    },
-                  ),
-                )
-                .toList();
-          },
-          error: (error, stackTrace) => [Text('error')],
-          loading: () => [Text("loading")],
-        ),
-      ],
-    );
-  }
-}
-
 class _SearchBarFilters extends StatelessWidget {
-  const _SearchBarFilters();
+  const _SearchBarFilters({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +63,46 @@ class _SearchBarFilters extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SuggestionList extends ConsumerWidget {
+  const SuggestionList({super.key, required this.controller});
+  final SearchController controller;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final searchQuery = ref.watch(dictionariesSearchQueryProvider);
+    if (searchQuery.isEmpty) return Empty();
+    final results = ref.watch(
+      searchDefinitionHintsResultsProvider(searchQuery),
+    );
+
+    return results.when(
+      data: (data) {
+        final hintTiles = data.map(
+          (result) => ListTile(
+            title: Text(result.word),
+            onTap: () {
+              ref.read(selectedSuggestionProvider.notifier).state = result.word;
+              FocusManager.instance.primaryFocus?.unfocus();
+              controller.closeView(result.word);
+            },
+          ),
+        );
+        return Column(children: hintTiles.toList());
+      },
+      error:
+          (_, __) => Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: CenteredMessage(message: context.tr("ErrorHintsSearch")),
+          ),
+      loading:
+          () => Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: CenteredMessage(message: context.tr("Loading")),
+          ),
     );
   }
 }

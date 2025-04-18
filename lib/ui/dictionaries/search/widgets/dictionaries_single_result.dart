@@ -1,4 +1,3 @@
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +6,21 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/meaning_cards.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
+import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning.dart';
 
-/// Display the title and the definiton of the result [LsfDictionarySearchResult].
-/// A click on a definition open a layer with the videos availaible for
-/// the definition.
+/// Displays a card representing one dictionary search result.
+///
+/// A search returns a list of [LsfDictionarySearchResult]. This can be a word
+/// or expression with multiple definitions.
+///
+/// For example, searching for 'brillant' returns:
+/// - Brillant (adjective)
+///   => That shines
+/// - Brillant (verb)
+///   => Reflect light
+///   => Stand out
+///
+/// Clicking a definition opens a layer with the available videos.
 class DictionariesSingleResult extends ConsumerWidget {
   const DictionariesSingleResult(this.result, {super.key});
   final LsfDictionarySearchResult result;
@@ -19,7 +29,7 @@ class DictionariesSingleResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverStickyHeader.builder(
       builder:
-          (_, state) => DictionariesSingleResultHeader(
+          (_, state) => _SingleResultHeader(
             result: result,
             stickyHeaderState: state,
           ),
@@ -53,8 +63,8 @@ class DictionariesSingleResult extends ConsumerWidget {
   }
 }
 
-class DictionariesSingleResultHeader extends StatelessWidget {
-  const DictionariesSingleResultHeader({
+class _SingleResultHeader extends StatelessWidget {
+  const _SingleResultHeader({
     super.key,
     required this.result,
     required this.stickyHeaderState,
@@ -76,8 +86,6 @@ class DictionariesSingleResultHeader extends StatelessWidget {
     //   ),
     // );
     return TweenAnimationBuilder<Color?>(
-      // Si c'est pinned, on va aller vers Colors.pink,
-      // sinon, on va vers Colors.transparent (ou une autre couleur).
       tween: ColorTween(
         begin: null,
         end: isPinned ? Colors.pink : Colors.transparent,

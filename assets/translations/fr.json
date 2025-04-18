@@ -1,8 +1,11 @@
 {
     "PAGE-DICTIONARIES_SEARCH_RESULTS_SCREEN": "",
+    "Search": "Rechercher",
+    "Loading": "Chargement",
     "noResults": "Aucun résultat",
     "makeASearch": "Faites une recherche",
-    "ErrorVideoLoading": "Une erreur s'est produite pendant le chargement de la vidéo",
+    "ErrorHintsSearch": "Une erreur s'est produite durant la recherche",
+    "ErrorVideoLoading": "Une erreur s'est produite durant le chargement de la vidéo",
     
     "WIDGET-CREATE_DECK_WIDGET": "",
     "NameOfTheDeck": {
