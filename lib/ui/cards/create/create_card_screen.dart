@@ -1,189 +1,66 @@
-import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
-import 'package:apprendre_lsf/global_providers.dart';
-import 'package:apprendre_lsf/utils/extensions/extensions.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
+import 'package:apprendre_lsf/ui/core/centered_message.dart';
 import 'package:flutter/material.dart';
-import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
-import 'package:apprendre_lsf/ui/decks/create/create_deck_widget.dart';
+import 'package:apprendre_lsf/ui/decks/create/create_deck_dialog.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
+import 'package:apprendre_lsf/ui/cards/create/providers/create_card_providers.dart';
+import 'package:apprendre_lsf/utils/extensions/extensions.dart';
+import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 
-enum CreateCardStep { selectDeck, addDetails, review }
+/// Page for selecting the decks to which the card will be added.
+///
+/// The user can use the plus button to create a new deck.
+class CreateCardScreen extends ConsumerWidget {
+  const CreateCardScreen({required this.cardToCreate, super.key});
+  final CardModel cardToCreate;
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final onChange =
+        ref.read(createCardStepProvider.notifier).updateFromPageIndex;
 
-final currentPageProvider =
-    NotifierProvider<CurrentPageNotifier, CreateCardStep>(
-      CurrentPageNotifier.new,
+    ref.listen(
+      createCardsProvider,
+      (_, next) => _onCardCreation(context, next),
     );
-
-class CurrentPageNotifier extends Notifier<CreateCardStep> {
-  @override
-  build() => CreateCardStep.selectDeck;
-
-  void updateFromPageIndex(int index) {
-    state =
-        CreateCardStep.values.elementAtOrNull(index) ??
-        CreateCardStep.selectDeck;
-  }
-}
-
-final createCardsProvider =
-    NotifierProvider<CreateCardNotifier, AsyncValue<void>>(
-      CreateCardNotifier.new,
-    );
-
-class CreateCardNotifier extends Notifier<AsyncValue<void>> {
-  @override
-  AsyncValue<void> build() => AsyncLoading();
-
-  Future call({required CardModel card, required List<int> deckIds}) async {
-    final deckRepository = ref.watch(decksRepositoryProvider);
-
-    try {
-      state = AsyncLoading();
-      final cardsToAdd = deckIds.map((deckId) => card.copyWith(deckId: deckId));
-      deckRepository.createCards(cards: cardsToAdd.toList());
-      state = AsyncData(null);
-    } catch (err, st) {
-      state = AsyncError(err, st);
-    }
-  }
-}
-
-final allDecksProviders = AutoDisposeFutureProvider((ref) {
-  final decksRepository = ref.watch(decksRepositoryProvider);
-  return decksRepository.getAllDecks();
-});
-
-final selectedDecksProvider =
-    AutoDisposeNotifierProvider<SelectedDecksNotifier, List<int>>(
-      SelectedDecksNotifier.new,
-    );
-
-class SelectedDecksNotifier extends AutoDisposeNotifier<List<int>> {
-  @override
-  List<int> build() => [];
-
-  void add(int deckId) => state = state + [deckId];
-  void remove(int deckId) =>
-      state = List.of(state)..remove(deckId); //pas sence marcher
-}
-
-///  ======================== WIDGET =======================
-
-class CreateCardScreen extends ConsumerStatefulWidget {
-  const CreateCardScreen({super.key, required CardModel cardToCreate})
-    : card = cardToCreate;
-  final CardModel card;
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CreateCardScreenState();
-}
-
-class _CreateCardScreenState extends ConsumerState<CreateCardScreen> {
-  @override
-  void initState() {
-    // _onCardsCreated(context);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final onChange = ref.read(currentPageProvider.notifier).updateFromPageIndex;
-    ref.listen(createCardsProvider, (prev, next) {
-      next.when(
-        data: (data) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SuccessSnackbar(message: context.tr("CreatedCard")));
-          Navigator.of(context).pop();
-        },
-        error: (err, st) {
-          debugPrint(err.toString());
-          debugPrintStack(stackTrace: st);
-          ScaffoldMessenger.of(context).showSnackBar(
-            ErrorSnackbar(message: context.tr("unexpectedErrorHasOccurred")),
-          );
-        },
-        loading: () => null,
-      );
-    });
 
     return Scaffold(
       appBar: AppBar(),
       body: Stack(
         children: [
           PageView(
-            // controller: PageController(),
             onPageChanged: onChange,
             children: <Widget>[SizedBox.expand(child: SelectDecks())],
           ),
-          _nextButton(),
+          _NextButton(card: cardToCreate),
         ],
       ),
       floatingActionButton: _FAB(),
     );
   }
 
-  Widget _nextButton() {
-    final selectedDecks = ref.watch(selectedDecksProvider);
-    final enabled = selectedDecks.isNotEmpty;
-
-    return Positioned(
-      bottom: 100,
-      child: SizedBox(
-        width: context.width,
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              if (enabled) {
-                ref
-                    .read(createCardsProvider.notifier)
-                    .call(card: widget.card, deckIds: selectedDecks);
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                WarningSnackbar(message: context.tr("SelectAtLeastOneDeck")),
-              );
-            },
-            style: ButtonStyle(
-              minimumSize: WidgetStatePropertyAll(Size(50, 40)),
-              elevation: WidgetStatePropertyAll(enabled ? 10 : 4),
-              backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-                Set<WidgetState> states,
-              ) {
-                if (states.contains(WidgetState.error)) {
-                  return Colors.red;
-                }
-                return enabled
-                    ? Colors.purple.shade200
-                    : Colors.purple.shade200.withAlpha(150);
-              }),
-              textStyle: WidgetStatePropertyAll(
-                TextStyle(
-                  fontSize: 18,
-                  // fontWeight: FontWeight.w300,
-                ),
-              ),
-            ),
-            child: Text(
-              context.tr("Next"),
-              style: TextStyle(
-                color: enabled ? Colors.black : Colors.black.withAlpha(100),
-              ),
-            ),
-          ),
-        ),
-      ),
+  void _onCardCreation(BuildContext context, AsyncValue<void> result) {
+    result.when(
+      data: (data) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SuccessSnackbar(message: context.tr("CreatedCard")));
+        Navigator.of(context).pop();
+      },
+      error: (err, st) {
+        debugPrint(err.toString());
+        debugPrintStack(stackTrace: st);
+        ScaffoldMessenger.of(context).showSnackBar(
+          ErrorSnackbar(message: context.tr("unexpectedErrorHasOccurred")),
+        );
+      },
+      loading: () => null,
     );
   }
 }
@@ -193,7 +70,7 @@ class _FAB extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPage = ref.watch(currentPageProvider);
+    final currentPage = ref.watch(createCardStepProvider);
 
     return switch (currentPage) {
       CreateCardStep.selectDeck => FloatingActionButton(
@@ -202,9 +79,11 @@ class _FAB extends ConsumerWidget {
             () => showDialog(
               context: context,
               builder:
-                  (_) => CreateDeckWidget(
-                    //TODO riv onSuccess: widget.viewModel.onCreateDeckSuccess,
-                    onSuccess: (int c) => null,
+                  (_) => CreateDeckDialog(
+                    onSuccess:
+                        (int createdDeckId) => ref
+                            .read(selectedDecksProvider.notifier)
+                            .add(createdDeckId),
                   ),
             ),
         child: const Icon(Icons.add),
@@ -219,30 +98,18 @@ class SelectDecks extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allDecks = ref.watch(allDecksProviders);
+    final allDecks = ref.watch(allDecksProvider);
     final selectedDecksIds = ref.watch(selectedDecksProvider);
 
     return allDecks.when(
       data: (allDecks) {
         if (allDecks.isEmpty) {
-          return _createFirstDeckMessage(context);
+          return CenteredMessage(message: context.tr("CreateADeckBefore"));
         }
         return _buildAllDecksCheckbox(ref, allDecks, selectedDecksIds);
       },
       loading: () => Center(child: CircularProgressIndicator()),
       error: (_, __) => Center(child: Text(context.tr("AnErrorHasOccured"))),
-    );
-  }
-
-  Widget _createFirstDeckMessage(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Center(
-        child: Text(
-          context.tr("CreateADeckBefore"),
-          textAlign: TextAlign.center,
-        ),
-      ),
     );
   }
 
@@ -273,30 +140,63 @@ class SelectDecks extends ConsumerWidget {
   }
 }
 
+class _NextButton extends ConsumerWidget {
+  const _NextButton({required this.card, super.key});
+  final CardModel card;
 
-// class AllDecksCheckbox extends ConsumerWidget {
-//   const AllDecksCheckbox({super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedDecks = ref.watch(selectedDecksProvider);
+    final enabled = selectedDecks.isNotEmpty;
 
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return ListView.builder(
-//       itemCount: allDecks.length,
-//       itemBuilder: (_, index) {
-//         final deck = allDecks[index];
-//         final isSelected = selectedDecksIds.contains(deck.id);
+    return Positioned(
+      bottom: 100,
+      child: SizedBox(
+        width: context.width,
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              if (enabled) {
+                ref
+                    .read(createCardsProvider.notifier)
+                    .call(card: card, deckIds: selectedDecks);
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                WarningSnackbar(message: context.tr("SelectAtLeastOneDeck")),
+              );
+            },
+            style: _buttonStyle(enabled),
+            child: Text(
+              context.tr("Next"),
+              style: TextStyle(
+                color: enabled ? Colors.black : Colors.black.withAlpha(100),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-//         return CheckboxListTile(
-//           value: isSelected,
-//           onChanged: (value) {
-//             if (isSelected) {
-//               return ref.read(selectedDecksProvider.notifier).remove(deck.id!);
-//             } else {
-//               return ref.read(selectedDecksProvider.notifier).add(deck.id!);
-//             }
-//           },
-//           title: Text(deck.name),
-//         );
-//       },
-//     );
-//   }
-//   }
+  ButtonStyle _buttonStyle(bool enabled) => ButtonStyle(
+    minimumSize: WidgetStatePropertyAll(Size(50, 40)),
+    elevation: WidgetStatePropertyAll(enabled ? 10 : 4),
+    backgroundColor: WidgetStateProperty.resolveWith<Color?>((
+      Set<WidgetState> states,
+    ) {
+      if (states.contains(WidgetState.error)) {
+        return Colors.red;
+      }
+      return enabled
+          ? Colors.purple.shade200
+          : Colors.purple.shade200.withAlpha(150);
+    }),
+    textStyle: WidgetStatePropertyAll(
+      TextStyle(
+        fontSize: 18,
+        // fontWeight: FontWeight.w300,
+      ),
+    ),
+  );
+}

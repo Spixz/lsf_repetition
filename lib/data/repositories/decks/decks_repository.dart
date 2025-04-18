@@ -16,7 +16,7 @@ class DecksRepository {
   Future<int> createDeck({required DeckModel deck}) async {
     try {
       final deckId = await _driftDatabase.decksTable.insertOne(
-        deck.toCompanion(),
+        deck.toCompanion,
       );
       return deckId;
     } catch (err, st) {
@@ -32,7 +32,7 @@ class DecksRepository {
   Future<List<DeckModel>> getAllDecks() async {
     try {
       final decksTableData = await _driftDatabase.managers.decksTable.get();
-      final decks = decksTableData.map((deckData) => deckData.toDeckModel());
+      final decks = decksTableData.map((deckData) => deckData.toDeckModel);
       return decks.toList();
     } catch (err, st) {
       print(st);
@@ -42,6 +42,13 @@ class DecksRepository {
             "Une erreur s'est produite durant la récupération des decks",
       );
     }
+  }
+
+  Stream<List<DeckModel>> getAllDecksStream() {
+    return _driftDatabase.managers.decksTable
+        .watch()
+        .map((deckList) => deckList.map((deck) => deck.toDeckModel).toList())
+        .asBroadcastStream();
   }
 
   Future<Result<int>> createCard({required CardModel card}) async {
