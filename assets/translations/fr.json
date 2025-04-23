@@ -6,7 +6,9 @@
     "makeASearch": "Faites une recherche",
     "ErrorHintsSearch": "Une erreur s'est produite durant la recherche",
     "ErrorVideoLoading": "Une erreur s'est produite durant le chargement de la vidéo",
-    
+    "AddToDeck": "Ajouter à un deck",
+    "AddToTrainingList": "Ajouter à la liste d'entraînement",
+
     "WIDGET-CREATE_DECK_WIDGET": "",
     "NameOfTheDeck": {
       "Hint": "Nom du deck",

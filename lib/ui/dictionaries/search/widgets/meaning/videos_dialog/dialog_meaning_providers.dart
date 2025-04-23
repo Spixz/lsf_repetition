@@ -10,12 +10,12 @@ final indexVideoSelectedProvider = StateProvider((ref) => 0);
 
 final generateVideosControllersProvider =
     AutoDisposeAsyncNotifierProviderFamily<
-      GeneProv,
+      GenerateVideosControllersNotifier,
       List<ChewieController>,
       List<LsfDictionaryMedia>
-    >(GeneProv.new);
+    >(GenerateVideosControllersNotifier.new);
 
-class GeneProv
+class GenerateVideosControllersNotifier
     extends
         AutoDisposeFamilyAsyncNotifier<
           List<ChewieController>,

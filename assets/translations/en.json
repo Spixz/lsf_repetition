@@ -6,6 +6,8 @@
     "makeASearch": "Make a search",
     "ErrorHintsSearch": "An error occurred during search",
     "ErrorVideoLoading": "An error occurred while loading the video",
+    "AddToDeck": "Add to deck",
+    "AddToTrainingList": "Add to training list",
     
     "WIDGET-CREATE_DECK_WIDGET": "",
     "NameOfTheDeck": {

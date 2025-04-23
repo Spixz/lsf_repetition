@@ -1,7 +1,10 @@
+import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/sign_video_player.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
@@ -26,9 +29,7 @@ class DialogMeaningVideos extends ConsumerWidget {
             Column(
               children: [
                 Expanded(child: _Carousel(signs: videosSign)),
-                Container(height: 80, color: Colors.blue.shade100),
-                // todo : L> remplacer le container par les boutons pour ajouter
-                // todo : à un deck
+                _ActionsBar(scopedMeaning: scopedMeaning),
               ],
             ),
             _CarouselPositionIndicator(lenght: videosSign.length),
@@ -102,10 +103,7 @@ class _CarouselPositionIndicator extends ConsumerWidget {
 }
 
 class _CarouselDot extends StatelessWidget {
-  _CarouselDot({
-    required this.itemCount,
-    required this.indexSelectedItem,
-  });
+  _CarouselDot({required this.itemCount, required this.indexSelectedItem});
   final int itemCount;
   final int indexSelectedItem;
   final selectedGradient = [Colors.grey, Colors.grey.shade100];
@@ -151,4 +149,51 @@ class _CarouselDot extends StatelessWidget {
       children: dots.toList(),
     );
   }
+}
+
+class _ActionsBar extends ConsumerWidget {
+  const _ActionsBar({super.key, required this.scopedMeaning});
+  final LsfDictionaryMeaningWithParent scopedMeaning;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      height: 80,
+      color: Colors.blue.shade100,
+      child: Container(
+        // decoration: BoxDecoration(boxShadow: kElevationToShadow[4]),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          spacing: 10,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildButton(
+              context.tr("AddToDeck"),
+              () => context.pushNamed(
+                Routes.createCard.name,
+                extra: scopedMeaning.toCardModel,
+              ),
+            ),
+            _buildButton(context.tr("AddToTrainingList"), () => null),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, void Function() onTap) => Expanded(
+    child: SizedBox(
+      height: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+          ),
+        ),
+        onPressed: onTap,
+        child: Text(text, textAlign: TextAlign.center),
+      ),
+    ),
+  );
 }

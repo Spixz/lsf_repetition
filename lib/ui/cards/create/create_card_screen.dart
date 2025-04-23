@@ -10,7 +10,6 @@ import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/decks/create/create_deck_dialog.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
 import 'package:apprendre_lsf/ui/cards/create/providers/create_card_providers.dart';
-import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 
 /// Page for selecting the decks to which the card will be added.
@@ -31,14 +30,13 @@ class CreateCardScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(actions: [_ValidateButton(card: cardToCreate)]),
       body: Stack(
         children: [
           PageView(
             onPageChanged: onChange,
             children: <Widget>[SizedBox.expand(child: SelectDecks())],
           ),
-          _NextButton(card: cardToCreate),
         ],
       ),
       floatingActionButton: _FAB(),
@@ -140,63 +138,41 @@ class SelectDecks extends ConsumerWidget {
   }
 }
 
-class _NextButton extends ConsumerWidget {
-  const _NextButton({required this.card, super.key});
+class _ValidateButton extends ConsumerWidget {
+  const _ValidateButton({required this.card, super.key});
   final CardModel card;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDecks = ref.watch(selectedDecksProvider);
-    final enabled = selectedDecks.isNotEmpty;
+    final enabledButton = selectedDecks.isNotEmpty;
 
-    return Positioned(
-      bottom: 100,
-      child: SizedBox(
-        width: context.width,
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              if (enabled) {
-                ref
-                    .read(createCardsProvider.notifier)
-                    .call(card: card, deckIds: selectedDecks);
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                WarningSnackbar(message: context.tr("SelectAtLeastOneDeck")),
-              );
-            },
-            style: _buttonStyle(enabled),
-            child: Text(
-              context.tr("Next"),
-              style: TextStyle(
-                color: enabled ? Colors.black : Colors.black.withAlpha(100),
-              ),
-            ),
-          ),
+    if (!enabledButton) return Empty();
+    return Padding(
+      padding: EdgeInsets.only(right: 6),
+      child: TextButton(
+        onPressed: () {
+          if (enabledButton) {
+            ref
+                .read(createCardsProvider.notifier)
+                .call(card: card, deckIds: selectedDecks);
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            WarningSnackbar(message: context.tr("SelectAtLeastOneDeck")),
+          );
+        },
+        child: Row(
+          children: [
+            Text("Validate", style: TextStyle(fontSize: 16)),
+            // Icon(
+            //   Icons.check,
+            //   size: 32,
+            //   color: Theme.of(context).colorScheme.primary,
+            // ),
+          ],
         ),
       ),
     );
   }
-
-  ButtonStyle _buttonStyle(bool enabled) => ButtonStyle(
-    minimumSize: WidgetStatePropertyAll(Size(50, 40)),
-    elevation: WidgetStatePropertyAll(enabled ? 10 : 4),
-    backgroundColor: WidgetStateProperty.resolveWith<Color?>((
-      Set<WidgetState> states,
-    ) {
-      if (states.contains(WidgetState.error)) {
-        return Colors.red;
-      }
-      return enabled
-          ? Colors.purple.shade200
-          : Colors.purple.shade200.withAlpha(150);
-    }),
-    textStyle: WidgetStatePropertyAll(
-      TextStyle(
-        fontSize: 18,
-        // fontWeight: FontWeight.w300,
-      ),
-    ),
-  );
 }
