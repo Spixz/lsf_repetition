@@ -31,6 +31,7 @@ mixin _$CardModel {
   int? get id => throw _privateConstructorUsedError;
   int? get dictionnarySignId => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  RetentionCard? get retentionCard => throw _privateConstructorUsedError;
 
   /// Serializes this CardModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,7 +59,10 @@ abstract class $CardModelCopyWith<$Res> {
     int? id,
     int? dictionnarySignId,
     DateTime? createdAt,
+    RetentionCard? retentionCard,
   });
+
+  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
@@ -86,6 +90,7 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
     Object? id = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
+    Object? retentionCard = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -139,9 +144,28 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
                     ? _value.createdAt
                     : createdAt // ignore: cast_nullable_to_non_nullable
                         as DateTime?,
+            retentionCard:
+                freezed == retentionCard
+                    ? _value.retentionCard
+                    : retentionCard // ignore: cast_nullable_to_non_nullable
+                        as RetentionCard?,
           )
           as $Val,
     );
+  }
+
+  /// Create a copy of CardModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $RetentionCardCopyWith<$Res>? get retentionCard {
+    if (_value.retentionCard == null) {
+      return null;
+    }
+
+    return $RetentionCardCopyWith<$Res>(_value.retentionCard!, (value) {
+      return _then(_value.copyWith(retentionCard: value) as $Val);
+    });
   }
 }
 
@@ -165,7 +189,11 @@ abstract class _$$CardModelImplCopyWith<$Res>
     int? id,
     int? dictionnarySignId,
     DateTime? createdAt,
+    RetentionCard? retentionCard,
   });
+
+  @override
+  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
@@ -192,6 +220,7 @@ class __$$CardModelImplCopyWithImpl<$Res>
     Object? id = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
+    Object? retentionCard = freezed,
   }) {
     return _then(
       _$CardModelImpl(
@@ -245,6 +274,11 @@ class __$$CardModelImplCopyWithImpl<$Res>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                     as DateTime?,
+        retentionCard:
+            freezed == retentionCard
+                ? _value.retentionCard
+                : retentionCard // ignore: cast_nullable_to_non_nullable
+                    as RetentionCard?,
       ),
     );
   }
@@ -264,6 +298,7 @@ class _$CardModelImpl implements _CardModel {
     this.id,
     this.dictionnarySignId,
     this.createdAt,
+    this.retentionCard,
   }) : _videosSigns = videosSigns,
        _tags = tags;
 
@@ -302,10 +337,12 @@ class _$CardModelImpl implements _CardModel {
   final int? dictionnarySignId;
   @override
   final DateTime? createdAt;
+  @override
+  final RetentionCard? retentionCard;
 
   @override
   String toString() {
-    return 'CardModel(name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, tags: $tags, deckId: $deckId, id: $id, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt)';
+    return 'CardModel(name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, tags: $tags, deckId: $deckId, id: $id, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt, retentionCard: $retentionCard)';
   }
 
   @override
@@ -329,7 +366,9 @@ class _$CardModelImpl implements _CardModel {
             (identical(other.dictionnarySignId, dictionnarySignId) ||
                 other.dictionnarySignId == dictionnarySignId) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.retentionCard, retentionCard) ||
+                other.retentionCard == retentionCard));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -346,6 +385,7 @@ class _$CardModelImpl implements _CardModel {
     id,
     dictionnarySignId,
     createdAt,
+    retentionCard,
   );
 
   /// Create a copy of CardModel
@@ -374,6 +414,7 @@ abstract class _CardModel implements CardModel {
     final int? id,
     final int? dictionnarySignId,
     final DateTime? createdAt,
+    final RetentionCard? retentionCard,
   }) = _$CardModelImpl;
 
   factory _CardModel.fromJson(Map<String, dynamic> json) =
@@ -399,6 +440,8 @@ abstract class _CardModel implements CardModel {
   int? get dictionnarySignId;
   @override
   DateTime? get createdAt;
+  @override
+  RetentionCard? get retentionCard;
 
   /// Create a copy of CardModel
   /// with the given fields replaced by the non-null parameter values.

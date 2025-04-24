@@ -52,6 +52,7 @@ dependencies:
   collection: ^1.19.1
   easy_localization: ^3.0.7+1
   flutter_riverpod: ^2.6.1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:

@@ -27,6 +27,12 @@ _$CardModelImpl _$$CardModelImplFromJson(Map<String, dynamic> json) =>
           json['createdAt'] == null
               ? null
               : DateTime.parse(json['createdAt'] as String),
+      retentionCard:
+          json['retentionCard'] == null
+              ? null
+              : RetentionCard.fromJson(
+                json['retentionCard'] as Map<String, dynamic>,
+              ),
     );
 
 Map<String, dynamic> _$$CardModelImplToJson(
@@ -42,6 +48,7 @@ Map<String, dynamic> _$$CardModelImplToJson(
   'id': instance.id,
   'dictionnarySignId': instance.dictionnarySignId,
   'createdAt': instance.createdAt?.toIso8601String(),
+  'retentionCard': instance.retentionCard,
 };
 
 const _$LsfDictionaryNameEnumMap = {

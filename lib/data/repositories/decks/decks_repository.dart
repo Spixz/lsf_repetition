@@ -65,9 +65,7 @@ class DecksRepository {
 
   Future<Result<void>> createCards({required List<CardModel> cards}) async {
     try {
-      // _driftDatabase.cardsTable.insertOne(cards.first.toCompanion());
       await _driftDatabase.batch((batch) {
-        // batch.insert(_driftDatabase.cardsTable, cards.first.toCompanion());
         batch.insertAll(
           _driftDatabase.cardsTable,
           cards.map((card) => card.toCompanion()),
@@ -79,4 +77,9 @@ class DecksRepository {
       return Result.error(Exception("Erreur lors de la création de la carte."));
     }
   }
+
+  /// Stored card   
+  // CardModel initSpaceRepetitionForCard() {
+
+  // }
 }

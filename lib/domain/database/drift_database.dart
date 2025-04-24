@@ -1,3 +1,5 @@
+import 'package:apprendre_lsf/domain/database/converters/retention_card_converters.dart';
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:drift/drift.dart';
@@ -9,10 +11,11 @@ part 'drift_database.g.dart';
 extension ListString on List<String> {
   static JsonTypeConverter2<List<String>, String, Object?> converter =
       TypeConverter.json2(
-    fromJson: (Object? json) =>
-        (json as List<dynamic>).whereType<String>().toList(),
-    toJson: (List<String> strList) => strList,
-  );
+        fromJson:
+            (Object? json) =>
+                (json as List<dynamic>).whereType<String>().toList(),
+        toJson: (List<String> strList) => strList,
+      );
 }
 
 class DecksTable extends Table {
@@ -36,7 +39,10 @@ class CardsTable extends Table {
   TextColumn get tags =>
       text().map(ListString.converter).clientDefault(() => "[]")();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  // TextColumn get retentionCard => text().map(const RetentionCardConverter())();
 }
+
+//nullable()();
 
 @DriftDatabase(tables: [DecksTable, CardsTable])
 class AppDriftDatabase extends _$AppDriftDatabase {

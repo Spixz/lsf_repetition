@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 
@@ -17,6 +18,7 @@ class CardModel with _$CardModel {
     int? id,
     int? dictionnarySignId,
     DateTime? createdAt,
+    RetentionCard? retentionCard,
   }) = _CardModel;
 
   factory CardModel.fromJson(Map<String, dynamic> json) =>
