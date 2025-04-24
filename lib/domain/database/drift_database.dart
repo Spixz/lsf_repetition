@@ -1,10 +1,11 @@
-import 'package:apprendre_lsf/domain/database/converters/retention_card_converters.dart';
-import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/domain/database/converters/retention_card_converters.dart';
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 
 part 'drift_database.g.dart';
 
@@ -25,26 +26,32 @@ class DecksTable extends Table {
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-@TableIndex(name: 'deck_id', columns: {#deckId})
 class CardsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get deckId =>
-      integer().references(DecksTable, #id, onDelete: KeyAction.cascade)();
   TextColumn get name => text().withLength(min: 1)();
   TextColumn get typology => text().withLength(min: 1)();
   TextColumn get meaning => text().withLength(min: 1)();
   TextColumn get videosSigns => text().map(ListString.converter)();
   IntColumn get sourceDictionnary => intEnum<LsfDictionaryName>()();
-  IntColumn get dictionnarySignId => integer()();
-  TextColumn get tags =>
-      text().map(ListString.converter).clientDefault(() => "[]")();
+  IntColumn get dictionnarySignId => integer().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  // TextColumn get retentionCard => text().map(const RetentionCardConverter())();
+}
+
+@TableIndex(name: 'deck_id', columns: {#deckId})
+class CardDeckInfoTable extends Table {
+  IntColumn get cardId =>
+      integer().references(CardsTable, #id, onDelete: KeyAction.cascade)();
+  IntColumn get deckId =>
+      integer().references(DecksTable, #id, onDelete: KeyAction.cascade)();
+  TextColumn get tags =>
+      text().map(ListString.converter).clientDefault(() => "[]").nullable()();
+  TextColumn get retentionCard => text().map(const RetentionCardConverter())();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
 //nullable()();
 
-@DriftDatabase(tables: [DecksTable, CardsTable])
+@DriftDatabase(tables: [DecksTable, CardsTable, CardDeckInfoTable])
 class AppDriftDatabase extends _$AppDriftDatabase {
   AppDriftDatabase() : super(_openConnection());
 
@@ -58,6 +65,13 @@ class AppDriftDatabase extends _$AppDriftDatabase {
         databaseDirectory: getApplicationSupportDirectory,
       ),
     );
+  }
+
+  void deleteTables() async {
+    final tables = allTables.toList().reversed;
+    for (final table in tables) {
+      await delete(table).go();
+    }
   }
 }
 

@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/decks/create/create_deck_dialog.dart';
-import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart' as card_model;
 import 'package:apprendre_lsf/ui/cards/create/providers/create_card_providers.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 
@@ -17,7 +17,7 @@ import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 /// The user can use the plus button to create a new deck.
 class CreateCardScreen extends ConsumerWidget {
   const CreateCardScreen({required this.cardToCreate, super.key});
-  final CardModel cardToCreate;
+  final card_model.Card cardToCreate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -140,7 +140,7 @@ class SelectDecks extends ConsumerWidget {
 
 class _ValidateButton extends ConsumerWidget {
   const _ValidateButton({required this.card, super.key});
-  final CardModel card;
+  final card_model.Card card;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

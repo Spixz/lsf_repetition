@@ -10,13 +10,15 @@ _$RetentionCardImpl _$$RetentionCardImplFromJson(Map<String, dynamic> json) =>
     _$RetentionCardImpl(
       due: DateTime.parse(json['due'] as String),
       lastReview: DateTime.parse(json['lastReview'] as String),
-      stability: (json['stability'] as num).toDouble(),
-      difficulty: (json['difficulty'] as num).toDouble(),
-      elapsedDays: (json['elapsedDays'] as num).toInt(),
-      scheduledDays: (json['scheduledDays'] as num).toInt(),
-      reps: (json['reps'] as num).toInt(),
-      lapses: (json['lapses'] as num).toInt(),
-      state: $enumDecode(_$RetentionStateEnumMap, json['state']),
+      stability: (json['stability'] as num?)?.toDouble() ?? 0,
+      difficulty: (json['difficulty'] as num?)?.toDouble() ?? 0,
+      elapsedDays: (json['elapsedDays'] as num?)?.toInt() ?? 0,
+      scheduledDays: (json['scheduledDays'] as num?)?.toInt() ?? 0,
+      reps: (json['reps'] as num?)?.toInt() ?? 0,
+      lapses: (json['lapses'] as num?)?.toInt() ?? 0,
+      state:
+          $enumDecodeNullable(_$RetentionStateEnumMap, json['state']) ??
+          RetentionState.newState,
     );
 
 Map<String, dynamic> _$$RetentionCardImplToJson(_$RetentionCardImpl instance) =>

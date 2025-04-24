@@ -1,11 +1,15 @@
-import 'package:apprendre_lsf/utils/exceptions.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:apprendre_lsf/domain/database/drift_database.dart';
 import 'package:apprendre_lsf/domain/mappers/cards_table_card_model_mapper.dart';
 import 'package:apprendre_lsf/domain/mappers/decks_table_deck_model_mapper.dart';
-import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/utils/result.dart';
+import 'package:apprendre_lsf/domain/mappers/deck_infos_table_deck_infos_model_mapper.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
+import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:apprendre_lsf/utils/exceptions.dart';
 
 class DecksRepository {
   final AppDriftDatabase _driftDatabase;
@@ -51,34 +55,53 @@ class DecksRepository {
         .asBroadcastStream();
   }
 
-  Future<Result<int>> createCard({required CardModel card}) async {
+  /// Store a FullCard in the DB by storing each part in different table.
+  ///
+  /// FullCard.[Card] in [CardsTable].
+  /// FullCard.[CardDeckInfo] in [CardDeckInfoTable].
+  /// The insert of [Card] inside [CardTable] is made first so it's id can be
+  /// use to make the link with the [CardDeckInfo].
+  Future<AsyncValue<int>> createCard({required FullCard fullCard}) async {
     try {
-      final cardId = await _driftDatabase.cardsTable.insertOne(
-        card.toCompanion(),
-      );
-      return Result.ok(cardId);
-    } catch (err, st) {
-      print(st);
-      return Result.error(Exception("Erreur lors de la création de la carte."));
-    }
-  }
+      final card = fullCard.card.toCompanion();
+      final cardId = await _driftDatabase.cardsTable.insertOne(card);
 
-  Future<Result<void>> createCards({required List<CardModel> cards}) async {
-    try {
-      await _driftDatabase.batch((batch) {
-        batch.insertAll(
-          _driftDatabase.cardsTable,
-          cards.map((card) => card.toCompanion()),
+      if (fullCard.deckInfos != null) {
+        final deckInfos = fullCard.deckInfos!.copyWith(cardId: cardId);
+        await _driftDatabase.cardDeckInfoTable.insertOne(
+          deckInfos.toCompanion(),
         );
-      });
-      return Result.ok(null);
+      }
+      return AsyncData(cardId);
     } catch (err, st) {
+      print(err);
       print(st);
-      return Result.error(Exception("Erreur lors de la création de la carte."));
+      return AsyncError(
+        Exception("Erreur lors de la création de la carte."),
+        st,
+      );
     }
   }
 
-  /// Stored card   
+  Future<AsyncValue<void>> createCards({
+    required List<FullCard> fullCards,
+  }) async {
+    try {
+      final createResp = await Future.wait(
+        fullCards.map((full) => createCard(fullCard: full)),
+      );
+      // final createdCardsId = createResp.whereType<AsyncData>().map((data) => data.value as int);
+      return AsyncData(null);
+    } catch (err, st) {
+      print(st);
+      return AsyncError(
+        Exception("Erreur lors de la création de la carte."),
+        st,
+      );
+    }
+  }
+
+  /// Stored card
   // CardModel initSpaceRepetitionForCard() {
 
   // }

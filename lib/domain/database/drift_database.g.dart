@@ -330,18 +330,6 @@ class $CardsTableTable extends CardsTable
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _deckIdMeta = const VerificationMeta('deckId');
-  @override
-  late final GeneratedColumn<int> deckId = GeneratedColumn<int>(
-    'deck_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES decks_table (id) ON DELETE CASCADE',
-    ),
-  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -403,20 +391,10 @@ class $CardsTableTable extends CardsTable
   late final GeneratedColumn<int> dictionnarySignId = GeneratedColumn<int>(
     'dictionnary_sign_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
-  @override
-  late final GeneratedColumnWithTypeConverter<List<String>, String> tags =
-      GeneratedColumn<String>(
-        'tags',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-        clientDefault: () => "[]",
-      ).withConverter<List<String>>($CardsTableTable.$convertertags);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -432,14 +410,12 @@ class $CardsTableTable extends CardsTable
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    deckId,
     name,
     typology,
     meaning,
     videosSigns,
     sourceDictionnary,
     dictionnarySignId,
-    tags,
     createdAt,
   ];
   @override
@@ -456,14 +432,6 @@ class $CardsTableTable extends CardsTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('deck_id')) {
-      context.handle(
-        _deckIdMeta,
-        deckId.isAcceptableOrUnknown(data['deck_id']!, _deckIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_deckIdMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -497,8 +465,6 @@ class $CardsTableTable extends CardsTable
           _dictionnarySignIdMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_dictionnarySignIdMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -519,11 +485,6 @@ class $CardsTableTable extends CardsTable
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
             data['${effectivePrefix}id'],
-          )!,
-      deckId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}deck_id'],
           )!,
       name:
           attachedDatabase.typeMapping.read(
@@ -552,16 +513,9 @@ class $CardsTableTable extends CardsTable
           data['${effectivePrefix}source_dictionnary'],
         )!,
       ),
-      dictionnarySignId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}dictionnary_sign_id'],
-          )!,
-      tags: $CardsTableTable.$convertertags.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}tags'],
-        )!,
+      dictionnarySignId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}dictionnary_sign_id'],
       ),
       createdAt:
           attachedDatabase.typeMapping.read(
@@ -582,38 +536,31 @@ class $CardsTableTable extends CardsTable
   $convertersourceDictionnary = const EnumIndexConverter<LsfDictionaryName>(
     LsfDictionaryName.values,
   );
-  static JsonTypeConverter2<List<String>, String, Object?> $convertertags =
-      ListString.converter;
 }
 
 class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   final int id;
-  final int deckId;
   final String name;
   final String typology;
   final String meaning;
   final List<String> videosSigns;
   final LsfDictionaryName sourceDictionnary;
-  final int dictionnarySignId;
-  final List<String> tags;
+  final int? dictionnarySignId;
   final DateTime createdAt;
   const CardsTableData({
     required this.id,
-    required this.deckId,
     required this.name,
     required this.typology,
     required this.meaning,
     required this.videosSigns,
     required this.sourceDictionnary,
-    required this.dictionnarySignId,
-    required this.tags,
+    this.dictionnarySignId,
     required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['deck_id'] = Variable<int>(deckId);
     map['name'] = Variable<String>(name);
     map['typology'] = Variable<String>(typology);
     map['meaning'] = Variable<String>(meaning);
@@ -627,11 +574,8 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
         $CardsTableTable.$convertersourceDictionnary.toSql(sourceDictionnary),
       );
     }
-    map['dictionnary_sign_id'] = Variable<int>(dictionnarySignId);
-    {
-      map['tags'] = Variable<String>(
-        $CardsTableTable.$convertertags.toSql(tags),
-      );
+    if (!nullToAbsent || dictionnarySignId != null) {
+      map['dictionnary_sign_id'] = Variable<int>(dictionnarySignId);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -640,14 +584,15 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   CardsTableCompanion toCompanion(bool nullToAbsent) {
     return CardsTableCompanion(
       id: Value(id),
-      deckId: Value(deckId),
       name: Value(name),
       typology: Value(typology),
       meaning: Value(meaning),
       videosSigns: Value(videosSigns),
       sourceDictionnary: Value(sourceDictionnary),
-      dictionnarySignId: Value(dictionnarySignId),
-      tags: Value(tags),
+      dictionnarySignId:
+          dictionnarySignId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(dictionnarySignId),
       createdAt: Value(createdAt),
     );
   }
@@ -659,7 +604,6 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CardsTableData(
       id: serializer.fromJson<int>(json['id']),
-      deckId: serializer.fromJson<int>(json['deckId']),
       name: serializer.fromJson<String>(json['name']),
       typology: serializer.fromJson<String>(json['typology']),
       meaning: serializer.fromJson<String>(json['meaning']),
@@ -669,10 +613,7 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
       sourceDictionnary: $CardsTableTable.$convertersourceDictionnary.fromJson(
         serializer.fromJson<int>(json['sourceDictionnary']),
       ),
-      dictionnarySignId: serializer.fromJson<int>(json['dictionnarySignId']),
-      tags: $CardsTableTable.$convertertags.fromJson(
-        serializer.fromJson<Object?>(json['tags']),
-      ),
+      dictionnarySignId: serializer.fromJson<int?>(json['dictionnarySignId']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -681,7 +622,6 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'deckId': serializer.toJson<int>(deckId),
       'name': serializer.toJson<String>(name),
       'typology': serializer.toJson<String>(typology),
       'meaning': serializer.toJson<String>(meaning),
@@ -691,41 +631,36 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
       'sourceDictionnary': serializer.toJson<int>(
         $CardsTableTable.$convertersourceDictionnary.toJson(sourceDictionnary),
       ),
-      'dictionnarySignId': serializer.toJson<int>(dictionnarySignId),
-      'tags': serializer.toJson<Object?>(
-        $CardsTableTable.$convertertags.toJson(tags),
-      ),
+      'dictionnarySignId': serializer.toJson<int?>(dictionnarySignId),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
   CardsTableData copyWith({
     int? id,
-    int? deckId,
     String? name,
     String? typology,
     String? meaning,
     List<String>? videosSigns,
     LsfDictionaryName? sourceDictionnary,
-    int? dictionnarySignId,
-    List<String>? tags,
+    Value<int?> dictionnarySignId = const Value.absent(),
     DateTime? createdAt,
   }) => CardsTableData(
     id: id ?? this.id,
-    deckId: deckId ?? this.deckId,
     name: name ?? this.name,
     typology: typology ?? this.typology,
     meaning: meaning ?? this.meaning,
     videosSigns: videosSigns ?? this.videosSigns,
     sourceDictionnary: sourceDictionnary ?? this.sourceDictionnary,
-    dictionnarySignId: dictionnarySignId ?? this.dictionnarySignId,
-    tags: tags ?? this.tags,
+    dictionnarySignId:
+        dictionnarySignId.present
+            ? dictionnarySignId.value
+            : this.dictionnarySignId,
     createdAt: createdAt ?? this.createdAt,
   );
   CardsTableData copyWithCompanion(CardsTableCompanion data) {
     return CardsTableData(
       id: data.id.present ? data.id.value : this.id,
-      deckId: data.deckId.present ? data.deckId.value : this.deckId,
       name: data.name.present ? data.name.value : this.name,
       typology: data.typology.present ? data.typology.value : this.typology,
       meaning: data.meaning.present ? data.meaning.value : this.meaning,
@@ -739,7 +674,6 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
           data.dictionnarySignId.present
               ? data.dictionnarySignId.value
               : this.dictionnarySignId,
-      tags: data.tags.present ? data.tags.value : this.tags,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -748,14 +682,12 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   String toString() {
     return (StringBuffer('CardsTableData(')
           ..write('id: $id, ')
-          ..write('deckId: $deckId, ')
           ..write('name: $name, ')
           ..write('typology: $typology, ')
           ..write('meaning: $meaning, ')
           ..write('videosSigns: $videosSigns, ')
           ..write('sourceDictionnary: $sourceDictionnary, ')
           ..write('dictionnarySignId: $dictionnarySignId, ')
-          ..write('tags: $tags, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -764,14 +696,12 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   @override
   int get hashCode => Object.hash(
     id,
-    deckId,
     name,
     typology,
     meaning,
     videosSigns,
     sourceDictionnary,
     dictionnarySignId,
-    tags,
     createdAt,
   );
   @override
@@ -779,106 +709,88 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
       identical(this, other) ||
       (other is CardsTableData &&
           other.id == this.id &&
-          other.deckId == this.deckId &&
           other.name == this.name &&
           other.typology == this.typology &&
           other.meaning == this.meaning &&
           other.videosSigns == this.videosSigns &&
           other.sourceDictionnary == this.sourceDictionnary &&
           other.dictionnarySignId == this.dictionnarySignId &&
-          other.tags == this.tags &&
           other.createdAt == this.createdAt);
 }
 
 class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
   final Value<int> id;
-  final Value<int> deckId;
   final Value<String> name;
   final Value<String> typology;
   final Value<String> meaning;
   final Value<List<String>> videosSigns;
   final Value<LsfDictionaryName> sourceDictionnary;
-  final Value<int> dictionnarySignId;
-  final Value<List<String>> tags;
+  final Value<int?> dictionnarySignId;
   final Value<DateTime> createdAt;
   const CardsTableCompanion({
     this.id = const Value.absent(),
-    this.deckId = const Value.absent(),
     this.name = const Value.absent(),
     this.typology = const Value.absent(),
     this.meaning = const Value.absent(),
     this.videosSigns = const Value.absent(),
     this.sourceDictionnary = const Value.absent(),
     this.dictionnarySignId = const Value.absent(),
-    this.tags = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   CardsTableCompanion.insert({
     this.id = const Value.absent(),
-    required int deckId,
     required String name,
     required String typology,
     required String meaning,
     required List<String> videosSigns,
     required LsfDictionaryName sourceDictionnary,
-    required int dictionnarySignId,
-    this.tags = const Value.absent(),
+    this.dictionnarySignId = const Value.absent(),
     this.createdAt = const Value.absent(),
-  }) : deckId = Value(deckId),
-       name = Value(name),
+  }) : name = Value(name),
        typology = Value(typology),
        meaning = Value(meaning),
        videosSigns = Value(videosSigns),
-       sourceDictionnary = Value(sourceDictionnary),
-       dictionnarySignId = Value(dictionnarySignId);
+       sourceDictionnary = Value(sourceDictionnary);
   static Insertable<CardsTableData> custom({
     Expression<int>? id,
-    Expression<int>? deckId,
     Expression<String>? name,
     Expression<String>? typology,
     Expression<String>? meaning,
     Expression<String>? videosSigns,
     Expression<int>? sourceDictionnary,
     Expression<int>? dictionnarySignId,
-    Expression<String>? tags,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (deckId != null) 'deck_id': deckId,
       if (name != null) 'name': name,
       if (typology != null) 'typology': typology,
       if (meaning != null) 'meaning': meaning,
       if (videosSigns != null) 'videos_signs': videosSigns,
       if (sourceDictionnary != null) 'source_dictionnary': sourceDictionnary,
       if (dictionnarySignId != null) 'dictionnary_sign_id': dictionnarySignId,
-      if (tags != null) 'tags': tags,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
 
   CardsTableCompanion copyWith({
     Value<int>? id,
-    Value<int>? deckId,
     Value<String>? name,
     Value<String>? typology,
     Value<String>? meaning,
     Value<List<String>>? videosSigns,
     Value<LsfDictionaryName>? sourceDictionnary,
-    Value<int>? dictionnarySignId,
-    Value<List<String>>? tags,
+    Value<int?>? dictionnarySignId,
     Value<DateTime>? createdAt,
   }) {
     return CardsTableCompanion(
       id: id ?? this.id,
-      deckId: deckId ?? this.deckId,
       name: name ?? this.name,
       typology: typology ?? this.typology,
       meaning: meaning ?? this.meaning,
       videosSigns: videosSigns ?? this.videosSigns,
       sourceDictionnary: sourceDictionnary ?? this.sourceDictionnary,
       dictionnarySignId: dictionnarySignId ?? this.dictionnarySignId,
-      tags: tags ?? this.tags,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -888,9 +800,6 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
-    }
-    if (deckId.present) {
-      map['deck_id'] = Variable<int>(deckId.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -916,11 +825,6 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
     if (dictionnarySignId.present) {
       map['dictionnary_sign_id'] = Variable<int>(dictionnarySignId.value);
     }
-    if (tags.present) {
-      map['tags'] = Variable<String>(
-        $CardsTableTable.$convertertags.toSql(tags.value),
-      );
-    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -931,15 +835,404 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
   String toString() {
     return (StringBuffer('CardsTableCompanion(')
           ..write('id: $id, ')
-          ..write('deckId: $deckId, ')
           ..write('name: $name, ')
           ..write('typology: $typology, ')
           ..write('meaning: $meaning, ')
           ..write('videosSigns: $videosSigns, ')
           ..write('sourceDictionnary: $sourceDictionnary, ')
           ..write('dictionnarySignId: $dictionnarySignId, ')
-          ..write('tags: $tags, ')
           ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CardDeckInfoTableTable extends CardDeckInfoTable
+    with TableInfo<$CardDeckInfoTableTable, CardDeckInfoTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CardDeckInfoTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _cardIdMeta = const VerificationMeta('cardId');
+  @override
+  late final GeneratedColumn<int> cardId = GeneratedColumn<int>(
+    'card_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES cards_table (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _deckIdMeta = const VerificationMeta('deckId');
+  @override
+  late final GeneratedColumn<int> deckId = GeneratedColumn<int>(
+    'deck_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES decks_table (id) ON DELETE CASCADE',
+    ),
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>?, String> tags =
+      GeneratedColumn<String>(
+        'tags',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        clientDefault: () => "[]",
+      ).withConverter<List<String>?>($CardDeckInfoTableTable.$convertertagsn);
+  @override
+  late final GeneratedColumnWithTypeConverter<RetentionCard, String>
+  retentionCard = GeneratedColumn<String>(
+    'retention_card',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  ).withConverter<RetentionCard>(
+    $CardDeckInfoTableTable.$converterretentionCard,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    cardId,
+    deckId,
+    tags,
+    retentionCard,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'card_deck_info_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CardDeckInfoTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('card_id')) {
+      context.handle(
+        _cardIdMeta,
+        cardId.isAcceptableOrUnknown(data['card_id']!, _cardIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_cardIdMeta);
+    }
+    if (data.containsKey('deck_id')) {
+      context.handle(
+        _deckIdMeta,
+        deckId.isAcceptableOrUnknown(data['deck_id']!, _deckIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_deckIdMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  CardDeckInfoTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CardDeckInfoTableData(
+      cardId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}card_id'],
+          )!,
+      deckId:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}deck_id'],
+          )!,
+      tags: $CardDeckInfoTableTable.$convertertagsn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}tags'],
+        ),
+      ),
+      retentionCard: $CardDeckInfoTableTable.$converterretentionCard.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}retention_card'],
+        )!,
+      ),
+      createdAt:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}created_at'],
+          )!,
+    );
+  }
+
+  @override
+  $CardDeckInfoTableTable createAlias(String alias) {
+    return $CardDeckInfoTableTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<List<String>, String, Object?> $convertertags =
+      ListString.converter;
+  static JsonTypeConverter2<List<String>?, String?, Object?> $convertertagsn =
+      JsonTypeConverter2.asNullable($convertertags);
+  static JsonTypeConverter2<RetentionCard, String, Map<String, Object?>>
+  $converterretentionCard = const RetentionCardConverter();
+}
+
+class CardDeckInfoTableData extends DataClass
+    implements Insertable<CardDeckInfoTableData> {
+  final int cardId;
+  final int deckId;
+  final List<String>? tags;
+  final RetentionCard retentionCard;
+  final DateTime createdAt;
+  const CardDeckInfoTableData({
+    required this.cardId,
+    required this.deckId,
+    this.tags,
+    required this.retentionCard,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['card_id'] = Variable<int>(cardId);
+    map['deck_id'] = Variable<int>(deckId);
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>(
+        $CardDeckInfoTableTable.$convertertagsn.toSql(tags),
+      );
+    }
+    {
+      map['retention_card'] = Variable<String>(
+        $CardDeckInfoTableTable.$converterretentionCard.toSql(retentionCard),
+      );
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  CardDeckInfoTableCompanion toCompanion(bool nullToAbsent) {
+    return CardDeckInfoTableCompanion(
+      cardId: Value(cardId),
+      deckId: Value(deckId),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
+      retentionCard: Value(retentionCard),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory CardDeckInfoTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CardDeckInfoTableData(
+      cardId: serializer.fromJson<int>(json['cardId']),
+      deckId: serializer.fromJson<int>(json['deckId']),
+      tags: $CardDeckInfoTableTable.$convertertagsn.fromJson(
+        serializer.fromJson<Object?>(json['tags']),
+      ),
+      retentionCard: $CardDeckInfoTableTable.$converterretentionCard.fromJson(
+        serializer.fromJson<Map<String, Object?>>(json['retentionCard']),
+      ),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'cardId': serializer.toJson<int>(cardId),
+      'deckId': serializer.toJson<int>(deckId),
+      'tags': serializer.toJson<Object?>(
+        $CardDeckInfoTableTable.$convertertagsn.toJson(tags),
+      ),
+      'retentionCard': serializer.toJson<Map<String, Object?>>(
+        $CardDeckInfoTableTable.$converterretentionCard.toJson(retentionCard),
+      ),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  CardDeckInfoTableData copyWith({
+    int? cardId,
+    int? deckId,
+    Value<List<String>?> tags = const Value.absent(),
+    RetentionCard? retentionCard,
+    DateTime? createdAt,
+  }) => CardDeckInfoTableData(
+    cardId: cardId ?? this.cardId,
+    deckId: deckId ?? this.deckId,
+    tags: tags.present ? tags.value : this.tags,
+    retentionCard: retentionCard ?? this.retentionCard,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  CardDeckInfoTableData copyWithCompanion(CardDeckInfoTableCompanion data) {
+    return CardDeckInfoTableData(
+      cardId: data.cardId.present ? data.cardId.value : this.cardId,
+      deckId: data.deckId.present ? data.deckId.value : this.deckId,
+      tags: data.tags.present ? data.tags.value : this.tags,
+      retentionCard:
+          data.retentionCard.present
+              ? data.retentionCard.value
+              : this.retentionCard,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CardDeckInfoTableData(')
+          ..write('cardId: $cardId, ')
+          ..write('deckId: $deckId, ')
+          ..write('tags: $tags, ')
+          ..write('retentionCard: $retentionCard, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(cardId, deckId, tags, retentionCard, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CardDeckInfoTableData &&
+          other.cardId == this.cardId &&
+          other.deckId == this.deckId &&
+          other.tags == this.tags &&
+          other.retentionCard == this.retentionCard &&
+          other.createdAt == this.createdAt);
+}
+
+class CardDeckInfoTableCompanion
+    extends UpdateCompanion<CardDeckInfoTableData> {
+  final Value<int> cardId;
+  final Value<int> deckId;
+  final Value<List<String>?> tags;
+  final Value<RetentionCard> retentionCard;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const CardDeckInfoTableCompanion({
+    this.cardId = const Value.absent(),
+    this.deckId = const Value.absent(),
+    this.tags = const Value.absent(),
+    this.retentionCard = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CardDeckInfoTableCompanion.insert({
+    required int cardId,
+    required int deckId,
+    this.tags = const Value.absent(),
+    required RetentionCard retentionCard,
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : cardId = Value(cardId),
+       deckId = Value(deckId),
+       retentionCard = Value(retentionCard);
+  static Insertable<CardDeckInfoTableData> custom({
+    Expression<int>? cardId,
+    Expression<int>? deckId,
+    Expression<String>? tags,
+    Expression<String>? retentionCard,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (cardId != null) 'card_id': cardId,
+      if (deckId != null) 'deck_id': deckId,
+      if (tags != null) 'tags': tags,
+      if (retentionCard != null) 'retention_card': retentionCard,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CardDeckInfoTableCompanion copyWith({
+    Value<int>? cardId,
+    Value<int>? deckId,
+    Value<List<String>?>? tags,
+    Value<RetentionCard>? retentionCard,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return CardDeckInfoTableCompanion(
+      cardId: cardId ?? this.cardId,
+      deckId: deckId ?? this.deckId,
+      tags: tags ?? this.tags,
+      retentionCard: retentionCard ?? this.retentionCard,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (cardId.present) {
+      map['card_id'] = Variable<int>(cardId.value);
+    }
+    if (deckId.present) {
+      map['deck_id'] = Variable<int>(deckId.value);
+    }
+    if (tags.present) {
+      map['tags'] = Variable<String>(
+        $CardDeckInfoTableTable.$convertertagsn.toSql(tags.value),
+      );
+    }
+    if (retentionCard.present) {
+      map['retention_card'] = Variable<String>(
+        $CardDeckInfoTableTable.$converterretentionCard.toSql(
+          retentionCard.value,
+        ),
+      );
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CardDeckInfoTableCompanion(')
+          ..write('cardId: $cardId, ')
+          ..write('deckId: $deckId, ')
+          ..write('tags: $tags, ')
+          ..write('retentionCard: $retentionCard, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -950,9 +1243,11 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
   $AppDriftDatabaseManager get managers => $AppDriftDatabaseManager(this);
   late final $DecksTableTable decksTable = $DecksTableTable(this);
   late final $CardsTableTable cardsTable = $CardsTableTable(this);
+  late final $CardDeckInfoTableTable cardDeckInfoTable =
+      $CardDeckInfoTableTable(this);
   late final Index deckId = Index(
     'deck_id',
-    'CREATE INDEX deck_id ON cards_table (deck_id)',
+    'CREATE INDEX deck_id ON card_deck_info_table (deck_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -961,16 +1256,24 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     decksTable,
     cardsTable,
+    cardDeckInfoTable,
     deckId,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
     WritePropagation(
       on: TableUpdateQuery.onTableName(
+        'cards_table',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('card_deck_info_table', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
         'decks_table',
         limitUpdateKind: UpdateKind.delete,
       ),
-      result: [TableUpdate('cards_table', kind: UpdateKind.delete)],
+      result: [TableUpdate('card_deck_info_table', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -995,19 +1298,28 @@ final class $$DecksTableTableReferences
         BaseReferences<_$AppDriftDatabase, $DecksTableTable, DecksTableData> {
   $$DecksTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$CardsTableTable, List<CardsTableData>>
-  _cardsTableRefsTable(_$AppDriftDatabase db) => MultiTypedResultKey.fromTable(
-    db.cardsTable,
-    aliasName: $_aliasNameGenerator(db.decksTable.id, db.cardsTable.deckId),
-  );
+  static MultiTypedResultKey<
+    $CardDeckInfoTableTable,
+    List<CardDeckInfoTableData>
+  >
+  _cardDeckInfoTableRefsTable(_$AppDriftDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.cardDeckInfoTable,
+        aliasName: $_aliasNameGenerator(
+          db.decksTable.id,
+          db.cardDeckInfoTable.deckId,
+        ),
+      );
 
-  $$CardsTableTableProcessedTableManager get cardsTableRefs {
-    final manager = $$CardsTableTableTableManager(
+  $$CardDeckInfoTableTableProcessedTableManager get cardDeckInfoTableRefs {
+    final manager = $$CardDeckInfoTableTableTableManager(
       $_db,
-      $_db.cardsTable,
+      $_db.cardDeckInfoTable,
     ).filter((f) => f.deckId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_cardsTableRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _cardDeckInfoTableRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -1043,22 +1355,22 @@ class $$DecksTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> cardsTableRefs(
-    Expression<bool> Function($$CardsTableTableFilterComposer f) f,
+  Expression<bool> cardDeckInfoTableRefs(
+    Expression<bool> Function($$CardDeckInfoTableTableFilterComposer f) f,
   ) {
-    final $$CardsTableTableFilterComposer composer = $composerBuilder(
+    final $$CardDeckInfoTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cardsTable,
+      referencedTable: $db.cardDeckInfoTable,
       getReferencedColumn: (t) => t.deckId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$CardsTableTableFilterComposer(
+          }) => $$CardDeckInfoTableTableFilterComposer(
             $db: $db,
-            $table: $db.cardsTable,
+            $table: $db.cardDeckInfoTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1122,28 +1434,29 @@ class $$DecksTableTableAnnotationComposer
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  Expression<T> cardsTableRefs<T extends Object>(
-    Expression<T> Function($$CardsTableTableAnnotationComposer a) f,
+  Expression<T> cardDeckInfoTableRefs<T extends Object>(
+    Expression<T> Function($$CardDeckInfoTableTableAnnotationComposer a) f,
   ) {
-    final $$CardsTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cardsTable,
-      getReferencedColumn: (t) => t.deckId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CardsTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.cardsTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
+    final $$CardDeckInfoTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.cardDeckInfoTable,
+          getReferencedColumn: (t) => t.deckId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer,
-          ),
-    );
+              }) => $$CardDeckInfoTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.cardDeckInfoTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
     return f(composer);
   }
 }
@@ -1161,7 +1474,7 @@ class $$DecksTableTableTableManager
           $$DecksTableTableUpdateCompanionBuilder,
           (DecksTableData, $$DecksTableTableReferences),
           DecksTableData,
-          PrefetchHooks Function({bool cardsTableRefs})
+          PrefetchHooks Function({bool cardDeckInfoTableRefs})
         > {
   $$DecksTableTableTableManager(_$AppDriftDatabase db, $DecksTableTable table)
     : super(
@@ -1208,29 +1521,31 @@ class $$DecksTableTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({cardsTableRefs = false}) {
+          prefetchHooksCallback: ({cardDeckInfoTableRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (cardsTableRefs) db.cardsTable],
+              explicitlyWatchedTables: [
+                if (cardDeckInfoTableRefs) db.cardDeckInfoTable,
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (cardsTableRefs)
+                  if (cardDeckInfoTableRefs)
                     await $_getPrefetchedData<
                       DecksTableData,
                       $DecksTableTable,
-                      CardsTableData
+                      CardDeckInfoTableData
                     >(
                       currentTable: table,
                       referencedTable: $$DecksTableTableReferences
-                          ._cardsTableRefsTable(db),
+                          ._cardDeckInfoTableRefsTable(db),
                       managerFromTypedResult:
                           (p0) =>
                               $$DecksTableTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).cardsTableRefs,
+                              ).cardDeckInfoTableRefs,
                       referencedItemsForCurrentItem:
                           (item, referencedItems) =>
                               referencedItems.where((e) => e.deckId == item.id),
@@ -1256,32 +1571,28 @@ typedef $$DecksTableTableProcessedTableManager =
       $$DecksTableTableUpdateCompanionBuilder,
       (DecksTableData, $$DecksTableTableReferences),
       DecksTableData,
-      PrefetchHooks Function({bool cardsTableRefs})
+      PrefetchHooks Function({bool cardDeckInfoTableRefs})
     >;
 typedef $$CardsTableTableCreateCompanionBuilder =
     CardsTableCompanion Function({
       Value<int> id,
-      required int deckId,
       required String name,
       required String typology,
       required String meaning,
       required List<String> videosSigns,
       required LsfDictionaryName sourceDictionnary,
-      required int dictionnarySignId,
-      Value<List<String>> tags,
+      Value<int?> dictionnarySignId,
       Value<DateTime> createdAt,
     });
 typedef $$CardsTableTableUpdateCompanionBuilder =
     CardsTableCompanion Function({
       Value<int> id,
-      Value<int> deckId,
       Value<String> name,
       Value<String> typology,
       Value<String> meaning,
       Value<List<String>> videosSigns,
       Value<LsfDictionaryName> sourceDictionnary,
-      Value<int> dictionnarySignId,
-      Value<List<String>> tags,
+      Value<int?> dictionnarySignId,
       Value<DateTime> createdAt,
     });
 
@@ -1290,22 +1601,30 @@ final class $$CardsTableTableReferences
         BaseReferences<_$AppDriftDatabase, $CardsTableTable, CardsTableData> {
   $$CardsTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $DecksTableTable _deckIdTable(_$AppDriftDatabase db) =>
-      db.decksTable.createAlias(
-        $_aliasNameGenerator(db.cardsTable.deckId, db.decksTable.id),
+  static MultiTypedResultKey<
+    $CardDeckInfoTableTable,
+    List<CardDeckInfoTableData>
+  >
+  _cardDeckInfoTableRefsTable(_$AppDriftDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.cardDeckInfoTable,
+        aliasName: $_aliasNameGenerator(
+          db.cardsTable.id,
+          db.cardDeckInfoTable.cardId,
+        ),
       );
 
-  $$DecksTableTableProcessedTableManager get deckId {
-    final $_column = $_itemColumn<int>('deck_id')!;
-
-    final manager = $$DecksTableTableTableManager(
+  $$CardDeckInfoTableTableProcessedTableManager get cardDeckInfoTableRefs {
+    final manager = $$CardDeckInfoTableTableTableManager(
       $_db,
-      $_db.decksTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_deckIdTable($_db));
-    if (item == null) return manager;
+      $_db.cardDeckInfoTable,
+    ).filter((f) => f.cardId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _cardDeckInfoTableRefsTable($_db),
+    );
     return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 }
@@ -1356,38 +1675,34 @@ class $$CardsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<List<String>, List<String>, String> get tags =>
-      $composableBuilder(
-        column: $table.tags,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  $$DecksTableTableFilterComposer get deckId {
-    final $$DecksTableTableFilterComposer composer = $composerBuilder(
+  Expression<bool> cardDeckInfoTableRefs(
+    Expression<bool> Function($$CardDeckInfoTableTableFilterComposer f) f,
+  ) {
+    final $$CardDeckInfoTableTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.deckId,
-      referencedTable: $db.decksTable,
-      getReferencedColumn: (t) => t.id,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.cardDeckInfoTable,
+      getReferencedColumn: (t) => t.cardId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$DecksTableTableFilterComposer(
+          }) => $$CardDeckInfoTableTableFilterComposer(
             $db: $db,
-            $table: $db.decksTable,
+            $table: $db.cardDeckInfoTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
           ),
     );
-    return composer;
+    return f(composer);
   }
 }
 
@@ -1435,38 +1750,10 @@ class $$CardsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get tags => $composableBuilder(
-    column: $table.tags,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
-
-  $$DecksTableTableOrderingComposer get deckId {
-    final $$DecksTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.deckId,
-      referencedTable: $db.decksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$DecksTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.decksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
 class $$CardsTableTableAnnotationComposer
@@ -1507,11 +1794,423 @@ class $$CardsTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumnWithTypeConverter<List<String>, String> get tags =>
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> cardDeckInfoTableRefs<T extends Object>(
+    Expression<T> Function($$CardDeckInfoTableTableAnnotationComposer a) f,
+  ) {
+    final $$CardDeckInfoTableTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.cardDeckInfoTable,
+          getReferencedColumn: (t) => t.cardId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CardDeckInfoTableTableAnnotationComposer(
+                $db: $db,
+                $table: $db.cardDeckInfoTable,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+}
+
+class $$CardsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDriftDatabase,
+          $CardsTableTable,
+          CardsTableData,
+          $$CardsTableTableFilterComposer,
+          $$CardsTableTableOrderingComposer,
+          $$CardsTableTableAnnotationComposer,
+          $$CardsTableTableCreateCompanionBuilder,
+          $$CardsTableTableUpdateCompanionBuilder,
+          (CardsTableData, $$CardsTableTableReferences),
+          CardsTableData,
+          PrefetchHooks Function({bool cardDeckInfoTableRefs})
+        > {
+  $$CardsTableTableTableManager(_$AppDriftDatabase db, $CardsTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer:
+              () => $$CardsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$CardsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$CardsTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> typology = const Value.absent(),
+                Value<String> meaning = const Value.absent(),
+                Value<List<String>> videosSigns = const Value.absent(),
+                Value<LsfDictionaryName> sourceDictionnary =
+                    const Value.absent(),
+                Value<int?> dictionnarySignId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => CardsTableCompanion(
+                id: id,
+                name: name,
+                typology: typology,
+                meaning: meaning,
+                videosSigns: videosSigns,
+                sourceDictionnary: sourceDictionnary,
+                dictionnarySignId: dictionnarySignId,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required String typology,
+                required String meaning,
+                required List<String> videosSigns,
+                required LsfDictionaryName sourceDictionnary,
+                Value<int?> dictionnarySignId = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => CardsTableCompanion.insert(
+                id: id,
+                name: name,
+                typology: typology,
+                meaning: meaning,
+                videosSigns: videosSigns,
+                sourceDictionnary: sourceDictionnary,
+                dictionnarySignId: dictionnarySignId,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          $$CardsTableTableReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
+          prefetchHooksCallback: ({cardDeckInfoTableRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (cardDeckInfoTableRefs) db.cardDeckInfoTable,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (cardDeckInfoTableRefs)
+                    await $_getPrefetchedData<
+                      CardsTableData,
+                      $CardsTableTable,
+                      CardDeckInfoTableData
+                    >(
+                      currentTable: table,
+                      referencedTable: $$CardsTableTableReferences
+                          ._cardDeckInfoTableRefsTable(db),
+                      managerFromTypedResult:
+                          (p0) =>
+                              $$CardsTableTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).cardDeckInfoTableRefs,
+                      referencedItemsForCurrentItem:
+                          (item, referencedItems) =>
+                              referencedItems.where((e) => e.cardId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CardsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDriftDatabase,
+      $CardsTableTable,
+      CardsTableData,
+      $$CardsTableTableFilterComposer,
+      $$CardsTableTableOrderingComposer,
+      $$CardsTableTableAnnotationComposer,
+      $$CardsTableTableCreateCompanionBuilder,
+      $$CardsTableTableUpdateCompanionBuilder,
+      (CardsTableData, $$CardsTableTableReferences),
+      CardsTableData,
+      PrefetchHooks Function({bool cardDeckInfoTableRefs})
+    >;
+typedef $$CardDeckInfoTableTableCreateCompanionBuilder =
+    CardDeckInfoTableCompanion Function({
+      required int cardId,
+      required int deckId,
+      Value<List<String>?> tags,
+      required RetentionCard retentionCard,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$CardDeckInfoTableTableUpdateCompanionBuilder =
+    CardDeckInfoTableCompanion Function({
+      Value<int> cardId,
+      Value<int> deckId,
+      Value<List<String>?> tags,
+      Value<RetentionCard> retentionCard,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+final class $$CardDeckInfoTableTableReferences
+    extends
+        BaseReferences<
+          _$AppDriftDatabase,
+          $CardDeckInfoTableTable,
+          CardDeckInfoTableData
+        > {
+  $$CardDeckInfoTableTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CardsTableTable _cardIdTable(_$AppDriftDatabase db) =>
+      db.cardsTable.createAlias(
+        $_aliasNameGenerator(db.cardDeckInfoTable.cardId, db.cardsTable.id),
+      );
+
+  $$CardsTableTableProcessedTableManager get cardId {
+    final $_column = $_itemColumn<int>('card_id')!;
+
+    final manager = $$CardsTableTableTableManager(
+      $_db,
+      $_db.cardsTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_cardIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $DecksTableTable _deckIdTable(_$AppDriftDatabase db) =>
+      db.decksTable.createAlias(
+        $_aliasNameGenerator(db.cardDeckInfoTable.deckId, db.decksTable.id),
+      );
+
+  $$DecksTableTableProcessedTableManager get deckId {
+    final $_column = $_itemColumn<int>('deck_id')!;
+
+    final manager = $$DecksTableTableTableManager(
+      $_db,
+      $_db.decksTable,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_deckIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$CardDeckInfoTableTableFilterComposer
+    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
+  $$CardDeckInfoTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
+  get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<RetentionCard, RetentionCard, String>
+  get retentionCard => $composableBuilder(
+    column: $table.retentionCard,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CardsTableTableFilterComposer get cardId {
+    final $$CardsTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cardId,
+      referencedTable: $db.cardsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CardsTableTableFilterComposer(
+            $db: $db,
+            $table: $db.cardsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DecksTableTableFilterComposer get deckId {
+    final $$DecksTableTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.deckId,
+      referencedTable: $db.decksTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DecksTableTableFilterComposer(
+            $db: $db,
+            $table: $db.decksTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CardDeckInfoTableTableOrderingComposer
+    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
+  $$CardDeckInfoTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get retentionCard => $composableBuilder(
+    column: $table.retentionCard,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CardsTableTableOrderingComposer get cardId {
+    final $$CardsTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cardId,
+      referencedTable: $db.cardsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CardsTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.cardsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$DecksTableTableOrderingComposer get deckId {
+    final $$DecksTableTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.deckId,
+      referencedTable: $db.decksTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$DecksTableTableOrderingComposer(
+            $db: $db,
+            $table: $db.decksTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$CardDeckInfoTableTableAnnotationComposer
+    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
+  $$CardDeckInfoTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<List<String>?, String> get tags =>
       $composableBuilder(column: $table.tags, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<RetentionCard, String> get retentionCard =>
+      $composableBuilder(
+        column: $table.retentionCard,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$CardsTableTableAnnotationComposer get cardId {
+    final $$CardsTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.cardId,
+      referencedTable: $db.cardsTable,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CardsTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.cardsTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 
   $$DecksTableTableAnnotationComposer get deckId {
     final $$DecksTableTableAnnotationComposer composer = $composerBuilder(
@@ -1537,80 +2236,74 @@ class $$CardsTableTableAnnotationComposer
   }
 }
 
-class $$CardsTableTableTableManager
+class $$CardDeckInfoTableTableTableManager
     extends
         RootTableManager<
           _$AppDriftDatabase,
-          $CardsTableTable,
-          CardsTableData,
-          $$CardsTableTableFilterComposer,
-          $$CardsTableTableOrderingComposer,
-          $$CardsTableTableAnnotationComposer,
-          $$CardsTableTableCreateCompanionBuilder,
-          $$CardsTableTableUpdateCompanionBuilder,
-          (CardsTableData, $$CardsTableTableReferences),
-          CardsTableData,
-          PrefetchHooks Function({bool deckId})
+          $CardDeckInfoTableTable,
+          CardDeckInfoTableData,
+          $$CardDeckInfoTableTableFilterComposer,
+          $$CardDeckInfoTableTableOrderingComposer,
+          $$CardDeckInfoTableTableAnnotationComposer,
+          $$CardDeckInfoTableTableCreateCompanionBuilder,
+          $$CardDeckInfoTableTableUpdateCompanionBuilder,
+          (CardDeckInfoTableData, $$CardDeckInfoTableTableReferences),
+          CardDeckInfoTableData,
+          PrefetchHooks Function({bool cardId, bool deckId})
         > {
-  $$CardsTableTableTableManager(_$AppDriftDatabase db, $CardsTableTable table)
-    : super(
+  $$CardDeckInfoTableTableTableManager(
+    _$AppDriftDatabase db,
+    $CardDeckInfoTableTable table,
+  ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$CardsTableTableFilterComposer($db: db, $table: table),
+              () => $$CardDeckInfoTableTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
           createOrderingComposer:
-              () => $$CardsTableTableOrderingComposer($db: db, $table: table),
+              () => $$CardDeckInfoTableTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
           createComputedFieldComposer:
-              () => $$CardsTableTableAnnotationComposer($db: db, $table: table),
+              () => $$CardDeckInfoTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
           updateCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                Value<int> cardId = const Value.absent(),
                 Value<int> deckId = const Value.absent(),
-                Value<String> name = const Value.absent(),
-                Value<String> typology = const Value.absent(),
-                Value<String> meaning = const Value.absent(),
-                Value<List<String>> videosSigns = const Value.absent(),
-                Value<LsfDictionaryName> sourceDictionnary =
-                    const Value.absent(),
-                Value<int> dictionnarySignId = const Value.absent(),
-                Value<List<String>> tags = const Value.absent(),
+                Value<List<String>?> tags = const Value.absent(),
+                Value<RetentionCard> retentionCard = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => CardsTableCompanion(
-                id: id,
+                Value<int> rowid = const Value.absent(),
+              }) => CardDeckInfoTableCompanion(
+                cardId: cardId,
                 deckId: deckId,
-                name: name,
-                typology: typology,
-                meaning: meaning,
-                videosSigns: videosSigns,
-                sourceDictionnary: sourceDictionnary,
-                dictionnarySignId: dictionnarySignId,
                 tags: tags,
+                retentionCard: retentionCard,
                 createdAt: createdAt,
+                rowid: rowid,
               ),
           createCompanionCallback:
               ({
-                Value<int> id = const Value.absent(),
+                required int cardId,
                 required int deckId,
-                required String name,
-                required String typology,
-                required String meaning,
-                required List<String> videosSigns,
-                required LsfDictionaryName sourceDictionnary,
-                required int dictionnarySignId,
-                Value<List<String>> tags = const Value.absent(),
+                Value<List<String>?> tags = const Value.absent(),
+                required RetentionCard retentionCard,
                 Value<DateTime> createdAt = const Value.absent(),
-              }) => CardsTableCompanion.insert(
-                id: id,
+                Value<int> rowid = const Value.absent(),
+              }) => CardDeckInfoTableCompanion.insert(
+                cardId: cardId,
                 deckId: deckId,
-                name: name,
-                typology: typology,
-                meaning: meaning,
-                videosSigns: videosSigns,
-                sourceDictionnary: sourceDictionnary,
-                dictionnarySignId: dictionnarySignId,
                 tags: tags,
+                retentionCard: retentionCard,
                 createdAt: createdAt,
+                rowid: rowid,
               ),
           withReferenceMapper:
               (p0) =>
@@ -1618,11 +2311,11 @@ class $$CardsTableTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$CardsTableTableReferences(db, table, e),
+                          $$CardDeckInfoTableTableReferences(db, table, e),
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({deckId = false}) {
+          prefetchHooksCallback: ({cardId = false, deckId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -1641,15 +2334,31 @@ class $$CardsTableTableTableManager
                   dynamic
                 >
               >(state) {
+                if (cardId) {
+                  state =
+                      state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.cardId,
+                            referencedTable: $$CardDeckInfoTableTableReferences
+                                ._cardIdTable(db),
+                            referencedColumn:
+                                $$CardDeckInfoTableTableReferences
+                                    ._cardIdTable(db)
+                                    .id,
+                          )
+                          as T;
+                }
                 if (deckId) {
                   state =
                       state.withJoin(
                             currentTable: table,
                             currentColumn: table.deckId,
-                            referencedTable: $$CardsTableTableReferences
+                            referencedTable: $$CardDeckInfoTableTableReferences
                                 ._deckIdTable(db),
                             referencedColumn:
-                                $$CardsTableTableReferences._deckIdTable(db).id,
+                                $$CardDeckInfoTableTableReferences
+                                    ._deckIdTable(db)
+                                    .id,
                           )
                           as T;
                 }
@@ -1665,19 +2374,19 @@ class $$CardsTableTableTableManager
       );
 }
 
-typedef $$CardsTableTableProcessedTableManager =
+typedef $$CardDeckInfoTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDriftDatabase,
-      $CardsTableTable,
-      CardsTableData,
-      $$CardsTableTableFilterComposer,
-      $$CardsTableTableOrderingComposer,
-      $$CardsTableTableAnnotationComposer,
-      $$CardsTableTableCreateCompanionBuilder,
-      $$CardsTableTableUpdateCompanionBuilder,
-      (CardsTableData, $$CardsTableTableReferences),
-      CardsTableData,
-      PrefetchHooks Function({bool deckId})
+      $CardDeckInfoTableTable,
+      CardDeckInfoTableData,
+      $$CardDeckInfoTableTableFilterComposer,
+      $$CardDeckInfoTableTableOrderingComposer,
+      $$CardDeckInfoTableTableAnnotationComposer,
+      $$CardDeckInfoTableTableCreateCompanionBuilder,
+      $$CardDeckInfoTableTableUpdateCompanionBuilder,
+      (CardDeckInfoTableData, $$CardDeckInfoTableTableReferences),
+      CardDeckInfoTableData,
+      PrefetchHooks Function({bool cardId, bool deckId})
     >;
 
 class $AppDriftDatabaseManager {
@@ -1687,4 +2396,6 @@ class $AppDriftDatabaseManager {
       $$DecksTableTableTableManager(_db, _db.decksTable);
   $$CardsTableTableTableManager get cardsTable =>
       $$CardsTableTableTableManager(_db, _db.cardsTable);
+  $$CardDeckInfoTableTableTableManager get cardDeckInfoTable =>
+      $$CardDeckInfoTableTableTableManager(_db, _db.cardDeckInfoTable);
 }

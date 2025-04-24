@@ -18,18 +18,21 @@ enum RetentionRating {
 
 @freezed
 class RetentionCard with _$RetentionCard {
-
-const factory RetentionCard({
+  factory RetentionCard({
     required DateTime due,
     required DateTime lastReview,
-    required double stability,
-    required double difficulty,
-    required int elapsedDays,
-    required int scheduledDays,
-    required int reps,
-    required int lapses,
-    required RetentionState state,
+    @Default(0) double stability,
+    @Default(0) double difficulty,
+    @Default(0) int elapsedDays,
+    @Default(0) int scheduledDays,
+    @Default(0) int reps,
+    @Default(0) int lapses,
+    @Default(RetentionState.newState) RetentionState state,
   }) = _RetentionCard;
 
-  factory RetentionCard.fromJson(Map<String, dynamic> json) => _$RetentionCardFromJson(json);
+  factory RetentionCard.initial() =>
+      RetentionCard(due: DateTime.now(), lastReview: DateTime.now());
+
+  factory RetentionCard.fromJson(Map<String, dynamic> json) =>
+      _$RetentionCardFromJson(json);
 }

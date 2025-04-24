@@ -1,8 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
+import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/global_providers.dart';
 
 enum CreateCardStep { selectDeck, addDetails, review }
@@ -32,21 +33,22 @@ class CreateCardNotifier extends Notifier<AsyncValue<void>> {
   @override
   AsyncValue<void> build() => AsyncLoading();
 
-  Future call({required CardModel card, required List<int> deckIds}) async {
+  Future call({required Card card, required List<int> deckIds}) async {
     final deckRepository = ref.watch(decksRepositoryProvider);
 
     try {
       state = AsyncLoading();
-      final cardsToAdd = deckIds.map((deckId) => card.copyWith(deckId: deckId));
-      deckRepository.createCards(cards: cardsToAdd.toList());
+      final cardsToAdd = deckIds.map(
+        (deckId) =>
+            FullCard(card: card, deckInfos: CardDeckInfo.initial(deckId: deckId)),
+      );
+      deckRepository.createCards(fullCards: cardsToAdd.toList());
       state = AsyncData(null);
     } catch (err, st) {
       state = AsyncError(err, st);
     }
   }
 }
-
-
 
 final selectedDecksProvider =
     AutoDisposeNotifierProvider<SelectedDecksNotifier, List<int>>(

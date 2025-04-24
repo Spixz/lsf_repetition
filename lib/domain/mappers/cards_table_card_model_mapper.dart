@@ -1,35 +1,30 @@
 import 'package:apprendre_lsf/domain/database/drift_database.dart';
-import 'package:apprendre_lsf/domain/models/card_model/card_model.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 
-extension CardsTableDataToCardModel on CardsTableData {
-  CardModel toCardModel() {
-    return CardModel(
+extension CardsTableDataToCard on CardsTableData {
+  Card toCardModel() {
+    return Card(
       id: id,
-      deckId: deckId,
       name: name,
       typology: typology,
       meaning: meaning,
       videosSigns: videosSigns,
       sourceDictionnary: sourceDictionnary,
       dictionnarySignId: dictionnarySignId,
-      tags: tags,
       createdAt: createdAt,
-      // retentionCard: retentionCard,
     );
   }
 }
 
-extension CardModelToCardsTableCompanion on CardModel {
+extension CardToCardsTableCompanion on Card {
   CardsTableCompanion toCompanion() {
     return CardsTableCompanion.insert(
-      deckId: deckId ?? -1,
       name: name,
       typology: typology,
       meaning: meaning,
       videosSigns: videosSigns,
       sourceDictionnary: sourceDictionnary,
-      dictionnarySignId: dictionnarySignId ?? -1,
-      // retentionCard: retentionCard!,
+      //todo : pb avec dictionnarySignId
     );
   }
 }

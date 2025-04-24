@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'card_model.dart';
+part of 'card.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,85 +15,78 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-CardModel _$CardModelFromJson(Map<String, dynamic> json) {
-  return _CardModel.fromJson(json);
+Card _$CardFromJson(Map<String, dynamic> json) {
+  return _Card.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CardModel {
+mixin _$Card {
+  int? get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get typology => throw _privateConstructorUsedError;
   String get meaning => throw _privateConstructorUsedError;
   List<String> get videosSigns => throw _privateConstructorUsedError;
   LsfDictionaryName get sourceDictionnary => throw _privateConstructorUsedError;
-  List<String> get tags => throw _privateConstructorUsedError;
-  int? get deckId => throw _privateConstructorUsedError;
-  int? get id => throw _privateConstructorUsedError;
   int? get dictionnarySignId => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  RetentionCard? get retentionCard => throw _privateConstructorUsedError;
 
-  /// Serializes this CardModel to a JSON map.
+  /// Serializes this Card to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CardModel
+  /// Create a copy of Card
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CardModelCopyWith<CardModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $CardCopyWith<Card> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CardModelCopyWith<$Res> {
-  factory $CardModelCopyWith(CardModel value, $Res Function(CardModel) then) =
-      _$CardModelCopyWithImpl<$Res, CardModel>;
+abstract class $CardCopyWith<$Res> {
+  factory $CardCopyWith(Card value, $Res Function(Card) then) =
+      _$CardCopyWithImpl<$Res, Card>;
   @useResult
   $Res call({
+    int? id,
     String name,
     String typology,
     String meaning,
     List<String> videosSigns,
     LsfDictionaryName sourceDictionnary,
-    List<String> tags,
-    int? deckId,
-    int? id,
     int? dictionnarySignId,
     DateTime? createdAt,
-    RetentionCard? retentionCard,
   });
-
-  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
-class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
-    implements $CardModelCopyWith<$Res> {
-  _$CardModelCopyWithImpl(this._value, this._then);
+class _$CardCopyWithImpl<$Res, $Val extends Card>
+    implements $CardCopyWith<$Res> {
+  _$CardCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CardModel
+  /// Create a copy of Card
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? name = null,
     Object? typology = null,
     Object? meaning = null,
     Object? videosSigns = null,
     Object? sourceDictionnary = null,
-    Object? tags = null,
-    Object? deckId = freezed,
-    Object? id = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
-    Object? retentionCard = freezed,
   }) {
     return _then(
       _value.copyWith(
+            id:
+                freezed == id
+                    ? _value.id
+                    : id // ignore: cast_nullable_to_non_nullable
+                        as int?,
             name:
                 null == name
                     ? _value.name
@@ -119,21 +112,6 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
                     ? _value.sourceDictionnary
                     : sourceDictionnary // ignore: cast_nullable_to_non_nullable
                         as LsfDictionaryName,
-            tags:
-                null == tags
-                    ? _value.tags
-                    : tags // ignore: cast_nullable_to_non_nullable
-                        as List<String>,
-            deckId:
-                freezed == deckId
-                    ? _value.deckId
-                    : deckId // ignore: cast_nullable_to_non_nullable
-                        as int?,
-            id:
-                freezed == id
-                    ? _value.id
-                    : id // ignore: cast_nullable_to_non_nullable
-                        as int?,
             dictionnarySignId:
                 freezed == dictionnarySignId
                     ? _value.dictionnarySignId
@@ -144,86 +122,60 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
                     ? _value.createdAt
                     : createdAt // ignore: cast_nullable_to_non_nullable
                         as DateTime?,
-            retentionCard:
-                freezed == retentionCard
-                    ? _value.retentionCard
-                    : retentionCard // ignore: cast_nullable_to_non_nullable
-                        as RetentionCard?,
           )
           as $Val,
     );
   }
-
-  /// Create a copy of CardModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $RetentionCardCopyWith<$Res>? get retentionCard {
-    if (_value.retentionCard == null) {
-      return null;
-    }
-
-    return $RetentionCardCopyWith<$Res>(_value.retentionCard!, (value) {
-      return _then(_value.copyWith(retentionCard: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
-abstract class _$$CardModelImplCopyWith<$Res>
-    implements $CardModelCopyWith<$Res> {
-  factory _$$CardModelImplCopyWith(
-    _$CardModelImpl value,
-    $Res Function(_$CardModelImpl) then,
-  ) = __$$CardModelImplCopyWithImpl<$Res>;
+abstract class _$$CardImplCopyWith<$Res> implements $CardCopyWith<$Res> {
+  factory _$$CardImplCopyWith(
+    _$CardImpl value,
+    $Res Function(_$CardImpl) then,
+  ) = __$$CardImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
+    int? id,
     String name,
     String typology,
     String meaning,
     List<String> videosSigns,
     LsfDictionaryName sourceDictionnary,
-    List<String> tags,
-    int? deckId,
-    int? id,
     int? dictionnarySignId,
     DateTime? createdAt,
-    RetentionCard? retentionCard,
   });
-
-  @override
-  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
-class __$$CardModelImplCopyWithImpl<$Res>
-    extends _$CardModelCopyWithImpl<$Res, _$CardModelImpl>
-    implements _$$CardModelImplCopyWith<$Res> {
-  __$$CardModelImplCopyWithImpl(
-    _$CardModelImpl _value,
-    $Res Function(_$CardModelImpl) _then,
-  ) : super(_value, _then);
+class __$$CardImplCopyWithImpl<$Res>
+    extends _$CardCopyWithImpl<$Res, _$CardImpl>
+    implements _$$CardImplCopyWith<$Res> {
+  __$$CardImplCopyWithImpl(_$CardImpl _value, $Res Function(_$CardImpl) _then)
+    : super(_value, _then);
 
-  /// Create a copy of CardModel
+  /// Create a copy of Card
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? name = null,
     Object? typology = null,
     Object? meaning = null,
     Object? videosSigns = null,
     Object? sourceDictionnary = null,
-    Object? tags = null,
-    Object? deckId = freezed,
-    Object? id = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
-    Object? retentionCard = freezed,
   }) {
     return _then(
-      _$CardModelImpl(
+      _$CardImpl(
+        id:
+            freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                    as int?,
         name:
             null == name
                 ? _value.name
@@ -249,21 +201,6 @@ class __$$CardModelImplCopyWithImpl<$Res>
                 ? _value.sourceDictionnary
                 : sourceDictionnary // ignore: cast_nullable_to_non_nullable
                     as LsfDictionaryName,
-        tags:
-            null == tags
-                ? _value._tags
-                : tags // ignore: cast_nullable_to_non_nullable
-                    as List<String>,
-        deckId:
-            freezed == deckId
-                ? _value.deckId
-                : deckId // ignore: cast_nullable_to_non_nullable
-                    as int?,
-        id:
-            freezed == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                    as int?,
         dictionnarySignId:
             freezed == dictionnarySignId
                 ? _value.dictionnarySignId
@@ -274,11 +211,6 @@ class __$$CardModelImplCopyWithImpl<$Res>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                     as DateTime?,
-        retentionCard:
-            freezed == retentionCard
-                ? _value.retentionCard
-                : retentionCard // ignore: cast_nullable_to_non_nullable
-                    as RetentionCard?,
       ),
     );
   }
@@ -286,25 +218,23 @@ class __$$CardModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$CardModelImpl implements _CardModel {
-  const _$CardModelImpl({
+class _$CardImpl implements _Card {
+  const _$CardImpl({
+    this.id,
     required this.name,
     required this.typology,
     required this.meaning,
     required final List<String> videosSigns,
     required this.sourceDictionnary,
-    required final List<String> tags,
-    this.deckId,
-    this.id,
     this.dictionnarySignId,
     this.createdAt,
-    this.retentionCard,
-  }) : _videosSigns = videosSigns,
-       _tags = tags;
+  }) : _videosSigns = videosSigns;
 
-  factory _$CardModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CardModelImplFromJson(json);
+  factory _$CardImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CardImplFromJson(json);
 
+  @override
+  final int? id;
   @override
   final String name;
   @override
@@ -321,35 +251,22 @@ class _$CardModelImpl implements _CardModel {
 
   @override
   final LsfDictionaryName sourceDictionnary;
-  final List<String> _tags;
-  @override
-  List<String> get tags {
-    if (_tags is EqualUnmodifiableListView) return _tags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tags);
-  }
-
-  @override
-  final int? deckId;
-  @override
-  final int? id;
   @override
   final int? dictionnarySignId;
   @override
   final DateTime? createdAt;
-  @override
-  final RetentionCard? retentionCard;
 
   @override
   String toString() {
-    return 'CardModel(name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, tags: $tags, deckId: $deckId, id: $id, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt, retentionCard: $retentionCard)';
+    return 'Card(id: $id, name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CardModelImpl &&
+            other is _$CardImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.typology, typology) ||
                 other.typology == typology) &&
@@ -360,66 +277,56 @@ class _$CardModelImpl implements _CardModel {
             ) &&
             (identical(other.sourceDictionnary, sourceDictionnary) ||
                 other.sourceDictionnary == sourceDictionnary) &&
-            const DeepCollectionEquality().equals(other._tags, _tags) &&
-            (identical(other.deckId, deckId) || other.deckId == deckId) &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.dictionnarySignId, dictionnarySignId) ||
                 other.dictionnarySignId == dictionnarySignId) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.retentionCard, retentionCard) ||
-                other.retentionCard == retentionCard));
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
+    id,
     name,
     typology,
     meaning,
     const DeepCollectionEquality().hash(_videosSigns),
     sourceDictionnary,
-    const DeepCollectionEquality().hash(_tags),
-    deckId,
-    id,
     dictionnarySignId,
     createdAt,
-    retentionCard,
   );
 
-  /// Create a copy of CardModel
+  /// Create a copy of Card
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CardModelImplCopyWith<_$CardModelImpl> get copyWith =>
-      __$$CardModelImplCopyWithImpl<_$CardModelImpl>(this, _$identity);
+  _$$CardImplCopyWith<_$CardImpl> get copyWith =>
+      __$$CardImplCopyWithImpl<_$CardImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CardModelImplToJson(this);
+    return _$$CardImplToJson(this);
   }
 }
 
-abstract class _CardModel implements CardModel {
-  const factory _CardModel({
+abstract class _Card implements Card {
+  const factory _Card({
+    final int? id,
     required final String name,
     required final String typology,
     required final String meaning,
     required final List<String> videosSigns,
     required final LsfDictionaryName sourceDictionnary,
-    required final List<String> tags,
-    final int? deckId,
-    final int? id,
     final int? dictionnarySignId,
     final DateTime? createdAt,
-    final RetentionCard? retentionCard,
-  }) = _$CardModelImpl;
+  }) = _$CardImpl;
 
-  factory _CardModel.fromJson(Map<String, dynamic> json) =
-      _$CardModelImpl.fromJson;
+  factory _Card.fromJson(Map<String, dynamic> json) = _$CardImpl.fromJson;
 
+  @override
+  int? get id;
   @override
   String get name;
   @override
@@ -431,22 +338,14 @@ abstract class _CardModel implements CardModel {
   @override
   LsfDictionaryName get sourceDictionnary;
   @override
-  List<String> get tags;
-  @override
-  int? get deckId;
-  @override
-  int? get id;
-  @override
   int? get dictionnarySignId;
   @override
   DateTime? get createdAt;
-  @override
-  RetentionCard? get retentionCard;
 
-  /// Create a copy of CardModel
+  /// Create a copy of Card
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CardModelImplCopyWith<_$CardModelImpl> get copyWith =>
+  _$$CardImplCopyWith<_$CardImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

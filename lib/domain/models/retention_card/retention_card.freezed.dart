@@ -240,16 +240,16 @@ class __$$RetentionCardImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RetentionCardImpl implements _RetentionCard {
-  const _$RetentionCardImpl({
+  _$RetentionCardImpl({
     required this.due,
     required this.lastReview,
-    required this.stability,
-    required this.difficulty,
-    required this.elapsedDays,
-    required this.scheduledDays,
-    required this.reps,
-    required this.lapses,
-    required this.state,
+    this.stability = 0,
+    this.difficulty = 0,
+    this.elapsedDays = 0,
+    this.scheduledDays = 0,
+    this.reps = 0,
+    this.lapses = 0,
+    this.state = RetentionState.newState,
   });
 
   factory _$RetentionCardImpl.fromJson(Map<String, dynamic> json) =>
@@ -260,18 +260,25 @@ class _$RetentionCardImpl implements _RetentionCard {
   @override
   final DateTime lastReview;
   @override
+  @JsonKey()
   final double stability;
   @override
+  @JsonKey()
   final double difficulty;
   @override
+  @JsonKey()
   final int elapsedDays;
   @override
+  @JsonKey()
   final int scheduledDays;
   @override
+  @JsonKey()
   final int reps;
   @override
+  @JsonKey()
   final int lapses;
   @override
+  @JsonKey()
   final RetentionState state;
 
   @override
@@ -330,16 +337,16 @@ class _$RetentionCardImpl implements _RetentionCard {
 }
 
 abstract class _RetentionCard implements RetentionCard {
-  const factory _RetentionCard({
+  factory _RetentionCard({
     required final DateTime due,
     required final DateTime lastReview,
-    required final double stability,
-    required final double difficulty,
-    required final int elapsedDays,
-    required final int scheduledDays,
-    required final int reps,
-    required final int lapses,
-    required final RetentionState state,
+    final double stability,
+    final double difficulty,
+    final int elapsedDays,
+    final int scheduledDays,
+    final int reps,
+    final int lapses,
+    final RetentionState state,
   }) = _$RetentionCardImpl;
 
   factory _RetentionCard.fromJson(Map<String, dynamic> json) =
