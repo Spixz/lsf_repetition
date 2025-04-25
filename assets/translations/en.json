@@ -26,7 +26,21 @@
     "SelectAtLeastOneDeck": "Select at least one deck",
     "Create": "Create",
     "Deck": "Deck",
+    "Decks": "Decks",
+    "Card": "Card",
+    "Cards": "Cards",
     "Next": "Next",
+    
+    "LIST-CARD-VIEW": "",
+    "ErrorLoadingCards": "Error while loading cards",
+    "Delete": "Delete",
+    "CardDeletion": "Delete card",
+    "ConfirmationCardDeletion": "Are you sure you want to delete the card '{}' ?",
+    "Yes": "Yes",
+    "No": "No",
+
+    "BOTTOM-NAVIGATION-BAR": "",
+    "MyCards": "My cards",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "An unexpected error has occurred",

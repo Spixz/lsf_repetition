@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/utils/provider_observer.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -22,18 +23,18 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       scrollBehavior: AppCustomScrollBehavior(),
-      routerConfig: createRouter(),
+      routerConfig: createRouter(ref),
     );
   }
 }

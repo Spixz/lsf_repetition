@@ -14,27 +14,30 @@ class DictionariesSearchbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SliverAppBar(
-      clipBehavior: Clip.none,
-      shape: const StadiumBorder(),
-      scrolledUnderElevation: 0.0,
-      titleSpacing: 0.0,
-      backgroundColor: Colors.transparent,
-      floating: true,
-      title: SearchAnchor.bar(
-        viewHintText: context.tr("Search"),
-        onChanged:
-            (value) => ref
-                .read(dictionariesSearchQueryProvider.notifier)
-                .update(value, updateAfter: Duration(milliseconds: 800)),
-        isFullScreen: true,
-        viewBuilder:
-            (suggestions) =>
-                ListView(children: [_SearchBarFilters(), ...suggestions]),
-        suggestionsBuilder:
-            (context, controller) async => [
-              SuggestionList(controller: controller),
-            ],
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      sliver: SliverAppBar(
+        clipBehavior: Clip.none,
+        shape: const StadiumBorder(),
+        scrolledUnderElevation: 0.0,
+        titleSpacing: 0.0,
+        backgroundColor: Colors.transparent,
+        floating: true,
+        title: SearchAnchor.bar(
+          viewHintText: context.tr("Search"),
+          onChanged:
+              (value) => ref
+                  .read(dictionariesSearchQueryProvider.notifier)
+                  .update(value, updateAfter: Duration(milliseconds: 800)),
+          isFullScreen: true,
+          viewBuilder:
+              (suggestions) =>
+                  ListView(children: [_SearchBarFilters(), ...suggestions]),
+          suggestionsBuilder:
+              (context, controller) async => [
+                SuggestionList(controller: controller),
+              ],
+        ),
       ),
     );
   }

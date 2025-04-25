@@ -29,10 +29,8 @@ class DictionariesSingleResult extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverStickyHeader.builder(
       builder:
-          (_, state) => _SingleResultHeader(
-            result: result,
-            stickyHeaderState: state,
-          ),
+          (_, state) =>
+              _SingleResultHeader(result: result, stickyHeaderState: state),
       sliver: _buildMeaningCardsList(result.meanings),
     );
   }

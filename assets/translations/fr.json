@@ -26,7 +26,21 @@
     "SelectAtLeastOneDeck": "Sélectionnez au moins un deck",
     "Create": "Créer",
     "Deck": "Deck",
+    "Decks": "Decks",
+    "Card": "Carte",
+    "Cards": "Cartes",
     "Next": "Suivant",
+
+    "LIST-CARD-VIEW": "",
+    "ErrorLoadingCards": "Érreur durant le chargement des cartes",
+    "Delete": "Supprimer",
+    "CardDeletion": "Supprimer la carte",
+    "ConfirmationCardDeletion": "Êtes-vous sur de vouloir supprimer la carte '{}' ?",
+    "Yes": "Oui",
+    "No": "Non",
+    
+    "BOTTOM-NAVIGATION-BAR": "",
+    "MyCards": "Mes cartes",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "Une erreur non attendue s'est produite",

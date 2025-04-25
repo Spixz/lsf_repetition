@@ -55,6 +55,26 @@ class DecksRepository {
         .asBroadcastStream();
   }
 
+  Stream<List<FullCard>> getAllCards() {
+    final db = _driftDatabase;
+    final query = db.select(db.cardsTable).join([
+      innerJoin(
+        db.cardDeckInfoTable,
+        db.cardDeckInfoTable.cardId.isExp(db.cardsTable.id),
+      ),
+    ]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return FullCard(
+          card: row.readTable(db.cardsTable).toCardModel(),
+          deckInfos:
+              row.readTableOrNull(db.cardDeckInfoTable)?.toCardDeckInfo(),
+        );
+      }).toList();
+    }).asBroadcastStream();
+  }
+
   /// Store a FullCard in the DB by storing each part in different table.
   ///
   /// FullCard.[Card] in [CardsTable].

@@ -53,6 +53,7 @@ dependencies:
   easy_localization: ^3.0.7+1
   flutter_riverpod: ^2.6.1
   json_annotation: ^4.9.0
+  text_scroll: ^0.2.0
 
 dev_dependencies:
   flutter_test:

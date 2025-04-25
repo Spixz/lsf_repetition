@@ -1,14 +1,30 @@
-class Route {
+class SingleRoute {
+  const SingleRoute(this.name, this.path);
+
   final String name;
   final String path;
 
-  const Route(this.name, this.path);
+  @override
+  String toString() {
+    return "name: $name | path: $path";
+  }
 }
 
 abstract final class Routes {
-  static const home = Route('Home', '/home');
-  static const login = Route('Login', '/login'); 
-  static const mouseController = Route('Mouse controller', '/mouse');
-  static const createCard = Route('Create Card', '/createCard');
-  static const searchDictionariesResults = Route('Search in dictionaries results', '/searchDictionariesResults');
+  static const home = SingleRoute('Home', '/home');
+  static const login = SingleRoute('Login', '/login');
+  static const createCard = SingleRoute('Create Card', '/createCard');
+  static const library = SingleRoute('List Cards', '/cards');
+  static const searchDictionariesResults = SingleRoute(
+    'Search in dictionaries results',
+    '/searchDictionariesResults',
+  );
+
+  static const all = [
+    home,
+    login,
+    createCard,
+    library,
+    searchDictionariesResults,
+  ];
 }

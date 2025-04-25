@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/routing/navigation_bar.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_single_result.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ import 'package:apprendre_lsf/ui/dictionaries/search/providers/dictionaries_sear
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_searchbar.dart';
 
 /// Dictionary search page.
-/// 
+///
 /// Displays a search bar with results listed below.
 class DictionariesSearchScreen extends ConsumerWidget {
   const DictionariesSearchScreen({super.key});
@@ -49,6 +50,7 @@ class DictionariesSearchScreen extends ConsumerWidget {
           ),
         ],
       ),
+      bottomNavigationBar: MyBottomNavigationBar(),
     );
   }
 
