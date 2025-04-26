@@ -41,6 +41,8 @@
     "No": "No",
     "CardDeletionSuccess": "Card deleted",
     "CardDeletionError": "Failed to delete the card",
+    "Recent": "Recent",
+    "Oldest": "Oldest",
 
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "My cards",

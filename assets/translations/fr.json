@@ -41,6 +41,8 @@
     "No": "Non",
     "CardDeletionSuccess": "Carte supprimée",
     "CardDeletionError": "Erreur durant la suppression de la carte",
+    "Recent": "Récent",
+    "Oldest": "Ancien",
     
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "Mes cartes",

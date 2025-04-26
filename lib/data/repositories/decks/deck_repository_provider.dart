@@ -28,7 +28,7 @@ final allCardsProvider = StreamProvider<List<FullCard>>(
   (ref) => ref.watch(decksRepositoryProvider).getAllCards(),
 );
 
-final cardsFilterProvider = StateProvider<CardsFilter?>((_) => null);
+final cardsFilterProvider = StateProvider<CardsFilter>((_) => CardsFilter());
 
 final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   final allCards = ref.watch(allCardsProvider);
