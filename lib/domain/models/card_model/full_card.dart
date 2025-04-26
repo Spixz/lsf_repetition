@@ -8,7 +8,11 @@ part 'full_card.g.dart';
 
 @freezed
 class FullCard with _$FullCard {
-  const factory FullCard({required Card card, CardDeckInfo? deckInfos}) = _FullCard;
+  const FullCard._();
+  const factory FullCard({required Card card, CardDeckInfo? deckInfos}) =
+      _FullCard;
+
+  bool get belongToADeck => deckInfos != null;
 
   factory FullCard.fromJson(Map<String, dynamic> json) =>
       _$FullCardFromJson(json);

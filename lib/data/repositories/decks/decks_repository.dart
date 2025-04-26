@@ -121,6 +121,17 @@ class DecksRepository {
     }
   }
 
+  Future<AsyncValue<void>> deleteCards({required List<int> cardsIds}) async {
+    try {
+      await _driftDatabase.cardsTable.deleteWhere(
+        (card) => card.id.isIn(cardsIds),
+      );
+      return AsyncData(null);
+    } catch (err, st) {
+      return AsyncError(err, st);
+    }
+  }
+
   /// Stored card
   // CardModel initSpaceRepetitionForCard() {
 

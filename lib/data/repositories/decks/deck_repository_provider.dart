@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
@@ -11,6 +12,17 @@ final allDecksProvider =
     NotifierProvider<AllDeckNotifier, AsyncValue<List<DeckModel>>>(
       AllDeckNotifier.new,
     );
+
+final getDeckByIdProvider = AutoDisposeProviderFamily<DeckModel?, int>((
+  ref,
+  deckId,
+) {
+  final allDecks = ref.watch(allDecksProvider);
+  return allDecks.maybeWhen(
+    data: (decks) => decks.firstWhereOrNull((deck) => deck.id == deckId),
+    orElse: () => null,
+  );
+});
 
 final allCardsProvider = StreamProvider<List<FullCard>>(
   (ref) => ref.watch(decksRepositoryProvider).getAllCards(),

@@ -36,8 +36,11 @@
     "Delete": "Supprimer",
     "CardDeletion": "Supprimer la carte",
     "ConfirmationCardDeletion": "Êtes-vous sur de vouloir supprimer la carte '{}' ?",
+    "ConfirmationCardDeletionFromDeck": "Êtes-vous sur de vouloir supprimer la carte '{}' du deck '{}' ?",
     "Yes": "Oui",
     "No": "Non",
+    "CardDeletionSuccess": "Carte supprimée",
+    "CardDeletionError": "Erreur durant la suppression de la carte",
     
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "Mes cartes",

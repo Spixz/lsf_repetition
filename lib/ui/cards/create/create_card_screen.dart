@@ -43,9 +43,8 @@ class CreateCardScreen extends ConsumerWidget {
     );
   }
 
-  void _onCardCreation(BuildContext context, AsyncValue<void> result) {
-    result.when(
-      data: (data) {
+  void _onCardCreation(BuildContext context, AsyncValue result) {
+    result.when(data: (_) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SuccessSnackbar(message: context.tr("CreatedCard")));

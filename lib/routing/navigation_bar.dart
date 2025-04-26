@@ -18,7 +18,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
     );
 
     return NavigationBar(
-      selectedIndex: destinationIndex,
+      selectedIndex: (destinationIndex == -1) ? 0 : destinationIndex,
       destinations: [
         NavigationDestination(
           icon: Icon(Icons.travel_explore_rounded),

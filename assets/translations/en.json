@@ -36,8 +36,11 @@
     "Delete": "Delete",
     "CardDeletion": "Delete card",
     "ConfirmationCardDeletion": "Are you sure you want to delete the card '{}' ?",
+    "ConfirmationCardDeletionFromDeck": "Are you sure you want to delete the card '{}' from the '{}' deck ?",
     "Yes": "Yes",
     "No": "No",
+    "CardDeletionSuccess": "Card deleted",
+    "CardDeletionError": "Failed to delete the card",
 
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "My cards",

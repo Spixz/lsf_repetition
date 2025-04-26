@@ -152,8 +152,8 @@ class __$$FullCardImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$FullCardImpl implements _FullCard {
-  const _$FullCardImpl({required this.card, this.deckInfos});
+class _$FullCardImpl extends _FullCard {
+  const _$FullCardImpl({required this.card, this.deckInfos}) : super._();
 
   factory _$FullCardImpl.fromJson(Map<String, dynamic> json) =>
       _$$FullCardImplFromJson(json);
@@ -196,11 +196,12 @@ class _$FullCardImpl implements _FullCard {
   }
 }
 
-abstract class _FullCard implements FullCard {
+abstract class _FullCard extends FullCard {
   const factory _FullCard({
     required final Card card,
     final CardDeckInfo? deckInfos,
   }) = _$FullCardImpl;
+  const _FullCard._() : super._();
 
   factory _FullCard.fromJson(Map<String, dynamic> json) =
       _$FullCardImpl.fromJson;

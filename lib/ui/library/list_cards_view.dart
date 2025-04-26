@@ -1,4 +1,7 @@
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
+import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
+import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +16,32 @@ import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 class ListCardsView extends ConsumerWidget {
   const ListCardsView({super.key});
 
+  void _onCardDeletion(BuildContext context, AsyncValue result) {
+    result.when(
+      data: (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SuccessSnackbar(message: context.tr("CardDeletionSuccess")),
+        );
+      },
+      error: (err, st) {
+        debugPrint(err.toString());
+        debugPrintStack(stackTrace: st);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(ErrorSnackbar(message: context.tr("CardDeletionError")));
+      },
+      loading: () => null,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allCards = ref.watch(allCardsProvider);
+
+    ref.listen(
+      deleteCardNotifierProvider,
+      (_, result) => _onCardDeletion(context, result),
+    );
 
     return allCards.when(
       data: (allCards) {
@@ -77,22 +103,41 @@ class DeleteCardDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    DeckModel? deck;
+
+    if (card.belongToADeck) {
+      deck = ref.watch(getDeckByIdProvider(card.deckInfos!.deckId));
+    }
+
     return AlertDialog(
       title: Text(context.tr("CardDeletion")),
-      content: Text(
-        context.tr("ConfirmationCardDeletion", args: [card.card.name]),
-      ),
+      content: _deletionConfirmationText(context, deck),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancel deletion'),
           child: Text(context.tr("No")),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, 'Valid deletion'),
+          onPressed: () {
+            ref.read(deleteCardNotifierProvider.notifier).call([card.card.id!]);
+            Navigator.pop(context, 'Valid deletion');
+          },
           child: Text(context.tr("Yes")),
         ),
       ],
     );
+  }
+
+  Widget _deletionConfirmationText(BuildContext context, DeckModel? deck) {
+    if (deck != null) {
+      return Text(
+        context.tr(
+          "ConfirmationCardDeletionFromDeck",
+          args: [card.card.name, deck.name],
+        ),
+      );
+    }
+    return Text(context.tr("ConfirmationCardDeletion", args: [card.card.name]));
   }
 }
 
