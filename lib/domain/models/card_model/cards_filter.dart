@@ -10,11 +10,15 @@ enum DateFilter { recent, oldest }
 
 @freezed
 class CardsFilter with _$CardsFilter {
+  const CardsFilter._();
   const factory CardsFilter({
     DateFilter? dateFilter,
     RetentionState? retentionState,
     DeckModel? deck,
   }) = _CardsFilter;
+
+  bool get hasActiveFilters =>
+      [dateFilter, retentionState, deck].any((prop) => prop != null);
 
   factory CardsFilter.fromJson(Map<String, dynamic> json) =>
       _$CardsFilterFromJson(json);

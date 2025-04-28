@@ -168,8 +168,9 @@ class __$$CardsFilterImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$CardsFilterImpl implements _CardsFilter {
-  const _$CardsFilterImpl({this.dateFilter, this.retentionState, this.deck});
+class _$CardsFilterImpl extends _CardsFilter {
+  const _$CardsFilterImpl({this.dateFilter, this.retentionState, this.deck})
+    : super._();
 
   factory _$CardsFilterImpl.fromJson(Map<String, dynamic> json) =>
       _$$CardsFilterImplFromJson(json);
@@ -217,12 +218,13 @@ class _$CardsFilterImpl implements _CardsFilter {
   }
 }
 
-abstract class _CardsFilter implements CardsFilter {
+abstract class _CardsFilter extends CardsFilter {
   const factory _CardsFilter({
     final DateFilter? dateFilter,
     final RetentionState? retentionState,
     final DeckModel? deck,
   }) = _$CardsFilterImpl;
+  const _CardsFilter._() : super._();
 
   factory _CardsFilter.fromJson(Map<String, dynamic> json) =
       _$CardsFilterImpl.fromJson;

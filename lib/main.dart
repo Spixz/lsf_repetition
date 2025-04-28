@@ -38,15 +38,3 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
-
-// Future<List<SingleChildWidget>> createProviders() async {
-//   final SupabaseRepository supabaseRepository = SupabaseRepository();
-//   final AppDriftDatabase driftDatabase = AppDriftDatabase();
-
-//   await supabaseRepository.initialize();
-
-//   ValueNotifier<int> counter = ValueNotifier<int>(0);
-//   return [
-//     // ChangeNotifierProvider<SupabaseRepository>.value(value: supabaseRepository),
-//   ];
-// }

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,11 +10,14 @@ import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_search
 import 'package:apprendre_lsf/routing/route_provider.dart';
 import 'package:apprendre_lsf/ui/library/library_screen.dart';
 
-final initialLocation = Routes.searchDictionariesResults;
+// final initialLocation = Routes.searchDictionariesResults;
+final initialLocation = Routes.library;
+
 
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,
   debugLogDiagnostics: true,
+  observers: [MyNavigatorObserver(ref)],
   routes: [
     GoRoute(
       path: Routes.home.path,
@@ -45,11 +49,24 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       },
     ),
   ],
-  redirect: (context, state) {
-    final actualRoute = Routes.all.firstWhere(
-      (route) => route.path == state.fullPath,
-      orElse: () => initialLocation,
-    );
-    ref.read(actualRouteProvider.notifier).state = actualRoute;
-  },
 );
+
+class MyNavigatorObserver extends NavigatorObserver {
+  MyNavigatorObserver(this.ref);
+  final WidgetRef ref;
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    _onChangeRoute(route.settings.name);
+  }
+
+  void _onChangeRoute(String? routeName) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final actualRoute = Routes.all.firstWhere(
+        (route) => route.name == routeName,
+        orElse: () => initialLocation,
+      );
+      ref.read(actualRouteProvider.notifier).state = actualRoute;
+    });
+  }
+}

@@ -43,6 +43,11 @@
     "CardDeletionError": "Erreur durant la suppression de la carte",
     "Recent": "Récent",
     "Oldest": "Ancien",
+    "Learned": "Appris",
+    "ToLearn": "À apprendre",
+    "InLearning": "En cours d'apprentissage",
+    "LearningState": "État d'apprentissage",
+    "SortByCreationDate": "Sort by creation date",
     
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "Mes cartes",

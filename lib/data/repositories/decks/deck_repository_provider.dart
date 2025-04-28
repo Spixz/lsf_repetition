@@ -34,7 +34,7 @@ final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   final allCards = ref.watch(allCardsProvider);
   final filter = ref.watch(cardsFilterProvider);
 
-  if (filter == null) return allCards;
+  if (!filter.hasActiveFilters) return allCards;
   if (allCards.hasValue) {
     final filteredCards =
         allCards.value!.where((card) {

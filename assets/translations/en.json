@@ -43,6 +43,11 @@
     "CardDeletionError": "Failed to delete the card",
     "Recent": "Recent",
     "Oldest": "Oldest",
+    "Learned": "Learned",
+    "ToLearn": "To learn",
+    "InLearning": "In learning",
+    "LearningState": "Sort by learning state",
+    "SortByCreationDate": "Sort by creation date",
 
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "My cards",

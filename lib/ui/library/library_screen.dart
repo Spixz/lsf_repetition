@@ -24,7 +24,7 @@ class LibraryScreen extends ConsumerWidget {
         body: Column(
           children: [
             // TabBar(tabs: myTabs),
-            Expanded(child: TabBarView(children: [Empty(), ListCardsView()])),
+            Expanded(child: TabBarView(children: [ListCardsView(), Empty()])),
             TabBar(tabs: myTabs),
           ],
         ),

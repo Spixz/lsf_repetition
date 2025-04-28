@@ -70,7 +70,7 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith((ref) => null),
+        cardsFilterProvider.overrideWith((ref) => CardsFilter()),
       ],
     );
 

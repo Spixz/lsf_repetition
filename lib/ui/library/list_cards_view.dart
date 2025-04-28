@@ -1,8 +1,10 @@
 import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
+import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,9 @@ class _SearchBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final filter = ref.watch(cardsFilterProvider);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SearchAnchor(
@@ -38,14 +43,11 @@ class _SearchBar extends ConsumerWidget {
             padding: const WidgetStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(horizontal: 16.0),
             ),
-            onChanged: (_) {
-              // controller.openView();
-            },
             leading: OverlayPortal(
               controller: overlayController,
               child: const Icon(Icons.search),
               overlayChildBuilder:
-                  (context) => _FilterSettingsOverlay(
+                  (context) => CardsFilterSettingsOverlay(
                     overlayController: overlayController,
                   ),
             ),
@@ -53,133 +55,18 @@ class _SearchBar extends ConsumerWidget {
               Tooltip(
                 message: 'Display filter',
                 child: IconButton(
-                  isSelected: true,
-                  onPressed: () {
-                    overlayController.toggle();
-                  },
-                  icon: const Icon(Icons.filter_alt_outlined),
-                  selectedIcon: const Icon(Icons.filter_alt),
+                  onPressed: () => overlayController.toggle(),
+                  icon: Icon(
+                    Icons.filter_alt,
+                    color: filter.hasActiveFilters ? primaryColor : null,
+                  ),
+                  // selectedIcon: const Icon(Icons.filter_alt),
                 ),
               ),
             ],
           );
         },
-        suggestionsBuilder: (
-          BuildContext context,
-          SearchController controller,
-        ) {
-          return [];
-        },
-      ),
-    );
-  }
-}
-
-class _FilterSettingsOverlay extends ConsumerWidget {
-  const _FilterSettingsOverlay({required this.overlayController, super.key});
-
-  final OverlayPortalController overlayController;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final filter = ref.watch(cardsFilterProvider);
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
-    return Positioned(
-      left: 0,
-      bottom: 0,
-      right: 0,
-      child: Stack(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 9),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              border: Border(top: BorderSide(color: Colors.transparent)),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Column(
-              spacing: 5,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(
-                    left: 15,
-                    top: 15,
-                    right: 15,
-                    bottom: 30,
-                  ),
-                  child: Column(
-                    spacing: 20,
-                    children: [
-                      Row(
-                        spacing: 10,
-                        children: [
-                          Icon(Icons.date_range, color: primaryColor),
-                          Text(
-                            "Date de création",
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        spacing: 10,
-                        children: [
-                          ChoiceChip(
-                            label: Text(context.tr("Recent")),
-                            selected: filter?.dateFilter == DateFilter.recent,
-                            onSelected: (bool selected) {
-                              if (filter?.dateFilter == DateFilter.recent) {
-                                ref
-                                    .read(cardsFilterProvider.notifier)
-                                    .state = filter.copyWith(dateFilter: null);
-                              } else {
-                                ref
-                                    .read(cardsFilterProvider.notifier)
-                                    .state = filter.copyWith(
-                                  dateFilter: DateFilter.recent,
-                                );
-                              }
-                            },
-                          ),
-                          ChoiceChip(
-                            label: Text(context.tr("Oldest")),
-                            selected: filter?.dateFilter == DateFilter.oldest,
-                            onSelected: (bool selected) {
-                              if (filter?.dateFilter == DateFilter.oldest) {
-                                ref
-                                    .read(cardsFilterProvider.notifier)
-                                    .state = filter.copyWith(dateFilter: null);
-                              } else {
-                                ref
-                                    .read(cardsFilterProvider.notifier)
-                                    .state = filter.copyWith(
-                                  dateFilter: DateFilter.oldest,
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            right: 15,
-            child: IconButton(
-              onPressed: () {
-                overlayController.toggle();
-              },
-              icon: Icon(Icons.close),
-            ),
-          ),
-        ],
+        suggestionsBuilder: (_, __) => [],
       ),
     );
   }
@@ -221,6 +108,7 @@ class _ListCards extends ConsumerWidget {
           itemCount: allCards.length,
           itemBuilder: (context, index) {
             final card = allCards[index];
+            
             return ListTile(
               title: Text(card.card.name),
               subtitle: SizedBox(
