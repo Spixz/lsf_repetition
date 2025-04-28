@@ -5,9 +5,10 @@ part 'elix_suggestion_response.g.dart';
 
 @freezed
 class ElixSuggestionResponse with _$ElixSuggestionResponse {
-  const factory ElixSuggestionResponse(
-      {required List<String> data,
-      required int total}) = _ElixSuggestionResponse;
+  const factory ElixSuggestionResponse({
+    required List<String> data,
+    required int total,
+  }) = _ElixSuggestionResponse;
 
   factory ElixSuggestionResponse.fromJson(Map<String, dynamic> json) =>
       _$ElixSuggestionResponseFromJson(json);

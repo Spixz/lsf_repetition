@@ -20,17 +20,20 @@ class ElixMeaning with _$ElixMeaning {
 
   factory ElixMeaning.fromJsonApi(Map<String, dynamic> json) {
     return ElixMeaning(
-        id: json['id'],
-        wordId: json['word_id'],
-        definition: json['definition'],
-        wordSigns: (json['wordSigns'] as List<dynamic>)
-            .whereType<Map<String, dynamic>>()
-            .map<ElixMedia>(ElixMedia.fromJsonApi)
-            .toList(),
-        definitionSigns: (json['definitionSigns'] as List<dynamic>)
-            .whereType<Map<String, dynamic>>()
-            .map<ElixMedia>(ElixMedia.fromJsonApi)
-            .toList(),
-        sourceUrl: json['source']);
+      id: json['id'],
+      wordId: json['word_id'],
+      definition: json['definition'],
+      wordSigns:
+          (json['wordSigns'] as List<dynamic>)
+              .whereType<Map<String, dynamic>>()
+              .map<ElixMedia>(ElixMedia.fromJsonApi)
+              .toList(),
+      definitionSigns:
+          (json['definitionSigns'] as List<dynamic>)
+              .whereType<Map<String, dynamic>>()
+              .map<ElixMedia>(ElixMedia.fromJsonApi)
+              .toList(),
+      sourceUrl: json['source'],
+    );
   }
 }

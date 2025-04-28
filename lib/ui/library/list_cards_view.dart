@@ -108,7 +108,7 @@ class _ListCards extends ConsumerWidget {
           itemCount: allCards.length,
           itemBuilder: (context, index) {
             final card = allCards[index];
-            
+
             return ListTile(
               title: Text(card.card.name),
               subtitle: SizedBox(

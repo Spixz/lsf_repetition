@@ -12,19 +12,25 @@ extension ElixMediaToLsfDictionaryMedia on ElixMedia {
 
 extension ElixMeaningToLsfDictionaryMeaning on ElixMeaning {
   LsfDictionaryMeaning toLsfDictionaryMeaning() => LsfDictionaryMeaning(
-      definition: definition,
-      wordSigns: wordSigns.map((sign) => sign.toLsfDictionaryMedia()).toList(),
-      definitionSigns: definitionSigns
-          .map((definition) => definition.toLsfDictionaryMedia())
-          .toList());
+    definition: definition,
+    wordSigns: wordSigns.map((sign) => sign.toLsfDictionaryMedia()).toList(),
+    definitionSigns:
+        definitionSigns
+            .map((definition) => definition.toLsfDictionaryMedia())
+            .toList(),
+  );
 }
 
 extension ElixToLsfDictionaryResultExtension on ElixSearchResult {
-  LsfDictionarySearchResult toLSFDictionaryResult() => LsfDictionarySearchResult.lsfDictionarySearchResult(
-      dictionaryName: LsfDictionaryName.elix,
-      name: name,
-      typology: typology,
-      language: 'fr',
-      meanings:
-          meanings.map((meaning) => meaning.toLsfDictionaryMeaning()).toList());
+  LsfDictionarySearchResult toLSFDictionaryResult() =>
+      LsfDictionarySearchResult.lsfDictionarySearchResult(
+        dictionaryName: LsfDictionaryName.elix,
+        name: name,
+        typology: typology,
+        language: 'fr',
+        meanings:
+            meanings
+                .map((meaning) => meaning.toLsfDictionaryMeaning())
+                .toList(),
+      );
 }

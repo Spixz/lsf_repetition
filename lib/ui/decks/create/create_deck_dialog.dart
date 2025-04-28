@@ -99,5 +99,4 @@ class _CreateDeckWidgetState extends ConsumerState<CreateDeckDialog> {
       loading: () => null,
     );
   }
-
 }

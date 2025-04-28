@@ -6,12 +6,12 @@ part 'lsf_dictionary_meaning.g.dart';
 
 @freezed
 class LsfDictionaryMeaning with _$LsfDictionaryMeaning {
-
   const factory LsfDictionaryMeaning({
     required String definition,
     required List<LsfDictionaryMedia> wordSigns,
     required List<LsfDictionaryMedia> definitionSigns,
   }) = _LsfDictionaryMeaning;
 
-  factory LsfDictionaryMeaning.fromJson(Map<String, dynamic> json) => _$LsfDictionaryMeaningFromJson(json);
+  factory LsfDictionaryMeaning.fromJson(Map<String, dynamic> json) =>
+      _$LsfDictionaryMeaningFromJson(json);
 }

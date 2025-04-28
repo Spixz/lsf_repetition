@@ -3,8 +3,6 @@ import 'package:apprendre_lsf/domain/mappers/elix_to_lsf_mapper.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_hint_result.dart';
 
-
-
 class LsfDictionariesRepository {
   LsfDictionariesRepository({required ElixService elixService})
     : _elixService = elixService;

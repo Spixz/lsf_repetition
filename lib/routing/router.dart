@@ -13,7 +13,6 @@ import 'package:apprendre_lsf/ui/library/library_screen.dart';
 // final initialLocation = Routes.searchDictionariesResults;
 final initialLocation = Routes.library;
 
-
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,
   debugLogDiagnostics: true,

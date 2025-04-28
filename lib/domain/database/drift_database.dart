@@ -75,7 +75,6 @@ class AppDriftDatabase extends _$AppDriftDatabase {
   }
 }
 
-
 //======================================================
 
 /*

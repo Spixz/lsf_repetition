@@ -39,8 +39,10 @@ class CreateCardNotifier extends Notifier<AsyncValue<void>> {
     try {
       state = AsyncLoading();
       final cardsToAdd = deckIds.map(
-        (deckId) =>
-            FullCard(card: card, deckInfos: CardDeckInfo.initial(deckId: deckId)),
+        (deckId) => FullCard(
+          card: card,
+          deckInfos: CardDeckInfo.initial(deckId: deckId),
+        ),
       );
       deckRepository.createCards(fullCards: cardsToAdd.toList());
       state = AsyncData(null);

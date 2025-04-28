@@ -17,10 +17,12 @@ class ElixSearchResult with _$ElixSearchResult {
 
   factory ElixSearchResult.fromJsonApi(Map<String, dynamic> json) =>
       ElixSearchResult(
-          name: json['name'],
-          typology: json['typology'],
-          meanings: (json['meanings'] as List<dynamic>)
-              .whereType<Map<String, dynamic>>()
-              .map<ElixMeaning>(ElixMeaning.fromJsonApi)
-              .toList());
+        name: json['name'],
+        typology: json['typology'],
+        meanings:
+            (json['meanings'] as List<dynamic>)
+                .whereType<Map<String, dynamic>>()
+                .map<ElixMeaning>(ElixMeaning.fromJsonApi)
+                .toList(),
+      );
 }

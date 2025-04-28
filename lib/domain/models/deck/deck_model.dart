@@ -5,7 +5,6 @@ part 'deck_model.g.dart';
 
 @freezed
 class DeckModel with _$DeckModel {
-
   const factory DeckModel({
     required String name,
     required String description,
@@ -13,5 +12,6 @@ class DeckModel with _$DeckModel {
     DateTime? createdAt,
   }) = _DeckModel;
 
-  factory DeckModel.fromJson(Map<String, dynamic> json) => _$DeckModelFromJson(json);
+  factory DeckModel.fromJson(Map<String, dynamic> json) =>
+      _$DeckModelFromJson(json);
 }

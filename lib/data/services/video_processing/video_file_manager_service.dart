@@ -23,8 +23,10 @@ class VideoFileManagerService {
     }
   }
 
-  Future<Result<bool>> isValidSAR(String filepath,
-      [String validSAR = "1:1"]) async {
+  Future<Result<bool>> isValidSAR(
+    String filepath, [
+    String validSAR = "1:1",
+  ]) async {
     final sar = await videoProcessing.getSAR(filepath);
     if (sar is Ok && (sar as Ok).value == validSAR) {
       return Result.ok(true);
@@ -32,8 +34,10 @@ class VideoFileManagerService {
     return Result.ok(false);
   }
 
-  Future<Result<String>> updateVideoAspectRatio(String filepath,
-      [String aspectRatio = "16/9"]) {
+  Future<Result<String>> updateVideoAspectRatio(
+    String filepath, [
+    String aspectRatio = "16/9",
+  ]) {
     return videoProcessing.updateVideoAspectRatio(filepath, aspectRatio);
   }
 }

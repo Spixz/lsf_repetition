@@ -7,13 +7,10 @@ import 'dart:io';
 /// Adds the `Authentication` header to a header configuration.
 
 abstract class ApiClient {
-  ApiClient({
-    String? host,
-    int? port,
-    HttpClient Function()? clientFactory,
-  })  : _host = host ?? 'localhost',
-        _port = port ?? 8080,
-        _clientFactory = clientFactory ?? HttpClient.new;
+  ApiClient({String? host, int? port, HttpClient Function()? clientFactory})
+    : _host = host ?? 'localhost',
+      _port = port ?? 8080,
+      _clientFactory = clientFactory ?? HttpClient.new;
 
   final String _host;
   final int _port;

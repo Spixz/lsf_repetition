@@ -43,14 +43,19 @@ class FfmpegVideoProcessing implements VideoProcessing {
   // TODO : extract the SAR from the logs
   @override
   Future<Result<String>> getSAR(String filepath) {
-    FFmpegKit.executeAsync('-i $filepath', (Session session) async {
-      session.getOutput().then((val) => print);
-    }, (Log log) {
-      // print(log.getMessage());
-      // CALLED WHEN SESSION PRINTS LOGS
-    }, (Statistics statistics) {
-      // CALLED WHEN SESSION GENERATES STATISTICS
-    });
+    FFmpegKit.executeAsync(
+      '-i $filepath',
+      (Session session) async {
+        session.getOutput().then((val) => print);
+      },
+      (Log log) {
+        // print(log.getMessage());
+        // CALLED WHEN SESSION PRINTS LOGS
+      },
+      (Statistics statistics) {
+        // CALLED WHEN SESSION GENERATES STATISTICS
+      },
+    );
     throw UnimplementedError();
   }
 

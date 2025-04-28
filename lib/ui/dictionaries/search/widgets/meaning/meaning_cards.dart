@@ -18,7 +18,7 @@ class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
   final LsfDictionaryMeaningWithParent scopedMeaning;
   final bool isLastMeaning;
 
-@override
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: EdgeInsets.only(bottom: isLastMeaning ? 15 : 0),
@@ -45,8 +45,7 @@ class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
   void _onCardTap(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (_) => DialogMeaningVideos(scopedMeaning: scopedMeaning),
+      builder: (_) => DialogMeaningVideos(scopedMeaning: scopedMeaning),
     );
   }
 }

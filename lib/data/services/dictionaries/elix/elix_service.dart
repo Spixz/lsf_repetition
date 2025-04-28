@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-
 import 'package:apprendre_lsf/data/services/dictionaries/dictionary_service.dart';
 import 'package:apprendre_lsf/data/services/dictionaries/elix/model/elix_search_result.dart';
 import 'package:apprendre_lsf/data/services/dictionaries/elix/model/elix_suggestion_response.dart';

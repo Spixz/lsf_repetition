@@ -24,8 +24,9 @@ final class SupabaseRepository extends ChangeNotifier {
   }
 
   void _bindAuthStateChange() {
-    _authSubscription =
-        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((
+      data,
+    ) {
       final AuthChangeEvent event = data.event;
       final Session? session = data.session;
 
@@ -64,10 +65,7 @@ final class SupabaseRepository extends ChangeNotifier {
 
   Future<String?> login(String email, String password) async {
     try {
-      await _client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      await _client.auth.signInWithPassword(email: email, password: password);
       return null;
     } on AuthException catch (e) {
       print(e.code);
@@ -79,10 +77,7 @@ final class SupabaseRepository extends ChangeNotifier {
 
   Future<String?> register(String email, String password) async {
     try {
-      await _client.auth.signUp(
-        email: email,
-        password: password,
-      );
+      await _client.auth.signUp(email: email, password: password);
       return null;
     } on AuthException catch (e) {
       print(e.code);

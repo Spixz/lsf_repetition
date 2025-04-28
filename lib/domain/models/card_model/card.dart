@@ -19,6 +19,5 @@ class Card with _$Card {
     DateTime? createdAt,
   }) = _Card;
 
-  factory Card.fromJson(Map<String, dynamic> json) =>
-      _$CardFromJson(json);
+  factory Card.fromJson(Map<String, dynamic> json) => _$CardFromJson(json);
 }

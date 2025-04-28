@@ -13,9 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
-        child: Column(spacing: 10, children: [
-        ],
-      ),
+        child: Column(spacing: 10, children: []),
       ),
     );
   }

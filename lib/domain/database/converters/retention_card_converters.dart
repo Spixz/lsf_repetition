@@ -1,4 +1,3 @@
-
 // stores RetentionCard as strings
 import 'dart:convert';
 
@@ -6,12 +5,10 @@ import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:drift/drift.dart';
 
 class RetentionCardConverter extends TypeConverter<RetentionCard, String>
-    with
-        
-        JsonTypeConverter2<RetentionCard, String, Map<String, Object?>> {
+    with JsonTypeConverter2<RetentionCard, String, Map<String, Object?>> {
   const RetentionCardConverter();
 
-@override
+  @override
   String toSql(RetentionCard value) {
     // Pour la BDD, on encode en chaîne
     return jsonEncode(value.toJson());

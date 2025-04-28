@@ -7,7 +7,9 @@ class MyObserver extends ProviderObserver {
     Object? value,
     ProviderContainer container,
   ) {
-    print("Provider $provider (${provider.name ?? ''}) was initialized with $value");
+    print(
+      "Provider $provider (${provider.name ?? ''}) was initialized with $value",
+    );
   }
 
   @override

@@ -17,8 +17,9 @@ class ElixMedia with _$ElixMedia {
 
   factory ElixMedia.fromJsonApi(Map<String, dynamic> json) {
     return ElixMedia(
-        uri: json['uri'],
-        image: json['image'],
-        author: json.containsKey('author') ? json['author'] : null);
+      uri: json['uri'],
+      image: json['image'],
+      author: json.containsKey('author') ? json['author'] : null,
+    );
   }
 }
