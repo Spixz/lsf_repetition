@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
 import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class CardsFilterSettingsOverlay extends ConsumerWidget {
   const CardsFilterSettingsOverlay({
     required this.overlayController,
@@ -15,7 +16,6 @@ class CardsFilterSettingsOverlay extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
 
     return Positioned(
       left: 0,
@@ -118,13 +118,9 @@ class _DateFilterChoiceTip extends ConsumerWidget {
       selected: filter.dateFilter == dateFilter,
       onSelected: (_) {
         if (filter.dateFilter == dateFilter) {
-          ref.read(cardsFilterProvider.notifier).state = filter.copyWith(
-            dateFilter: null,
-          );
+          ref.read(cardsFilterProvider.notifier).updateDateFilter(null);
         } else {
-          ref.read(cardsFilterProvider.notifier).state = filter.copyWith(
-            dateFilter: dateFilter,
-          );
+          ref.read(cardsFilterProvider.notifier).updateDateFilter(dateFilter);
         }
       },
     );
@@ -195,13 +191,11 @@ class _RetentionStateChoiceTip extends ConsumerWidget {
       selected: filter.retentionState == retentionState,
       onSelected: (_) {
         if (filter.retentionState == retentionState) {
-          ref.read(cardsFilterProvider.notifier).state = filter.copyWith(
-            retentionState: null,
-          );
+          ref.read(cardsFilterProvider.notifier).updateRetentionState(null);
         } else {
-          ref.read(cardsFilterProvider.notifier).state = filter.copyWith(
-            retentionState: retentionState,
-          );
+          ref
+              .read(cardsFilterProvider.notifier)
+              .updateRetentionState(retentionState);
         }
       },
     );

@@ -1,3 +1,7 @@
+import 'package:collection/collection.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
@@ -6,9 +10,6 @@ import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
-import 'package:collection/collection.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 final allStoredDecks = [
   DeckModel(id: 1, name: "deck 1", description: "premier deck"),
@@ -70,9 +71,9 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith((ref) => CardsFilter()),
       ],
     );
+    container.read(cardsFilterProvider.notifier).copyFrom(CardsFilter());
 
     expect(
       container.read(filteredCardsProvider),
@@ -88,14 +89,14 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith(
-          (ref) => CardsFilter(dateFilter: DateFilter.oldest),
-        ),
       ],
     );
+    final filter = CardsFilter(dateFilter: DateFilter.oldest);
 
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
     container.read(filteredCardsProvider);
     await container.pump();
+
     final filteredCardsIds =
         container
             .read(filteredCardsProvider)
@@ -110,14 +111,14 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith(
-          (ref) => CardsFilter(dateFilter: DateFilter.recent),
-        ),
       ],
     );
+    final filter = CardsFilter(dateFilter: DateFilter.recent);
 
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
     container.read(filteredCardsProvider);
     await container.pump();
+
     final filteredCardsIds =
         container
             .read(filteredCardsProvider)
@@ -132,14 +133,14 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith(
-          (ref) => CardsFilter(retentionState: RetentionState.learning),
-        ),
       ],
     );
+    final filter = CardsFilter(retentionState: RetentionState.learning);
 
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
     container.read(filteredCardsProvider);
     await container.pump();
+
     final filteredCardsIds =
         container
             .read(filteredCardsProvider)
@@ -160,17 +161,17 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith(
-          (ref) => CardsFilter(
-            retentionState: RetentionState.review,
-            deck: DeckModel(id: 2, name: "deck 2", description: "second deck"),
-          ),
-        ),
       ],
     );
+    final filter = CardsFilter(
+      retentionState: RetentionState.review,
+      deck: DeckModel(id: 2, name: "deck 2", description: "second deck"),
+    );
 
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
     container.read(filteredCardsProvider);
     await container.pump();
+
     final filteredCardsIds =
         container
             .read(filteredCardsProvider)
@@ -190,17 +191,17 @@ void main() {
     final container = ProviderContainer(
       overrides: [
         allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
-        cardsFilterProvider.overrideWith(
-          (ref) => CardsFilter(
-            retentionState: RetentionState.learning,
-            dateFilter: DateFilter.recent,
-          ),
-        ),
       ],
     );
+    final filter = CardsFilter(
+      retentionState: RetentionState.learning,
+      dateFilter: DateFilter.recent,
+    );
 
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
     container.read(filteredCardsProvider);
     await container.pump();
+
     final filteredCardsIds =
         container
             .read(filteredCardsProvider)
@@ -209,5 +210,42 @@ void main() {
             .toList();
 
     expect(filteredCardsIds, [4, 2]);
+  });
+
+  test('Filter by empty name (text query)', () async {
+    final container = ProviderContainer(
+      overrides: [
+        allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
+      ],
+    );
+    final filter = CardsFilter(name: '');
+
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
+    container.read(filteredCardsProvider);
+    await container.pump();
+
+    expect(container.read(filteredCardsProvider), AsyncData(allStoredCards));
+  });
+
+  test('Filter by name', () async {
+    final container = ProviderContainer(
+      overrides: [
+        allCardsProvider.overrideWith((ref) => Stream.value(allStoredCards)),
+      ],
+    );
+    final filter = CardsFilter(name: 'te');
+
+    container.read(cardsFilterProvider.notifier).copyFrom(filter);
+    container.read(filteredCardsProvider);
+    await container.pump();
+
+    final filteredCardsIds =
+        container
+            .read(filteredCardsProvider)
+            .value!
+            .map((card) => card.card.id)
+            .toList();
+
+    expect(filteredCardsIds, [2, 3, 4]);
   });
 }

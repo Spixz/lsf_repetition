@@ -8,6 +8,7 @@ part of 'cards_filter.dart';
 
 _$CardsFilterImpl _$$CardsFilterImplFromJson(Map<String, dynamic> json) =>
     _$CardsFilterImpl(
+      name: json['name'] as String? ?? "",
       dateFilter: $enumDecodeNullable(_$DateFilterEnumMap, json['dateFilter']),
       retentionState: $enumDecodeNullable(
         _$RetentionStateEnumMap,
@@ -21,6 +22,7 @@ _$CardsFilterImpl _$$CardsFilterImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$CardsFilterImplToJson(_$CardsFilterImpl instance) =>
     <String, dynamic>{
+      'name': instance.name,
       'dateFilter': _$DateFilterEnumMap[instance.dateFilter],
       'retentionState': _$RetentionStateEnumMap[instance.retentionState],
       'deck': instance.deck,

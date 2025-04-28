@@ -21,6 +21,7 @@ CardsFilter _$CardsFilterFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CardsFilter {
+  String get name => throw _privateConstructorUsedError;
   DateFilter? get dateFilter => throw _privateConstructorUsedError;
   RetentionState? get retentionState => throw _privateConstructorUsedError;
   DeckModel? get deck => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $CardsFilterCopyWith<$Res> {
   ) = _$CardsFilterCopyWithImpl<$Res, CardsFilter>;
   @useResult
   $Res call({
+    String name,
     DateFilter? dateFilter,
     RetentionState? retentionState,
     DeckModel? deck,
@@ -66,12 +68,18 @@ class _$CardsFilterCopyWithImpl<$Res, $Val extends CardsFilter>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? dateFilter = freezed,
     Object? retentionState = freezed,
     Object? deck = freezed,
   }) {
     return _then(
       _value.copyWith(
+            name:
+                null == name
+                    ? _value.name
+                    : name // ignore: cast_nullable_to_non_nullable
+                        as String,
             dateFilter:
                 freezed == dateFilter
                     ? _value.dateFilter
@@ -117,6 +125,7 @@ abstract class _$$CardsFilterImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
+    String name,
     DateFilter? dateFilter,
     RetentionState? retentionState,
     DeckModel? deck,
@@ -140,12 +149,18 @@ class __$$CardsFilterImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? dateFilter = freezed,
     Object? retentionState = freezed,
     Object? deck = freezed,
   }) {
     return _then(
       _$CardsFilterImpl(
+        name:
+            null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                    as String,
         dateFilter:
             freezed == dateFilter
                 ? _value.dateFilter
@@ -169,12 +184,19 @@ class __$$CardsFilterImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$CardsFilterImpl extends _CardsFilter {
-  const _$CardsFilterImpl({this.dateFilter, this.retentionState, this.deck})
-    : super._();
+  const _$CardsFilterImpl({
+    this.name = "",
+    this.dateFilter,
+    this.retentionState,
+    this.deck,
+  }) : super._();
 
   factory _$CardsFilterImpl.fromJson(Map<String, dynamic> json) =>
       _$$CardsFilterImplFromJson(json);
 
+  @override
+  @JsonKey()
+  final String name;
   @override
   final DateFilter? dateFilter;
   @override
@@ -184,7 +206,7 @@ class _$CardsFilterImpl extends _CardsFilter {
 
   @override
   String toString() {
-    return 'CardsFilter(dateFilter: $dateFilter, retentionState: $retentionState, deck: $deck)';
+    return 'CardsFilter(name: $name, dateFilter: $dateFilter, retentionState: $retentionState, deck: $deck)';
   }
 
   @override
@@ -192,6 +214,7 @@ class _$CardsFilterImpl extends _CardsFilter {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CardsFilterImpl &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.dateFilter, dateFilter) ||
                 other.dateFilter == dateFilter) &&
             (identical(other.retentionState, retentionState) ||
@@ -202,7 +225,7 @@ class _$CardsFilterImpl extends _CardsFilter {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, dateFilter, retentionState, deck);
+      Object.hash(runtimeType, name, dateFilter, retentionState, deck);
 
   /// Create a copy of CardsFilter
   /// with the given fields replaced by the non-null parameter values.
@@ -220,6 +243,7 @@ class _$CardsFilterImpl extends _CardsFilter {
 
 abstract class _CardsFilter extends CardsFilter {
   const factory _CardsFilter({
+    final String name,
     final DateFilter? dateFilter,
     final RetentionState? retentionState,
     final DeckModel? deck,
@@ -229,6 +253,8 @@ abstract class _CardsFilter extends CardsFilter {
   factory _CardsFilter.fromJson(Map<String, dynamic> json) =
       _$CardsFilterImpl.fromJson;
 
+  @override
+  String get name;
   @override
   DateFilter? get dateFilter;
   @override

@@ -1,20 +1,18 @@
-import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
-import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
-import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
-import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
-import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
-import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:text_scroll/text_scroll.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
 import 'package:apprendre_lsf/ui/core/centered_message.dart';
 import 'package:apprendre_lsf/ui/core/loading_circle.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
+import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
+import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
+import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
+import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
 
 class ListCardsView extends ConsumerWidget {
   const ListCardsView({super.key});
@@ -37,12 +35,14 @@ class _SearchBar extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SearchAnchor(
-        builder: (BuildContext context, SearchController controller) {
+        builder: (context, _) {
           return SearchBar(
-            controller: controller,
             padding: const WidgetStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(horizontal: 16.0),
             ),
+            onChanged:
+                (query) =>
+                    ref.read(cardsFilterProvider.notifier).updateName(query),
             leading: OverlayPortal(
               controller: overlayController,
               child: const Icon(Icons.search),
@@ -58,9 +58,11 @@ class _SearchBar extends ConsumerWidget {
                   onPressed: () => overlayController.toggle(),
                   icon: Icon(
                     Icons.filter_alt,
-                    color: filter.hasActiveFilters ? primaryColor : null,
+                    color:
+                        filter.hasOneFilterActiveExceptName
+                            ? primaryColor
+                            : null,
                   ),
-                  // selectedIcon: const Icon(Icons.filter_alt),
                 ),
               ),
             ],
