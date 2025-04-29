@@ -77,9 +77,9 @@ class DecksRepository {
 
   /// Store a FullCard in the DB by storing each part in different table.
   ///
-  /// FullCard.[Card] in [CardsTable].
+  /// FullCard.[CardModel] in [CardsTable].
   /// FullCard.[CardDeckInfo] in [CardDeckInfoTable].
-  /// The insert of [Card] inside [CardTable] is made first so it's id can be
+  /// The insert of [CardModel] inside [CardTable] is made first so it's id can be
   /// use to make the link with the [CardDeckInfo].
   Future<AsyncValue<int>> createCard({required FullCard fullCard}) async {
     try {

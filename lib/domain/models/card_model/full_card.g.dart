@@ -8,7 +8,7 @@ part of 'full_card.dart';
 
 _$FullCardImpl _$$FullCardImplFromJson(Map<String, dynamic> json) =>
     _$FullCardImpl(
-      card: Card.fromJson(json['card'] as Map<String, dynamic>),
+      card: CardModel.fromJson(json['card'] as Map<String, dynamic>),
       deckInfos:
           json['deckInfos'] == null
               ? null

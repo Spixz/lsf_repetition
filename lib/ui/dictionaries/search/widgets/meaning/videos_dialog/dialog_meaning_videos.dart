@@ -1,4 +1,3 @@
-import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,19 +6,20 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/sign_video_player.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
+import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
+import 'package:apprendre_lsf/routing/routes_name.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 
 /// An overlay screen showing a video for each different way to sign a word.
 class DialogMeaningVideos extends ConsumerWidget {
-  const DialogMeaningVideos({super.key, required this.scopedMeaning});
-  final LsfDictionaryMeaningWithParent scopedMeaning;
+  const DialogMeaningVideos({super.key, required this.fullcard});
+  final FullCard fullcard;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<LsfDictionaryMedia> videosSign = scopedMeaning.meaning.wordSigns;
+    final List<String> videosSign = fullcard.card.videosSigns;
 
     return SafeArea(
       child: Container(
@@ -28,8 +28,8 @@ class DialogMeaningVideos extends ConsumerWidget {
           children: [
             Column(
               children: [
-                Expanded(child: _Carousel(signs: videosSign)),
-                _ActionsBar(scopedMeaning: scopedMeaning),
+                Expanded(child: _Carousel(videoUrls: videosSign)),
+                _ActionsBar(card: fullcard.card),
               ],
             ),
             _CarouselPositionIndicator(lenght: videosSign.length),
@@ -53,9 +53,9 @@ class DialogMeaningVideos extends ConsumerWidget {
 }
 
 class _Carousel extends ConsumerWidget {
-  const _Carousel({required this.signs, super.key});
+  const _Carousel({required this.videoUrls, super.key});
 
-  final List<LsfDictionaryMedia> signs;
+  final List<String> videoUrls;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,7 +75,7 @@ class _Carousel extends ConsumerWidget {
           ref.read(indexVideoSelectedProvider.notifier).state = index;
         },
       ),
-      items: signs.map(SignVideoPlayer.fromMedia).toList(),
+      items: videoUrls.map(SignVideoPlayer.fromMedia).toList(),
     );
   }
 }
@@ -152,8 +152,8 @@ class _CarouselDot extends StatelessWidget {
 }
 
 class _ActionsBar extends ConsumerWidget {
-  const _ActionsBar({super.key, required this.scopedMeaning});
-  final LsfDictionaryMeaningWithParent scopedMeaning;
+  const _ActionsBar({super.key, required this.card});
+  final CardModel card;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -171,17 +171,17 @@ class _ActionsBar extends ConsumerWidget {
               context.tr("AddToDeck"),
               () => context.pushNamed(
                 Routes.createCard.name,
-                extra: scopedMeaning.toCardModel,
+                extra: card
               ),
             ),
-            _buildButton(context.tr("AddToTrainingList"), () => null),
+            _buildButton(context.tr("AddToTrainingList")),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildButton(String text, void Function() onTap) => Expanded(
+  Widget _buildButton(String text, [void Function()? onTap]) => Expanded(
     child: SizedBox(
       height: double.infinity,
       child: ElevatedButton(

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
@@ -33,7 +34,7 @@ class CreateCardNotifier extends Notifier<AsyncValue<void>> {
   @override
   AsyncValue<void> build() => AsyncLoading();
 
-  Future call({required Card card, required List<int> deckIds}) async {
+  Future call({required CardModel card, required List<int> deckIds}) async {
     final deckRepository = ref.watch(decksRepositoryProvider);
 
     try {

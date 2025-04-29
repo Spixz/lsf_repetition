@@ -1,6 +1,5 @@
 import 'package:apprendre_lsf/core/app_colors.dart';
 import 'package:apprendre_lsf/data/services/video_processing/ffmpeg_video_processing.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 import 'package:apprendre_lsf/ui/core/centered_message.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
@@ -16,14 +15,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Some videos show a black bar on the right due to aspect ratio issues.
 /// See [FfmpegVideoProcessing] for more details.
 class SignVideoPlayer extends ConsumerWidget {
-  const SignVideoPlayer({required this.media, super.key});
-  const SignVideoPlayer.fromMedia(this.media, {super.key});
+  const SignVideoPlayer({required this.videoUrl, super.key});
+  const SignVideoPlayer.fromMedia(this.videoUrl, {super.key});
 
-  final LsfDictionaryMedia media;
+  final String videoUrl;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chewieController = ref.watch(generateVideoControllerProvider(media));
+    final chewieController = ref.watch(
+      generateVideoControllerProvider(videoUrl),
+    );
 
     return chewieController.when(
       data: (controller) {

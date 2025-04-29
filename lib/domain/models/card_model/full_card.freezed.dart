@@ -21,7 +21,7 @@ FullCard _$FullCardFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FullCard {
-  Card get card => throw _privateConstructorUsedError;
+  CardModel get card => throw _privateConstructorUsedError;
   CardDeckInfo? get deckInfos => throw _privateConstructorUsedError;
 
   /// Serializes this FullCard to a JSON map.
@@ -39,9 +39,9 @@ abstract class $FullCardCopyWith<$Res> {
   factory $FullCardCopyWith(FullCard value, $Res Function(FullCard) then) =
       _$FullCardCopyWithImpl<$Res, FullCard>;
   @useResult
-  $Res call({Card card, CardDeckInfo? deckInfos});
+  $Res call({CardModel card, CardDeckInfo? deckInfos});
 
-  $CardCopyWith<$Res> get card;
+  $CardModelCopyWith<$Res> get card;
   $CardDeckInfoCopyWith<$Res>? get deckInfos;
 }
 
@@ -66,7 +66,7 @@ class _$FullCardCopyWithImpl<$Res, $Val extends FullCard>
                 null == card
                     ? _value.card
                     : card // ignore: cast_nullable_to_non_nullable
-                        as Card,
+                        as CardModel,
             deckInfos:
                 freezed == deckInfos
                     ? _value.deckInfos
@@ -81,8 +81,8 @@ class _$FullCardCopyWithImpl<$Res, $Val extends FullCard>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CardCopyWith<$Res> get card {
-    return $CardCopyWith<$Res>(_value.card, (value) {
+  $CardModelCopyWith<$Res> get card {
+    return $CardModelCopyWith<$Res>(_value.card, (value) {
       return _then(_value.copyWith(card: value) as $Val);
     });
   }
@@ -111,10 +111,10 @@ abstract class _$$FullCardImplCopyWith<$Res>
   ) = __$$FullCardImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Card card, CardDeckInfo? deckInfos});
+  $Res call({CardModel card, CardDeckInfo? deckInfos});
 
   @override
-  $CardCopyWith<$Res> get card;
+  $CardModelCopyWith<$Res> get card;
   @override
   $CardDeckInfoCopyWith<$Res>? get deckInfos;
 }
@@ -139,7 +139,7 @@ class __$$FullCardImplCopyWithImpl<$Res>
             null == card
                 ? _value.card
                 : card // ignore: cast_nullable_to_non_nullable
-                    as Card,
+                    as CardModel,
         deckInfos:
             freezed == deckInfos
                 ? _value.deckInfos
@@ -159,7 +159,7 @@ class _$FullCardImpl extends _FullCard {
       _$$FullCardImplFromJson(json);
 
   @override
-  final Card card;
+  final CardModel card;
   @override
   final CardDeckInfo? deckInfos;
 
@@ -198,7 +198,7 @@ class _$FullCardImpl extends _FullCard {
 
 abstract class _FullCard extends FullCard {
   const factory _FullCard({
-    required final Card card,
+    required final CardModel card,
     final CardDeckInfo? deckInfos,
   }) = _$FullCardImpl;
   const _FullCard._() : super._();
@@ -207,7 +207,7 @@ abstract class _FullCard extends FullCard {
       _$FullCardImpl.fromJson;
 
   @override
-  Card get card;
+  CardModel get card;
   @override
   CardDeckInfo? get deckInfos;
 

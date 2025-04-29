@@ -10,13 +10,13 @@ import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_search
 import 'package:apprendre_lsf/routing/route_provider.dart';
 import 'package:apprendre_lsf/ui/library/library_screen.dart';
 
-// final initialLocation = Routes.searchDictionariesResults;
-final initialLocation = Routes.library;
+final initialLocation = Routes.searchDictionariesResults;
+// final initialLocation = Routes.library;
 
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,
   debugLogDiagnostics: true,
-  observers: [MyNavigatorObserver(ref)],
+  // observers: [MyNavigatorObserver(ref)],
   routes: [
     GoRoute(
       path: Routes.home.path,
@@ -29,7 +29,7 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       path: Routes.createCard.path,
       name: Routes.createCard.name,
       builder: (context, state) {
-        final Card card = state.extra as Card;
+        final CardModel card = state.extra as CardModel;
         return CreateCardScreen(cardToCreate: card);
       },
     ),
@@ -48,24 +48,13 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       },
     ),
   ],
-);
-
-class MyNavigatorObserver extends NavigatorObserver {
-  MyNavigatorObserver(this.ref);
-  final WidgetRef ref;
-
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    _onChangeRoute(route.settings.name);
-  }
-
-  void _onChangeRoute(String? routeName) {
+  redirect: (context, state) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final actualRoute = Routes.all.firstWhere(
-        (route) => route.name == routeName,
+        (route) => route.path == state.fullPath,
         orElse: () => initialLocation,
       );
       ref.read(actualRouteProvider.notifier).state = actualRoute;
     });
-  }
-}
+  },
+);

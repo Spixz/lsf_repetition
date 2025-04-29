@@ -6,26 +6,29 @@ part of 'card.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CardImpl _$$CardImplFromJson(Map<String, dynamic> json) => _$CardImpl(
-  id: (json['id'] as num?)?.toInt(),
-  name: json['name'] as String,
-  typology: json['typology'] as String,
-  meaning: json['meaning'] as String,
-  videosSigns:
-      (json['videosSigns'] as List<dynamic>).map((e) => e as String).toList(),
-  sourceDictionnary: $enumDecode(
-    _$LsfDictionaryNameEnumMap,
-    json['sourceDictionnary'],
-  ),
-  dictionnarySignId: (json['dictionnarySignId'] as num?)?.toInt(),
-  createdAt:
-      json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-);
+_$CardModelImpl _$$CardModelImplFromJson(Map<String, dynamic> json) =>
+    _$CardModelImpl(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String,
+      typology: json['typology'] as String,
+      meaning: json['meaning'] as String,
+      videosSigns:
+          (json['videosSigns'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList(),
+      sourceDictionnary: $enumDecode(
+        _$LsfDictionaryNameEnumMap,
+        json['sourceDictionnary'],
+      ),
+      dictionnarySignId: (json['dictionnarySignId'] as num?)?.toInt(),
+      createdAt:
+          json['createdAt'] == null
+              ? null
+              : DateTime.parse(json['createdAt'] as String),
+    );
 
-Map<String, dynamic> _$$CardImplToJson(
-  _$CardImpl instance,
+Map<String, dynamic> _$$CardModelImplToJson(
+  _$CardModelImpl instance,
 ) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,

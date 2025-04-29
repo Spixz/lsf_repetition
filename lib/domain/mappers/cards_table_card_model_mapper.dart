@@ -2,8 +2,8 @@ import 'package:apprendre_lsf/domain/database/drift_database.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 
 extension CardsTableDataToCard on CardsTableData {
-  Card toCardModel() {
-    return Card(
+  CardModel toCardModel() {
+    return CardModel(
       id: id,
       name: name,
       typology: typology,
@@ -16,7 +16,7 @@ extension CardsTableDataToCard on CardsTableData {
   }
 }
 
-extension CardToCardsTableCompanion on Card {
+extension CardToCardsTableCompanion on CardModel {
   CardsTableCompanion toCompanion() {
     return CardsTableCompanion.insert(
       name: name,

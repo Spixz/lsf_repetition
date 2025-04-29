@@ -6,16 +6,17 @@ import 'package:go_router/go_router.dart';
 
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
+import 'package:apprendre_lsf/domain/models/card_model/card.dart';
+import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 
 /// A word or expression meaning with an available video to show its sign.
 class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
   const MeaningCardBodyWithVideoSigns({
     super.key,
-    required this.scopedMeaning,
+    required this.fullCard,
     required this.isLastMeaning,
   });
-  final LsfDictionaryMeaningWithParent scopedMeaning;
+  final FullCard fullCard;
   final bool isLastMeaning;
 
   @override
@@ -31,7 +32,7 @@ class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               _definition(),
-              _ActionsList(scopedMeaning: scopedMeaning),
+              _ActionsList(card: fullCard.card),
             ],
           ),
         ),
@@ -40,20 +41,20 @@ class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
   }
 
   Widget _definition() =>
-      ListTile(title: Text(scopedMeaning.meaning.definition));
+      ListTile(title: Text(fullCard.card.name));
 
   void _onCardTap(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => DialogMeaningVideos(scopedMeaning: scopedMeaning),
+      builder: (_) => DialogMeaningVideos(fullcard: fullCard),
     );
   }
 }
 
 class _ActionsList extends ConsumerWidget {
-  const _ActionsList({super.key, required this.scopedMeaning});
+  const _ActionsList({super.key, required this.card});
 
-  final LsfDictionaryMeaningWithParent scopedMeaning;
+  final CardModel card;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +66,7 @@ class _ActionsList extends ConsumerWidget {
         _cardButton(context.tr("Deck"), Icons.add, () {
           context.pushNamed(
             Routes.createCard.name,
-            extra: scopedMeaning.toCardModel,
+            extra: card,
           );
         }),
       ],
@@ -87,10 +88,10 @@ class _ActionsList extends ConsumerWidget {
 class MeaningCardBodyWithoutVideoSigns extends StatelessWidget {
   const MeaningCardBodyWithoutVideoSigns({
     super.key,
-    required this.scopedMeaning,
+    required this.fullCard,
     required this.isLastMeaning,
   });
-  final LsfDictionaryMeaningWithParent scopedMeaning;
+  final FullCard fullCard;
   final bool isLastMeaning;
 
   @override
@@ -105,7 +106,7 @@ class MeaningCardBodyWithoutVideoSigns extends StatelessWidget {
           children: [
             ListTile(
               title: Text(
-                scopedMeaning.meaning.definition,
+                fullCard.card.name,
                 style: TextStyle(color: Colors.grey),
               ),
             ),

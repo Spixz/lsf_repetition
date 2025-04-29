@@ -48,12 +48,12 @@ class GenerateVideosControllersNotifier
 }
 
 final generateVideoControllerProvider =
-    AutoDisposeFutureProviderFamily<ChewieController, LsfDictionaryMedia>((
+    AutoDisposeFutureProviderFamily<ChewieController, String>((
       ref,
-      media,
+      videoUrl,
     ) async {
       final videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.parse(media.videoUrl),
+        Uri.parse(videoUrl),
       );
 
       await videoPlayerController.initialize();

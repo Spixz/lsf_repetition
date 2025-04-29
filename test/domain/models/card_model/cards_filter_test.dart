@@ -16,7 +16,7 @@ final allStoredDecks = [
   DeckModel(id: 2, name: "deck 2", description: "second deck"),
 ];
 
-final Card basicCard = Card(
+final CardModel basicCard = CardModel(
   id: 1,
   name: "card 1",
   typology: "v",

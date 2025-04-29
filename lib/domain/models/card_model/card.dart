@@ -7,8 +7,8 @@ part 'card.freezed.dart';
 part 'card.g.dart';
 
 @freezed
-class Card with _$Card {
-  const factory Card({
+class CardModel with _$CardModel {
+  const factory CardModel({
     int? id,
     required String name,
     required String typology,
@@ -17,7 +17,7 @@ class Card with _$Card {
     required LsfDictionaryName sourceDictionnary,
     int? dictionnarySignId,
     DateTime? createdAt,
-  }) = _Card;
+  }) = _CardModel;
 
-  factory Card.fromJson(Map<String, dynamic> json) => _$CardFromJson(json);
+  factory CardModel.fromJson(Map<String, dynamic> json) => _$CardModelFromJson(json);
 }

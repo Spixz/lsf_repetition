@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/domain/models/card_model/full_card_mapper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,6 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/meaning_cards.dart';
-import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning_with_parent.dart';
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_meaning.dart';
 
 /// Displays a card representing one dictionary search result.
@@ -41,19 +41,19 @@ class DictionariesSingleResult extends ConsumerWidget {
       itemBuilder: (_, index) {
         final meaning = result.meanings[index];
         final isLastMeaning = index == result.meanings.length - 1;
-        final scopedMeaning = LsfDictionaryMeaningWithParent(
-          parent: result,
-          meaning: meaning,
+        final fullCard = FullCardMapper.fromLsfDictionnaryResults(
+          searchOutput: result,
+          selectedMeaning: meaning,
         );
 
         if (meaning.wordSigns.isEmpty) {
           return MeaningCardBodyWithoutVideoSigns(
-            scopedMeaning: scopedMeaning,
+            fullCard: fullCard,
             isLastMeaning: isLastMeaning,
           );
         }
         return MeaningCardBodyWithVideoSigns(
-          scopedMeaning: scopedMeaning,
+          fullCard: fullCard,
           isLastMeaning: isLastMeaning,
         );
       },
