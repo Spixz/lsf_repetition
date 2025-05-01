@@ -9,10 +9,9 @@ import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 
-final allDecksProvider =
-    NotifierProvider<AllDeckNotifier, AsyncValue<List<DeckModel>>>(
-      AllDeckNotifier.new,
-    );
+final allDecksProvider = StreamProvider<List<DeckModel>>(
+  (ref) => ref.watch(decksRepositoryProvider).getAllDecksStream(),
+);
 
 final getDeckByIdProvider = AutoDisposeProviderFamily<DeckModel?, int>((
   ref,
@@ -29,36 +28,13 @@ final allCardsProvider = StreamProvider<List<FullCard>>(
   (ref) => ref.watch(decksRepositoryProvider).getAllCards(),
 );
 
+final getCardsOfADeckProvider = AutoDisposeFutureProviderFamily<List<FullCard>, int>(
+  (ref, deckId) => ref.watch(decksRepositoryProvider).getCardsOfADeck(deckId),
+);
+
 final cardsFilterProvider = NotifierProvider<CardsFilterNotifier, CardsFilter>(
   CardsFilterNotifier.new,
 );
-
-class CardsFilterNotifier extends Notifier<CardsFilter> {
-  @override
-  CardsFilter build() => CardsFilter();
-
-  Timer? _timer;
-
-  void updateName(String value) {
-    if (_timer != null && _timer!.isActive) {
-      _timer!.cancel();
-    }
-    _timer = Timer.periodic(
-      Duration(milliseconds: 300),
-      (_) => state = state.copyWith(name: value),
-    );
-  }
-
-  void updateDateFilter(DateFilter? date) =>
-      state = state.copyWith(dateFilter: date);
-
-  void updateRetentionState(RetentionState? retention) =>
-      state = state.copyWith(retentionState: retention);
-
-  void updateDeck(DeckModel? deck) => state = state.copyWith(deck: deck);
-
-  void copyFrom(CardsFilter filter) => state = filter;
-}
 
 final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   final allCards = ref.watch(allCardsProvider);
@@ -103,21 +79,29 @@ final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   return allCards;
 });
 
-class AllDeckNotifier extends Notifier<AsyncValue<List<DeckModel>>> {
-  late StreamSubscription allDecksStreamSubcription;
-
+class CardsFilterNotifier extends Notifier<CardsFilter> {
   @override
-  AsyncValue<List<DeckModel>> build() {
-    final allDeckStream =
-        ref.watch(decksRepositoryProvider).getAllDecksStream();
-    allDecksStreamSubcription = allDeckStream.listen((data) {
-      state = AsyncData(data);
-    });
-    ref.onDispose(dispose);
-    return AsyncLoading();
+  CardsFilter build() => CardsFilter();
+
+  Timer? _timer;
+
+  void updateName(String value) {
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
+    _timer = Timer.periodic(
+      Duration(milliseconds: 300),
+      (_) => state = state.copyWith(name: value),
+    );
   }
 
-  void dispose() {
-    allDecksStreamSubcription.cancel();
-  }
+  void updateDateFilter(DateFilter? date) =>
+      state = state.copyWith(dateFilter: date);
+
+  void updateRetentionState(RetentionState? retention) =>
+      state = state.copyWith(retentionState: retention);
+
+  void updateDeck(DeckModel? deck) => state = state.copyWith(deck: deck);
+
+  void copyFrom(CardsFilter filter) => state = filter;
 }

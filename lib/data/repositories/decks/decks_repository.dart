@@ -35,7 +35,10 @@ class DecksRepository {
 
   Future<List<DeckModel>> getAllDecks() async {
     try {
-      final decksTableData = await _driftDatabase.managers.decksTable.get();
+      final decksTableData =
+          await _driftDatabase.managers.decksTable
+              .orderBy((deck) => deck.name.asc())
+              .get();
       final decks = decksTableData.map((deckData) => deckData.toDeckModel);
       return decks.toList();
     } catch (err, st) {
@@ -55,6 +58,14 @@ class DecksRepository {
         .asBroadcastStream();
   }
 
+  Future<void> deleteDecks({required List<int> deckIds}) async {
+    _driftDatabase.decksTable.deleteWhere((deck) => deck.id.isIn(deckIds));
+  }
+
+  Future<void> deleteCardsFromDeck({required List<int> deckIds}) async {
+    _driftDatabase.cardsTable.deleteWhere((card) => card.id.isIn(deckIds));
+  }
+
   Stream<List<FullCard>> getAllCards() {
     final db = _driftDatabase;
     final query = db.select(db.cardsTable).join([
@@ -63,6 +74,7 @@ class DecksRepository {
         db.cardDeckInfoTable.cardId.isExp(db.cardsTable.id),
       ),
     ]);
+    final simple = db.select(db.cardsTable).watch();
 
     return query.watch().map((rows) {
       return rows.map((row) {
@@ -73,6 +85,28 @@ class DecksRepository {
         );
       }).toList();
     }).asBroadcastStream();
+  }
+
+  Future<List<FullCard>> getCardsOfADeck(int deckId) async {
+    final db = _driftDatabase;
+    final query = db.select(db.cardDeckInfoTable)
+      ..where((info) => info.deckId.equals(deckId));
+    // ..orderBy([(card) => OrderingTerm(expression: card.name)]);
+    final joinedQuery = query.join([
+      innerJoin(
+        db.cardsTable,
+        db.cardsTable.id.isExp(db.cardDeckInfoTable.cardId),
+      ),
+    ]);
+    final joinedQueryResult = await joinedQuery.get();
+    final result = joinedQueryResult.map(
+      (row) => FullCard(
+        card: row.readTable(db.cardsTable).toCardModel(),
+        deckInfos: row.readTable(db.cardDeckInfoTable).toCardDeckInfo(),
+      ),
+    );
+    
+    return result.toList();
   }
 
   /// Store a FullCard in the DB by storing each part in different table.
@@ -121,15 +155,20 @@ class DecksRepository {
     }
   }
 
-  Future<AsyncValue<void>> deleteCards({required List<int> cardsIds}) async {
-    try {
-      await _driftDatabase.cardsTable.deleteWhere(
-        (card) => card.id.isIn(cardsIds),
-      );
-      return AsyncData(null);
-    } catch (err, st) {
-      return AsyncError(err, st);
-    }
+  Future<void> deleteCards({required List<int> cardsIds}) async {
+    await _driftDatabase.cardsTable.deleteWhere(
+      (card) => card.id.isIn(cardsIds),
+    );
+  }
+
+  Future<void> updateParentDeck({
+    required List<int> cardsIds,
+    int? newValue,
+  }) async {
+    final db = _driftDatabase;
+    (db.update(db.cardDeckInfoTable)..where(
+      (info) => info.deckId.isIn(cardsIds),
+    )).write(CardDeckInfoTableCompanion(deckId: Value(newValue)));
   }
 
   /// Stored card

@@ -5,8 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/routing/navigation_bar.dart';
-import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/ui/library/list_cards_view.dart';
+import 'package:apprendre_lsf/ui/library/list_deck_view.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
@@ -24,7 +24,9 @@ class LibraryScreen extends ConsumerWidget {
         body: Column(
           children: [
             // TabBar(tabs: myTabs),
-            Expanded(child: TabBarView(children: [ListCardsView(), Empty()])),
+            Expanded(
+              child: TabBarView(children: [ListDecksView(), ListCardsView()]),
+            ),
             TabBar(tabs: myTabs),
           ],
         ),

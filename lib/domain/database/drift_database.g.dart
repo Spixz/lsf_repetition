@@ -870,11 +870,11 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
   late final GeneratedColumn<int> deckId = GeneratedColumn<int>(
     'deck_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.int,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES decks_table (id) ON DELETE CASCADE',
+      'REFERENCES decks_table (id)',
     ),
   );
   @override
@@ -943,8 +943,6 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
         _deckIdMeta,
         deckId.isAcceptableOrUnknown(data['deck_id']!, _deckIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_deckIdMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -966,11 +964,10 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
             DriftSqlType.int,
             data['${effectivePrefix}card_id'],
           )!,
-      deckId:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.int,
-            data['${effectivePrefix}deck_id'],
-          )!,
+      deckId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deck_id'],
+      ),
       tags: $CardDeckInfoTableTable.$convertertagsn.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
@@ -1007,13 +1004,13 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
 class CardDeckInfoTableData extends DataClass
     implements Insertable<CardDeckInfoTableData> {
   final int cardId;
-  final int deckId;
+  final int? deckId;
   final List<String>? tags;
   final RetentionCard retentionCard;
   final DateTime createdAt;
   const CardDeckInfoTableData({
     required this.cardId,
-    required this.deckId,
+    this.deckId,
     this.tags,
     required this.retentionCard,
     required this.createdAt,
@@ -1022,7 +1019,9 @@ class CardDeckInfoTableData extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['card_id'] = Variable<int>(cardId);
-    map['deck_id'] = Variable<int>(deckId);
+    if (!nullToAbsent || deckId != null) {
+      map['deck_id'] = Variable<int>(deckId);
+    }
     if (!nullToAbsent || tags != null) {
       map['tags'] = Variable<String>(
         $CardDeckInfoTableTable.$convertertagsn.toSql(tags),
@@ -1040,7 +1039,8 @@ class CardDeckInfoTableData extends DataClass
   CardDeckInfoTableCompanion toCompanion(bool nullToAbsent) {
     return CardDeckInfoTableCompanion(
       cardId: Value(cardId),
-      deckId: Value(deckId),
+      deckId:
+          deckId == null && nullToAbsent ? const Value.absent() : Value(deckId),
       tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       retentionCard: Value(retentionCard),
       createdAt: Value(createdAt),
@@ -1054,7 +1054,7 @@ class CardDeckInfoTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CardDeckInfoTableData(
       cardId: serializer.fromJson<int>(json['cardId']),
-      deckId: serializer.fromJson<int>(json['deckId']),
+      deckId: serializer.fromJson<int?>(json['deckId']),
       tags: $CardDeckInfoTableTable.$convertertagsn.fromJson(
         serializer.fromJson<Object?>(json['tags']),
       ),
@@ -1069,7 +1069,7 @@ class CardDeckInfoTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'cardId': serializer.toJson<int>(cardId),
-      'deckId': serializer.toJson<int>(deckId),
+      'deckId': serializer.toJson<int?>(deckId),
       'tags': serializer.toJson<Object?>(
         $CardDeckInfoTableTable.$convertertagsn.toJson(tags),
       ),
@@ -1082,13 +1082,13 @@ class CardDeckInfoTableData extends DataClass
 
   CardDeckInfoTableData copyWith({
     int? cardId,
-    int? deckId,
+    Value<int?> deckId = const Value.absent(),
     Value<List<String>?> tags = const Value.absent(),
     RetentionCard? retentionCard,
     DateTime? createdAt,
   }) => CardDeckInfoTableData(
     cardId: cardId ?? this.cardId,
-    deckId: deckId ?? this.deckId,
+    deckId: deckId.present ? deckId.value : this.deckId,
     tags: tags.present ? tags.value : this.tags,
     retentionCard: retentionCard ?? this.retentionCard,
     createdAt: createdAt ?? this.createdAt,
@@ -1135,7 +1135,7 @@ class CardDeckInfoTableData extends DataClass
 class CardDeckInfoTableCompanion
     extends UpdateCompanion<CardDeckInfoTableData> {
   final Value<int> cardId;
-  final Value<int> deckId;
+  final Value<int?> deckId;
   final Value<List<String>?> tags;
   final Value<RetentionCard> retentionCard;
   final Value<DateTime> createdAt;
@@ -1150,13 +1150,12 @@ class CardDeckInfoTableCompanion
   });
   CardDeckInfoTableCompanion.insert({
     required int cardId,
-    required int deckId,
+    this.deckId = const Value.absent(),
     this.tags = const Value.absent(),
     required RetentionCard retentionCard,
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : cardId = Value(cardId),
-       deckId = Value(deckId),
        retentionCard = Value(retentionCard);
   static Insertable<CardDeckInfoTableData> custom({
     Expression<int>? cardId,
@@ -1178,7 +1177,7 @@ class CardDeckInfoTableCompanion
 
   CardDeckInfoTableCompanion copyWith({
     Value<int>? cardId,
-    Value<int>? deckId,
+    Value<int?>? deckId,
     Value<List<String>?>? tags,
     Value<RetentionCard>? retentionCard,
     Value<DateTime>? createdAt,
@@ -1264,13 +1263,6 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'cards_table',
-        limitUpdateKind: UpdateKind.delete,
-      ),
-      result: [TableUpdate('card_deck_info_table', kind: UpdateKind.delete)],
-    ),
-    WritePropagation(
-      on: TableUpdateQuery.onTableName(
-        'decks_table',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('card_deck_info_table', kind: UpdateKind.delete)],
@@ -1956,7 +1948,7 @@ typedef $$CardsTableTableProcessedTableManager =
 typedef $$CardDeckInfoTableTableCreateCompanionBuilder =
     CardDeckInfoTableCompanion Function({
       required int cardId,
-      required int deckId,
+      Value<int?> deckId,
       Value<List<String>?> tags,
       required RetentionCard retentionCard,
       Value<DateTime> createdAt,
@@ -1965,7 +1957,7 @@ typedef $$CardDeckInfoTableTableCreateCompanionBuilder =
 typedef $$CardDeckInfoTableTableUpdateCompanionBuilder =
     CardDeckInfoTableCompanion Function({
       Value<int> cardId,
-      Value<int> deckId,
+      Value<int?> deckId,
       Value<List<String>?> tags,
       Value<RetentionCard> retentionCard,
       Value<DateTime> createdAt,
@@ -2009,9 +2001,9 @@ final class $$CardDeckInfoTableTableReferences
         $_aliasNameGenerator(db.cardDeckInfoTable.deckId, db.decksTable.id),
       );
 
-  $$DecksTableTableProcessedTableManager get deckId {
-    final $_column = $_itemColumn<int>('deck_id')!;
-
+  $$DecksTableTableProcessedTableManager? get deckId {
+    final $_column = $_itemColumn<int>('deck_id');
+    if ($_column == null) return null;
     final manager = $$DecksTableTableTableManager(
       $_db,
       $_db.decksTable,
@@ -2276,7 +2268,7 @@ class $$CardDeckInfoTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> cardId = const Value.absent(),
-                Value<int> deckId = const Value.absent(),
+                Value<int?> deckId = const Value.absent(),
                 Value<List<String>?> tags = const Value.absent(),
                 Value<RetentionCard> retentionCard = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -2292,7 +2284,7 @@ class $$CardDeckInfoTableTableTableManager
           createCompanionCallback:
               ({
                 required int cardId,
-                required int deckId,
+                Value<int?> deckId = const Value.absent(),
                 Value<List<String>?> tags = const Value.absent(),
                 required RetentionCard retentionCard,
                 Value<DateTime> createdAt = const Value.absent(),

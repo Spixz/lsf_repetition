@@ -19,6 +19,7 @@ abstract final class Routes {
     'Search in dictionaries results',
     '/searchDictionariesResults',
   );
+  static const settings = SingleRoute('Settings', '/settings');
 
   static const all = [
     home,

@@ -1,9 +1,6 @@
-import 'package:apprendre_lsf/routing/routes_name.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -11,18 +8,18 @@ import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.d
 import 'package:apprendre_lsf/ui/core/centered_message.dart';
 import 'package:apprendre_lsf/ui/core/loading_circle.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
-import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
+import 'package:apprendre_lsf/ui/decks/delete/delete_deck_provider.dart';
+import 'package:apprendre_lsf/ui/library/providers/checkbox_delete_deck_with_cards.dart';
 
-class ListCardsView extends ConsumerWidget {
-  const ListCardsView({super.key});
+class ListDecksView extends ConsumerWidget {
+  const ListDecksView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: [_SearchBar(), Expanded(child: _ListCards())]);
+    return Column(children: [Expanded(child: _ListDecks())]);
   }
 }
 
@@ -68,13 +65,6 @@ class _SearchBar extends ConsumerWidget {
                   ),
                 ),
               ),
-              Tooltip(
-                message: 'Settings',
-                child: IconButton(
-                  onPressed: () => context.pushNamed(Routes.settings.name),
-                  icon: Icon(Icons.settings),
-                ),
-              ),
             ],
           );
         },
@@ -84,42 +74,38 @@ class _SearchBar extends ConsumerWidget {
   }
 }
 
-class _ListCards extends ConsumerWidget {
-  const _ListCards({super.key});
+class _ListDecks extends ConsumerWidget {
+  const _ListDecks({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final allCards = ref.watch(filteredCardsProvider);
+    final allDecks = ref.watch(allDecksProvider);
 
-    ref.listen(
-      deleteCardNotifierProvider,
-      (_, result) => _onCardDeletion(context, result),
-    );
-
-    return allCards.when(
-      data: (cards) {
+    return allDecks.when(
+      data: (decks) {
         return ListView.builder(
-          itemCount: cards.length,
+          itemCount: decks.length,
           itemBuilder: (context, index) {
-            final card = cards[index];
+            final deck = decks[index];
+            final numberOfCards = ref
+                .watch(getCardsOfADeckProvider(deck.id!))
+                .maybeWhen(data: (cards) => cards.length, orElse: () => 0);
 
             return ListTile(
-              title: Text(card.card.name),
+              title: Text(deck.name),
               subtitle: SizedBox(
                 height: 30,
                 child: TextScroll(
-                  card.card.meaning,
+                  "$numberOfCards cards",
                   delayBefore: Duration(seconds: 1),
                   pauseBetween: Duration(seconds: 3),
                 ),
               ),
               isThreeLine: false,
-              trailing: _PopUpMenu(card: card),
-              onTap:
-                  () => showDialog(
-                    context: context,
-                    builder: (_) => DialogMeaningVideos(fullcard: card),
-                  ),
+              trailing: _PopUpMenu(deck: deck),
+              onTap: () {
+                //TODO : change filter + tab
+              },
             );
           },
         );
@@ -129,30 +115,12 @@ class _ListCards extends ConsumerWidget {
       loading: () => SizedBox(height: context.height, child: LoadingCircle()),
     );
   }
-
-  void _onCardDeletion(BuildContext context, AsyncValue result) {
-    result.when(
-      data: (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SuccessSnackbar(message: context.tr("CardDeletionSuccess")),
-        );
-      },
-      error: (err, st) {
-        debugPrint(err.toString());
-        debugPrintStack(stackTrace: st);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(ErrorSnackbar(message: context.tr("CardDeletionError")));
-      },
-      loading: () => null,
-    );
-  }
 }
 
 class _PopUpMenu extends ConsumerWidget {
-  const _PopUpMenu({required this.card, super.key});
+  const _PopUpMenu({required this.deck, super.key});
 
-  final FullCard card;
+  final DeckModel deck;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -165,7 +133,7 @@ class _PopUpMenu extends ConsumerWidget {
                   () => showDialog<String>(
                     context: context,
                     builder:
-                        (BuildContext context) => _DeleteCardDialog(card: card),
+                        (BuildContext context) => _DeleteDeckDialog(deck: deck),
                   ),
             ),
           ],
@@ -173,30 +141,67 @@ class _PopUpMenu extends ConsumerWidget {
   }
 }
 
-class _DeleteCardDialog extends ConsumerWidget {
-  const _DeleteCardDialog({required this.card, super.key});
+class _DeleteDeckDialog extends ConsumerWidget {
+  const _DeleteDeckDialog({required this.deck, super.key});
 
-  final FullCard card;
+  final DeckModel deck;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    DeckModel? deck;
+    final numberOfCards = ref
+        .watch(getCardsOfADeckProvider(deck.id!))
+        .maybeWhen(data: (cards) => cards.length, orElse: () => 0);
 
-    if (card.belongToADeck) {
-      deck = ref.watch(getDeckByIdProvider(card.deckInfos!.deckId!));
-    }
+    ref.listen(
+      deleteDeckNotifierProvider,
+      (_, result) => _onDeckDeletion(context, result),
+    );
 
     return AlertDialog(
-      title: Text(context.tr("CardDeletion")),
-      content: _deletionConfirmationText(context, deck),
+      title: Text(context.tr("DeckDeletion")),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 10,
+        children: [
+          Text(
+            context.tr(
+              "ConfirmationDeckDeletion",
+              args: [deck.name, "$numberOfCards"],
+            ),
+          ),
+          Row(
+            children: [
+              Checkbox(
+                value: ref.watch(checkboxStatusDeleteWithCardsProvider),
+                onChanged: (newValue) {
+                  ref
+                      .read(checkboxStatusDeleteWithCardsProvider.notifier)
+                      .state = newValue ?? false;
+                },
+              ),
+              Expanded(
+                child: Text(
+                  context.tr("DeleteCardsItContain", args: ["$numberOfCards"]),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancel deletion'),
           child: Text(context.tr("No")),
         ),
         TextButton(
-          onPressed: () {
-            ref.read(deleteCardNotifierProvider.notifier).call([card.card.id!]);
+          onPressed: () async {
+            await ref
+                .read(deleteDeckNotifierProvider.notifier)
+                .call(
+                  deckIds: [deck.id!],
+                  deleteCards: ref.read(checkboxStatusDeleteWithCardsProvider),
+                );
             Navigator.pop(context, 'Valid deletion');
           },
           child: Text(context.tr("Yes")),
@@ -205,15 +210,23 @@ class _DeleteCardDialog extends ConsumerWidget {
     );
   }
 
-  Widget _deletionConfirmationText(BuildContext context, DeckModel? deck) {
-    if (deck != null) {
-      return Text(
-        context.tr(
-          "ConfirmationCardDeletionFromDeck",
-          args: [card.card.name, deck.name],
-        ),
-      );
-    }
-    return Text(context.tr("ConfirmationCardDeletion", args: [card.card.name]));
+  void _onDeckDeletion(BuildContext context, AsyncValue result) {
+    result.when(
+      data: (wasExecuted) {
+        if (wasExecuted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SuccessSnackbar(message: context.tr("DeckDeletionSuccess")),
+          );
+        }
+      },
+      error: (err, st) {
+        debugPrint(err.toString());
+        debugPrintStack(stackTrace: st);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(ErrorSnackbar(message: context.tr("DeckDeletionError")));
+      },
+      loading: () => null,
+    );
   }
 }

@@ -41,8 +41,7 @@ class CardsTable extends Table {
 class CardDeckInfoTable extends Table {
   IntColumn get cardId =>
       integer().references(CardsTable, #id, onDelete: KeyAction.cascade)();
-  IntColumn get deckId =>
-      integer().references(DecksTable, #id, onDelete: KeyAction.cascade)();
+  IntColumn get deckId => integer().references(DecksTable, #id).nullable()();
   TextColumn get tags =>
       text().map(ListString.converter).clientDefault(() => "[]").nullable()();
   TextColumn get retentionCard => text().map(const RetentionCardConverter())();
@@ -61,11 +60,19 @@ class AppDriftDatabase extends _$AppDriftDatabase {
   static QueryExecutor _openConnection() {
     return driftDatabase(
       name: 'drift_database',
-      native: const DriftNativeOptions(
+      native: DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),
     );
   }
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON;');
+    },
+  );
 
   void deleteTables() async {
     final tables = allTables.toList().reversed;

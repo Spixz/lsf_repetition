@@ -22,8 +22,8 @@ CardDeckInfo _$CardDeckInfoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CardDeckInfo {
   int get cardId => throw _privateConstructorUsedError;
-  int get deckId => throw _privateConstructorUsedError;
   RetentionCard get retentionCard => throw _privateConstructorUsedError;
+  int? get deckId => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -46,8 +46,8 @@ abstract class $CardDeckInfoCopyWith<$Res> {
   @useResult
   $Res call({
     int cardId,
-    int deckId,
     RetentionCard retentionCard,
+    int? deckId,
     List<String> tags,
     DateTime? createdAt,
   });
@@ -71,8 +71,8 @@ class _$CardDeckInfoCopyWithImpl<$Res, $Val extends CardDeckInfo>
   @override
   $Res call({
     Object? cardId = null,
-    Object? deckId = null,
     Object? retentionCard = null,
+    Object? deckId = freezed,
     Object? tags = null,
     Object? createdAt = freezed,
   }) {
@@ -83,16 +83,16 @@ class _$CardDeckInfoCopyWithImpl<$Res, $Val extends CardDeckInfo>
                     ? _value.cardId
                     : cardId // ignore: cast_nullable_to_non_nullable
                         as int,
-            deckId:
-                null == deckId
-                    ? _value.deckId
-                    : deckId // ignore: cast_nullable_to_non_nullable
-                        as int,
             retentionCard:
                 null == retentionCard
                     ? _value.retentionCard
                     : retentionCard // ignore: cast_nullable_to_non_nullable
                         as RetentionCard,
+            deckId:
+                freezed == deckId
+                    ? _value.deckId
+                    : deckId // ignore: cast_nullable_to_non_nullable
+                        as int?,
             tags:
                 null == tags
                     ? _value.tags
@@ -130,8 +130,8 @@ abstract class _$$CardDeckInfoImplCopyWith<$Res>
   @useResult
   $Res call({
     int cardId,
-    int deckId,
     RetentionCard retentionCard,
+    int? deckId,
     List<String> tags,
     DateTime? createdAt,
   });
@@ -155,8 +155,8 @@ class __$$CardDeckInfoImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? cardId = null,
-    Object? deckId = null,
     Object? retentionCard = null,
+    Object? deckId = freezed,
     Object? tags = null,
     Object? createdAt = freezed,
   }) {
@@ -167,16 +167,16 @@ class __$$CardDeckInfoImplCopyWithImpl<$Res>
                 ? _value.cardId
                 : cardId // ignore: cast_nullable_to_non_nullable
                     as int,
-        deckId:
-            null == deckId
-                ? _value.deckId
-                : deckId // ignore: cast_nullable_to_non_nullable
-                    as int,
         retentionCard:
             null == retentionCard
                 ? _value.retentionCard
                 : retentionCard // ignore: cast_nullable_to_non_nullable
                     as RetentionCard,
+        deckId:
+            freezed == deckId
+                ? _value.deckId
+                : deckId // ignore: cast_nullable_to_non_nullable
+                    as int?,
         tags:
             null == tags
                 ? _value._tags
@@ -197,8 +197,8 @@ class __$$CardDeckInfoImplCopyWithImpl<$Res>
 class _$CardDeckInfoImpl implements _CardDeckInfo {
   const _$CardDeckInfoImpl({
     required this.cardId,
-    required this.deckId,
     required this.retentionCard,
+    this.deckId,
     final List<String> tags = const [],
     this.createdAt,
   }) : _tags = tags;
@@ -209,9 +209,9 @@ class _$CardDeckInfoImpl implements _CardDeckInfo {
   @override
   final int cardId;
   @override
-  final int deckId;
-  @override
   final RetentionCard retentionCard;
+  @override
+  final int? deckId;
   final List<String> _tags;
   @override
   @JsonKey()
@@ -226,7 +226,7 @@ class _$CardDeckInfoImpl implements _CardDeckInfo {
 
   @override
   String toString() {
-    return 'CardDeckInfo(cardId: $cardId, deckId: $deckId, retentionCard: $retentionCard, tags: $tags, createdAt: $createdAt)';
+    return 'CardDeckInfo(cardId: $cardId, retentionCard: $retentionCard, deckId: $deckId, tags: $tags, createdAt: $createdAt)';
   }
 
   @override
@@ -235,9 +235,9 @@ class _$CardDeckInfoImpl implements _CardDeckInfo {
         (other.runtimeType == runtimeType &&
             other is _$CardDeckInfoImpl &&
             (identical(other.cardId, cardId) || other.cardId == cardId) &&
-            (identical(other.deckId, deckId) || other.deckId == deckId) &&
             (identical(other.retentionCard, retentionCard) ||
                 other.retentionCard == retentionCard) &&
+            (identical(other.deckId, deckId) || other.deckId == deckId) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
@@ -248,8 +248,8 @@ class _$CardDeckInfoImpl implements _CardDeckInfo {
   int get hashCode => Object.hash(
     runtimeType,
     cardId,
-    deckId,
     retentionCard,
+    deckId,
     const DeepCollectionEquality().hash(_tags),
     createdAt,
   );
@@ -271,8 +271,8 @@ class _$CardDeckInfoImpl implements _CardDeckInfo {
 abstract class _CardDeckInfo implements CardDeckInfo {
   const factory _CardDeckInfo({
     required final int cardId,
-    required final int deckId,
     required final RetentionCard retentionCard,
+    final int? deckId,
     final List<String> tags,
     final DateTime? createdAt,
   }) = _$CardDeckInfoImpl;
@@ -283,9 +283,9 @@ abstract class _CardDeckInfo implements CardDeckInfo {
   @override
   int get cardId;
   @override
-  int get deckId;
-  @override
   RetentionCard get retentionCard;
+  @override
+  int? get deckId;
   @override
   List<String> get tags;
   @override

@@ -48,6 +48,13 @@
     "InLearning": "En cours d'apprentissage",
     "LearningState": "État d'apprentissage",
     "SortByCreationDate": "Sort by creation date",
+
+    "DECK-VIEW": "",
+    "DeckDeletion": "Supprimer le deck",
+    "ConfirmationDeckDeletion": "Êtes-vous sur de vouloir supprimer '{}' ?",
+    "DeleteCardsItContain": "Supprimer les {} cartes qu'il contient",
+    "DeckDeletionSuccess": "Deck supprimé",
+    "DeckDeletionError": "Erreur durant la suppression du deck",
     
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "Mes cartes",

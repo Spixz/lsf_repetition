@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -45,6 +46,13 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       name: Routes.searchDictionariesResults.name,
       pageBuilder: (context, state) {
         return NoTransitionPage(child: DictionariesSearchScreen());
+      },
+    ),
+    GoRoute(
+      path: Routes.settings.path,
+      name: Routes.settings.name,
+      builder: (context, state) {
+        return const SettingsScreen();
       },
     ),
   ],

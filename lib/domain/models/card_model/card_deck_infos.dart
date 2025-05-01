@@ -9,8 +9,8 @@ part 'card_deck_infos.g.dart';
 class CardDeckInfo with _$CardDeckInfo {
   const factory CardDeckInfo({
     required int cardId,
-    required int deckId,
     required RetentionCard retentionCard,
+    int? deckId,
     @Default([]) List<String> tags,
     DateTime? createdAt,
   }) = _CardDeckInfo;

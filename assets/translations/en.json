@@ -49,6 +49,13 @@
     "LearningState": "Sort by learning state",
     "SortByCreationDate": "Sort by creation date",
 
+    "DECK-VIEW": "",
+    "DeckDeletion": "Delete deck",
+    "ConfirmationDeckDeletion": "Are you sure you want to delete '{}' ?",
+    "DeleteCardsItContain": "Delete the {} cards it contains",
+    "DeckDeletionSuccess": "Deck deleted",
+    "DeckDeletionError": "Error while deleting the deck",
+
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "My cards",
   
