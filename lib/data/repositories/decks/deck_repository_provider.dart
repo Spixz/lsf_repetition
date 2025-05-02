@@ -28,9 +28,10 @@ final allCardsProvider = StreamProvider<List<FullCard>>(
   (ref) => ref.watch(decksRepositoryProvider).getAllCards(),
 );
 
-final getCardsOfADeckProvider = AutoDisposeFutureProviderFamily<List<FullCard>, int>(
-  (ref, deckId) => ref.watch(decksRepositoryProvider).getCardsOfADeck(deckId),
-);
+final getCardsOfADeckProvider = AutoDisposeFutureProviderFamily<
+  List<FullCard>,
+  int
+>((ref, deckId) => ref.watch(decksRepositoryProvider).getCardsOfADeck(deckId));
 
 final cardsFilterProvider = NotifierProvider<CardsFilterNotifier, CardsFilter>(
   CardsFilterNotifier.new,
@@ -103,6 +104,8 @@ class CardsFilterNotifier extends Notifier<CardsFilter> {
       state = state.copyWith(retentionState: retention);
 
   void updateDeck(DeckModel? deck) => state = state.copyWith(deck: deck);
+
+  void clear() => ref.invalidateSelf();
 
   void copyFrom(CardsFilter filter) => state = filter;
 }

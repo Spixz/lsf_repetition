@@ -22,8 +22,8 @@ class CardsFilter with _$CardsFilter {
       [dateFilter, retentionState, deck].any((prop) => prop != null) ||
       name.isNotEmpty;
 
-  bool get hasOneFilterActiveExceptName =>
-      [dateFilter, retentionState, deck].any((prop) => prop != null);
+  bool get hasActiveFiltersExceptDeckAndName =>
+      [dateFilter, retentionState].any((prop) => prop != null);
 
   factory CardsFilter.fromJson(Map<String, dynamic> json) =>
       _$CardsFilterFromJson(json);

@@ -10,9 +10,9 @@ import 'package:apprendre_lsf/ui/core/loading_circle.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
-import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
 import 'package:apprendre_lsf/ui/decks/delete/delete_deck_provider.dart';
 import 'package:apprendre_lsf/ui/library/providers/checkbox_delete_deck_with_cards.dart';
+import 'package:apprendre_lsf/ui/library/providers/library_on_dispose_provider.dart';
 
 class ListDecksView extends ConsumerWidget {
   const ListDecksView({super.key});
@@ -20,57 +20,6 @@ class ListDecksView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(children: [Expanded(child: _ListDecks())]);
-  }
-}
-
-class _SearchBar extends ConsumerWidget {
-  _SearchBar({super.key});
-  final OverlayPortalController overlayController = OverlayPortalController();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final filter = ref.watch(cardsFilterProvider);
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SearchAnchor(
-        builder: (context, _) {
-          return SearchBar(
-            padding: const WidgetStatePropertyAll<EdgeInsets>(
-              EdgeInsets.symmetric(horizontal: 16.0),
-            ),
-            onChanged:
-                (query) =>
-                    ref.read(cardsFilterProvider.notifier).updateName(query),
-            leading: OverlayPortal(
-              controller: overlayController,
-              child: const Icon(Icons.search),
-              overlayChildBuilder:
-                  (context) => CardsFilterSettingsOverlay(
-                    overlayController: overlayController,
-                  ),
-            ),
-            trailing: <Widget>[
-              Tooltip(
-                message: 'Display filter',
-                child: IconButton(
-                  onPressed: () => overlayController.toggle(),
-                  icon: Icon(
-                    Icons.filter_alt,
-                    color:
-                        filter.hasOneFilterActiveExceptName
-                            ? primaryColor
-                            : null,
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-        suggestionsBuilder: (_, __) => [],
-      ),
-    );
   }
 }
 
@@ -104,7 +53,11 @@ class _ListDecks extends ConsumerWidget {
               isThreeLine: false,
               trailing: _PopUpMenu(deck: deck),
               onTap: () {
-                //TODO : change filter + tab
+                ref.read(cardsFilterProvider.notifier).clear();
+                ref.read(cardsFilterProvider.notifier).updateDeck(deck);
+                DefaultTabController.maybeOf(
+                  context,
+                )?.animateTo(LibraryTab.cards.index);
               },
             );
           },

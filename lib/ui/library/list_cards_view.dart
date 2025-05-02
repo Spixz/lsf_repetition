@@ -1,5 +1,4 @@
-import 'package:apprendre_lsf/routing/routes_name.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
+import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,13 +15,21 @@ import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/ui/cards/delete/providers/delete_card_provider.dart';
 import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
+import 'package:apprendre_lsf/routing/routes_name.dart';
+import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
 
 class ListCardsView extends ConsumerWidget {
   const ListCardsView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(children: [_SearchBar(), Expanded(child: _ListCards())]);
+    return Column(
+      children: [
+        _SearchBar(),
+        _SelectedDeckChip(),
+        Expanded(child: _ListCards()),
+      ],
+    );
   }
 }
 
@@ -32,8 +39,7 @@ class _SearchBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-    final filter = ref.watch(cardsFilterProvider);
+    final filteredCards = ref.watch(cardsFilterProvider);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -62,8 +68,8 @@ class _SearchBar extends ConsumerWidget {
                   icon: Icon(
                     Icons.filter_alt,
                     color:
-                        filter.hasOneFilterActiveExceptName
-                            ? primaryColor
+                        filteredCards.hasActiveFiltersExceptDeckAndName
+                            ? context.primaryColor
                             : null,
                   ),
                 ),
@@ -122,6 +128,34 @@ class _ListCards extends ConsumerWidget {
       error:
           (_, __) => CenteredMessage(message: context.tr("ErrorLoadingCards")),
       loading: () => SizedBox(height: context.height, child: LoadingCircle()),
+    );
+  }
+}
+
+class _SelectedDeckChip extends ConsumerWidget {
+  const _SelectedDeckChip({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filter = ref.watch(cardsFilterProvider);
+
+    if (filter.deck == null) {
+      return Empty();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Chip(
+            label: Text(filter.deck!.name),
+            backgroundColor: Color.fromRGBO(236, 230, 240, 0.578),
+            onDeleted: () {
+              ref.read(cardsFilterProvider.notifier).updateDeck(null);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

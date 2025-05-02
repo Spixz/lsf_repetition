@@ -1,3 +1,5 @@
+import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
+import 'package:apprendre_lsf/ui/library/providers/library_on_dispose_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -17,17 +19,24 @@ class LibraryScreen extends ConsumerWidget {
       Tab(text: context.tr("Decks")),
       Tab(text: context.tr("Cards")),
     ];
+    ref.watch(libraryOnDisposeProvider);
 
     return DefaultTabController(
       length: myTabs.length,
       child: Scaffold(
         body: Column(
           children: [
-            // TabBar(tabs: myTabs),
             Expanded(
               child: TabBarView(children: [ListDecksView(), ListCardsView()]),
             ),
-            TabBar(tabs: myTabs),
+            TabBar(
+              tabs: myTabs,
+              onTap: (index) {
+                if (index == LibraryTab.decks.index) {
+                  ref.read(cardsFilterProvider.notifier).updateDeck(null);
+                }
+              },
+            ),
           ],
         ),
         bottomNavigationBar: MyBottomNavigationBar(),
