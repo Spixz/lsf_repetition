@@ -5,16 +5,15 @@ final deleteCardNotifierProvider = AutoDisposeNotifierProvider(
   DeleteCardsNotifier.new,
 );
 
-class DeleteCardsNotifier extends AutoDisposeNotifier<AsyncValue> {
+class DeleteCardsNotifier extends AutoDisposeNotifier<AsyncValue<bool>> {
   @override
-  AsyncValue build() {
-    return AsyncLoading();
-  }
+  AsyncValue<bool> build() => AsyncValue.data(false);
 
   Future call(List<int> cardsIds) async {
     try {
+      state = AsyncLoading();
       await ref.watch(decksRepositoryProvider).deleteCards(cardsIds: cardsIds);
-      state = AsyncData(null);
+      state = AsyncData(true);
     } catch (err, st) {
       state = AsyncError(err, st);
     }

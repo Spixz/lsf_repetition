@@ -91,11 +91,6 @@ class _ListCards extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final allCards = ref.watch(filteredCardsProvider);
 
-    ref.listen(
-      deleteCardNotifierProvider,
-      (_, result) => _onCardDeletion(context, result),
-    );
-
     return allCards.when(
       data: (cards) {
         return ListView.builder(
@@ -127,24 +122,6 @@ class _ListCards extends ConsumerWidget {
       error:
           (_, __) => CenteredMessage(message: context.tr("ErrorLoadingCards")),
       loading: () => SizedBox(height: context.height, child: LoadingCircle()),
-    );
-  }
-
-  void _onCardDeletion(BuildContext context, AsyncValue result) {
-    result.when(
-      data: (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SuccessSnackbar(message: context.tr("CardDeletionSuccess")),
-        );
-      },
-      error: (err, st) {
-        debugPrint(err.toString());
-        debugPrintStack(stackTrace: st);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(ErrorSnackbar(message: context.tr("CardDeletionError")));
-      },
-      loading: () => null,
     );
   }
 }
@@ -182,6 +159,11 @@ class _DeleteCardDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     DeckModel? deck;
 
+    ref.listen(
+      deleteCardNotifierProvider,
+      (_, result) => _onCardDeletion(context, result),
+    );
+
     if (card.belongToADeck) {
       deck = ref.watch(getDeckByIdProvider(card.deckInfos!.deckId!));
     }
@@ -215,5 +197,25 @@ class _DeleteCardDialog extends ConsumerWidget {
       );
     }
     return Text(context.tr("ConfirmationCardDeletion", args: [card.card.name]));
+  }
+
+  void _onCardDeletion(BuildContext context, AsyncValue result) {
+    result.when(
+      data: (wasExecuted) {
+        if (wasExecuted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SuccessSnackbar(message: context.tr("CardDeletionSuccess")),
+          );
+        }
+      },
+      error: (err, st) {
+        debugPrint(err.toString());
+        debugPrintStack(stackTrace: st);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(ErrorSnackbar(message: context.tr("CardDeletionError")));
+      },
+      loading: () => null,
+    );
   }
 }

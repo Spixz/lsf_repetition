@@ -26,19 +26,19 @@ class CurrentPageNotifier extends Notifier<CreateCardStep> {
 }
 
 final createCardsProvider =
-    NotifierProvider<CreateCardNotifier, AsyncValue<void>>(
+    NotifierProvider<CreateCardNotifier, AsyncValue<bool>>(
       CreateCardNotifier.new,
     );
 
-class CreateCardNotifier extends Notifier<AsyncValue<void>> {
+class CreateCardNotifier extends Notifier<AsyncValue<bool>> {
   @override
-  AsyncValue<void> build() => AsyncLoading();
+  AsyncValue<bool> build() => AsyncData(false);
 
   Future call({required CardModel card, required List<int> deckIds}) async {
-    final deckRepository = ref.watch(decksRepositoryProvider);
-
     try {
       state = AsyncLoading();
+      final deckRepository = ref.watch(decksRepositoryProvider);
+
       final cardsToAdd = deckIds.map(
         (deckId) => FullCard(
           card: card,
@@ -46,7 +46,7 @@ class CreateCardNotifier extends Notifier<AsyncValue<void>> {
         ),
       );
       deckRepository.createCards(fullCards: cardsToAdd.toList());
-      state = AsyncData(null);
+      state = AsyncData(true);
     } catch (err, st) {
       state = AsyncError(err, st);
     }

@@ -105,7 +105,7 @@ class DecksRepository {
         deckInfos: row.readTable(db.cardDeckInfoTable).toCardDeckInfo(),
       ),
     );
-    
+
     return result.toList();
   }
 
@@ -115,44 +115,23 @@ class DecksRepository {
   /// FullCard.[CardDeckInfo] in [CardDeckInfoTable].
   /// The insert of [CardModel] inside [CardTable] is made first so it's id can be
   /// use to make the link with the [CardDeckInfo].
-  Future<AsyncValue<int>> createCard({required FullCard fullCard}) async {
-    try {
-      final card = fullCard.card.toCompanion();
-      final cardId = await _driftDatabase.cardsTable.insertOne(card);
+  Future<int> createCard({required FullCard fullCard}) async {
+    final card = fullCard.card.toCompanion();
+    final cardId = await _driftDatabase.cardsTable.insertOne(card);
 
-      if (fullCard.deckInfos != null) {
-        final deckInfos = fullCard.deckInfos!.copyWith(cardId: cardId);
-        await _driftDatabase.cardDeckInfoTable.insertOne(
-          deckInfos.toCompanion(),
-        );
-      }
-      return AsyncData(cardId);
-    } catch (err, st) {
-      print(err);
-      print(st);
-      return AsyncError(
-        Exception("Erreur lors de la création de la carte."),
-        st,
-      );
+    if (fullCard.deckInfos != null) {
+      final deckInfos = fullCard.deckInfos!.copyWith(cardId: cardId);
+      await _driftDatabase.cardDeckInfoTable.insertOne(deckInfos.toCompanion());
     }
+    return cardId;
   }
 
-  Future<AsyncValue<void>> createCards({
-    required List<FullCard> fullCards,
-  }) async {
-    try {
-      final createResp = await Future.wait(
-        fullCards.map((full) => createCard(fullCard: full)),
-      );
-      // final createdCardsId = createResp.whereType<AsyncData>().map((data) => data.value as int);
-      return AsyncData(null);
-    } catch (err, st) {
-      print(st);
-      return AsyncError(
-        Exception("Erreur lors de la création de la carte."),
-        st,
-      );
-    }
+  Future<void> createCards({required List<FullCard> fullCards}) async {
+    final createResp = await Future.wait(
+      fullCards.map((full) => createCard(fullCard: full)),
+    );
+    // final createdCardsId = createResp.whereType<AsyncData>().map((data) => data.value as int);
+    return;
   }
 
   Future<void> deleteCards({required List<int> cardsIds}) async {

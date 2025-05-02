@@ -36,6 +36,7 @@ final cardsFilterProvider = NotifierProvider<CardsFilterNotifier, CardsFilter>(
   CardsFilterNotifier.new,
 );
 
+//TODO : convert this filter in drift query to improve performance
 final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   final allCards = ref.watch(allCardsProvider);
   final filter = ref.watch(cardsFilterProvider);
