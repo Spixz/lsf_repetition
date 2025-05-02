@@ -55,7 +55,7 @@ class CreateCardScreen extends ConsumerWidget {
       },
       error: (err, st) {
         debugPrint(err.toString());
-        debugPrintStack(stackTrace: st);
+        debugPrint(st.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           ErrorSnackbar(message: context.tr("unexpectedErrorHasOccurred")),
         );
@@ -104,7 +104,9 @@ class SelectDecks extends ConsumerWidget {
     return allDecks.when(
       data: (allDecks) {
         if (allDecks.isEmpty) {
-          return CenteredMessage(message: context.tr("CreateADeckBefore"));
+          return CenteredMessage(
+            message: context.tr("OrganizeYourCardsInFolder"),
+          );
         }
         return _buildAllDecksCheckbox(ref, allDecks, selectedDecksIds);
       },
@@ -147,22 +149,14 @@ class _ValidateButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDecks = ref.watch(selectedDecksProvider);
-    final enabledButton = selectedDecks.isNotEmpty;
 
-    if (!enabledButton) return Empty();
     return Padding(
       padding: EdgeInsets.only(right: 6),
       child: TextButton(
         onPressed: () {
-          if (enabledButton) {
-            ref
-                .read(createCardsProvider.notifier)
-                .call(card: card, deckIds: selectedDecks);
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            WarningSnackbar(message: context.tr("SelectAtLeastOneDeck")),
-          );
+          ref
+              .read(createCardsProvider.notifier)
+              .call(card: card, deckIds: selectedDecks);
         },
         child: Row(
           children: [

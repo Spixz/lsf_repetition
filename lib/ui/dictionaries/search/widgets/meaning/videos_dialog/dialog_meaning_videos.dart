@@ -168,7 +168,7 @@ class _ActionsBar extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildButton(
-              context.tr("AddToDeck"),
+              context.tr("SaveTheSign"),
               () => context.pushNamed(
                 Routes.createCard.name,
                 extra: card

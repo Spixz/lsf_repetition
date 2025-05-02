@@ -15,7 +15,7 @@ class CardDeckInfo with _$CardDeckInfo {
     DateTime? createdAt,
   }) = _CardDeckInfo;
 
-  factory CardDeckInfo.initial({required int deckId, int? cardId}) =>
+  factory CardDeckInfo.initial({int? cardId, int? deckId }) =>
       CardDeckInfo(
         cardId: cardId ?? -1,
         deckId: deckId,

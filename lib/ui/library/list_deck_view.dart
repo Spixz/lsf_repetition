@@ -174,7 +174,7 @@ class _DeleteDeckDialog extends ConsumerWidget {
       },
       error: (err, st) {
         debugPrint(err.toString());
-        debugPrintStack(stackTrace: st);
+        debugPrint(st.toString());
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(ErrorSnackbar(message: context.tr("DeckDeletionError")));

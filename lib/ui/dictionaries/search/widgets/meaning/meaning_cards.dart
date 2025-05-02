@@ -30,18 +30,14 @@ class MeaningCardBodyWithVideoSigns extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _definition(),
-              _ActionsList(card: fullCard.card),
-            ],
+            children: [_definition(), _ActionsList(card: fullCard.card)],
           ),
         ),
       ),
     );
   }
 
-  Widget _definition() =>
-      ListTile(title: Text(fullCard.card.name));
+  Widget _definition() => ListTile(title: Text(fullCard.card.name));
 
   void _onCardTap(BuildContext context) {
     showDialog(
@@ -63,11 +59,8 @@ class _ActionsList extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       spacing: 8,
       children: <Widget>[
-        _cardButton(context.tr("Deck"), Icons.add, () {
-          context.pushNamed(
-            Routes.createCard.name,
-            extra: card,
-          );
+        _cardButton(context.tr("MyCards"), Icons.add, () {
+          context.pushNamed(Routes.createCard.name, extra: card);
         }),
       ],
     );
@@ -78,7 +71,7 @@ class _ActionsList extends ConsumerWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextButton(
         onPressed: onPressed,
-        child: Row(spacing: 5, children: [Icon(icon), Text(text)]),
+        child: Row(spacing: 5, children: [Icon(icon, size: 23), Text(text)]),
       ),
     );
   }

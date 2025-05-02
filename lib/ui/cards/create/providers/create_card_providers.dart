@@ -38,14 +38,23 @@ class CreateCardNotifier extends Notifier<AsyncValue<bool>> {
     try {
       state = AsyncLoading();
       final deckRepository = ref.watch(decksRepositoryProvider);
+      List<FullCard> cardsToAdd;
 
-      final cardsToAdd = deckIds.map(
-        (deckId) => FullCard(
-          card: card,
-          deckInfos: CardDeckInfo.initial(deckId: deckId),
-        ),
-      );
-      deckRepository.createCards(fullCards: cardsToAdd.toList());
+      if (deckIds.isEmpty) {
+        cardsToAdd = [FullCard(card: card, deckInfos: CardDeckInfo.initial())];
+      } else {
+        cardsToAdd =
+            deckIds
+                .map(
+                  (deckId) => FullCard(
+                    card: card,
+                    deckInfos: CardDeckInfo.initial(deckId: deckId),
+                  ),
+                )
+                .toList();
+      }
+
+      await deckRepository.createCards(fullCards: cardsToAdd);
       state = AsyncData(true);
     } catch (err, st) {
       state = AsyncError(err, st);

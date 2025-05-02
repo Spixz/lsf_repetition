@@ -7,6 +7,7 @@
     "ErrorHintsSearch": "An error occurred during search",
     "ErrorVideoLoading": "An error occurred while loading the video",
     "AddToDeck": "Add to deck",
+    "SaveTheSign": "Save the sign",
     "AddToTrainingList": "Add to training list",
     
     "WIDGET-CREATE_DECK_WIDGET": "",
@@ -22,6 +23,7 @@
     "CreatedCard": "Card created!",
     "AnErrorHasOccured": "An error has occurred",
     "CreateADeckBefore": "Create a deck first by clicking the plus sign.",
+    "OrganizeYourCardsInFolder": "Tip: organize your cards by creating folders (decks). To add one, simply tap the '+' button at the bottom right. It’s completely optional.",
   
     "SelectAtLeastOneDeck": "Select at least one deck",
     "Create": "Create",

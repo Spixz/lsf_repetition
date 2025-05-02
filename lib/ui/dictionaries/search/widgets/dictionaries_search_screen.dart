@@ -81,7 +81,7 @@ class DictionariesSearchScreen extends ConsumerWidget {
         ErrorSnackbar(message: context.tr("unexpectedErrorHasOccurred")),
       );
       debugPrint(result.error.toString());
-      debugPrintStack(stackTrace: result.stackTrace);
+      debugPrint(result.stackTrace.toString());
     }
   }
 }
