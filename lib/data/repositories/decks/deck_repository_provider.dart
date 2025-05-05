@@ -25,7 +25,7 @@ final getDeckByIdProvider = AutoDisposeProviderFamily<DeckModel?, int>((
 });
 
 final allCardsProvider = StreamProvider<List<FullCard>>(
-  (ref) => ref.watch(decksRepositoryProvider).getAllCards(),
+  (ref) => ref.watch(decksRepositoryProvider).getAllCardsStream(),
 );
 
 final getCardsOfADeckProvider = AutoDisposeFutureProviderFamily<

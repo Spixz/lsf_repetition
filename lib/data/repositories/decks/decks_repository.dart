@@ -10,6 +10,7 @@ import 'package:apprendre_lsf/domain/mappers/deck_infos_table_deck_infos_model_m
 import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/utils/exceptions.dart';
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 
 class DecksRepository {
   final AppDriftDatabase _driftDatabase;
@@ -66,7 +67,7 @@ class DecksRepository {
     _driftDatabase.cardsTable.deleteWhere((card) => card.id.isIn(deckIds));
   }
 
-  Stream<List<FullCard>> getAllCards() {
+  Stream<List<FullCard>> getAllCardsStream() {
     final db = _driftDatabase;
     final query = db.select(db.cardsTable).join([
       innerJoin(
@@ -86,6 +87,15 @@ class DecksRepository {
       }).toList();
     }).asBroadcastStream();
   }
+
+  Future<List<FullCard>> getAllCards() {
+    return getAllCardsStream().first;
+  }
+
+  // Future<List<FullCard>> getDueCards() {
+  //       final db = _driftDatabase;
+  //   final dueCardIds = db.managers.cardDeckInfoTable.filter((infos) => infos.retentionCard.xxx))
+  // }
 
   Future<List<FullCard>> getCardsOfADeck(int deckId) async {
     final db = _driftDatabase;
@@ -131,8 +141,13 @@ class DecksRepository {
       fullCards.map((full) => createCard(fullCard: full)),
     );
     // final createdCardsId = createResp.whereType<AsyncData>().map((data) => data.value as int);
-    return;
   }
+
+  // Future<void> setCardRetention({int cardId, RetentionCard retention}) async {
+  //   await _driftDatabase.managers.cardDeckInfoTable
+  //       .filter((card) => card.cardId.id.equals(cardId))
+  //       .update((card) => card(retentionCard: Value(retention)));
+  // }
 
   Future<void> deleteCards({required List<int> cardsIds}) async {
     await _driftDatabase.cardsTable.deleteWhere(
