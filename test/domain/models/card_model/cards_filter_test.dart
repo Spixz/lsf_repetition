@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
-import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
 import 'package:apprendre_lsf/domain/models/card_model/cards_filter.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
@@ -29,39 +28,42 @@ final CardModel basicCard = CardModel(
 final allStoredCards = [
   FullCard(card: basicCard),
   FullCard(
-    card: basicCard.copyWith(name: "test2", id: 2, createdAt: DateTime(2001)),
-    deckInfos: CardDeckInfo(
-      cardId: 2,
+    card: basicCard.copyWith(
+      name: "test2",
+      id: 2,
       deckId: 1,
-      retentionCard: RetentionCard(
-        due: DateTime.now(),
-        lastReview: DateTime.now(),
-        state: RetentionState.learning,
-      ),
+      createdAt: DateTime(2001),
+    ),
+    retentionCard: RetentionCard(
+      due: DateTime.now(),
+      lastReview: DateTime.now(),
+      state: RetentionState.learning,
     ),
   ),
   FullCard(
-    card: basicCard.copyWith(name: "test3", id: 3, createdAt: DateTime(2002)),
-    deckInfos: CardDeckInfo(
-      cardId: 3,
+    card: basicCard.copyWith(
+      name: "test3",
+      id: 3,
       deckId: 2,
-      retentionCard: RetentionCard(
-        due: DateTime.now(),
-        lastReview: DateTime.now(),
-        state: RetentionState.review,
-      ),
+      createdAt: DateTime(2002),
+    ),
+    retentionCard: RetentionCard(
+      due: DateTime.now(),
+      lastReview: DateTime.now(),
+      state: RetentionState.review,
     ),
   ),
   FullCard(
-    card: basicCard.copyWith(name: "test4", id: 4, createdAt: DateTime(2003)),
-    deckInfos: CardDeckInfo(
-      cardId: 4,
+    card: basicCard.copyWith(
+      name: "test4",
+      id: 4,
       deckId: 2,
-      retentionCard: RetentionCard(
-        due: DateTime.now(),
-        lastReview: DateTime.now(),
-        state: RetentionState.learning,
-      ),
+      createdAt: DateTime(2003),
+    ),
+    retentionCard: RetentionCard(
+      due: DateTime.now(),
+      lastReview: DateTime.now(),
+      state: RetentionState.learning,
     ),
   ),
 ];

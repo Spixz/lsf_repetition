@@ -19,6 +19,7 @@ enum RetentionRating {
 @freezed
 class RetentionCard with _$RetentionCard {
   factory RetentionCard({
+    int? cardId,
     required DateTime due,
     required DateTime lastReview,
     @Default(0) double stability,

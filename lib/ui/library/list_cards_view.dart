@@ -1,4 +1,3 @@
-import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +16,7 @@ import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:apprendre_lsf/ui/library/filters_overlay.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
+import 'package:apprendre_lsf/ui/core/empty.dart';
 
 class ListCardsView extends ConsumerWidget {
   const ListCardsView({super.key});
@@ -199,7 +199,7 @@ class _DeleteCardDialog extends ConsumerWidget {
     );
 
     if (card.belongToADeck) {
-      deck = ref.watch(getDeckByIdProvider(card.deckInfos!.deckId!));
+      deck = ref.watch(getDeckByIdProvider(card.card.deckId!));
     }
 
     return AlertDialog(

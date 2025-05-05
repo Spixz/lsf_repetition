@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/global_providers.dart';
@@ -41,14 +41,16 @@ class CreateCardNotifier extends Notifier<AsyncValue<bool>> {
       List<FullCard> cardsToAdd;
 
       if (deckIds.isEmpty) {
-        cardsToAdd = [FullCard(card: card, deckInfos: CardDeckInfo.initial())];
+        cardsToAdd = [
+          FullCard(card: card, retentionCard: RetentionCard.initial()),
+        ];
       } else {
         cardsToAdd =
             deckIds
                 .map(
                   (deckId) => FullCard(
-                    card: card,
-                    deckInfos: CardDeckInfo.initial(deckId: deckId),
+                    card: card.copyWith(deckId: deckId),
+                    retentionCard: RetentionCard.initial(),
                   ),
                 )
                 .toList();

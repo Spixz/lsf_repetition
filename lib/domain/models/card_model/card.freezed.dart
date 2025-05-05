@@ -22,11 +22,13 @@ CardModel _$CardModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CardModel {
   int? get id => throw _privateConstructorUsedError;
+  int? get deckId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get typology => throw _privateConstructorUsedError;
   String get meaning => throw _privateConstructorUsedError;
   List<String> get videosSigns => throw _privateConstructorUsedError;
   LsfDictionaryName get sourceDictionnary => throw _privateConstructorUsedError;
+  List<String>? get tags => throw _privateConstructorUsedError;
   int? get dictionnarySignId => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -47,11 +49,13 @@ abstract class $CardModelCopyWith<$Res> {
   @useResult
   $Res call({
     int? id,
+    int? deckId,
     String name,
     String typology,
     String meaning,
     List<String> videosSigns,
     LsfDictionaryName sourceDictionnary,
+    List<String>? tags,
     int? dictionnarySignId,
     DateTime? createdAt,
   });
@@ -73,11 +77,13 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
   @override
   $Res call({
     Object? id = freezed,
+    Object? deckId = freezed,
     Object? name = null,
     Object? typology = null,
     Object? meaning = null,
     Object? videosSigns = null,
     Object? sourceDictionnary = null,
+    Object? tags = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
   }) {
@@ -87,6 +93,11 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
                 freezed == id
                     ? _value.id
                     : id // ignore: cast_nullable_to_non_nullable
+                        as int?,
+            deckId:
+                freezed == deckId
+                    ? _value.deckId
+                    : deckId // ignore: cast_nullable_to_non_nullable
                         as int?,
             name:
                 null == name
@@ -113,6 +124,11 @@ class _$CardModelCopyWithImpl<$Res, $Val extends CardModel>
                     ? _value.sourceDictionnary
                     : sourceDictionnary // ignore: cast_nullable_to_non_nullable
                         as LsfDictionaryName,
+            tags:
+                freezed == tags
+                    ? _value.tags
+                    : tags // ignore: cast_nullable_to_non_nullable
+                        as List<String>?,
             dictionnarySignId:
                 freezed == dictionnarySignId
                     ? _value.dictionnarySignId
@@ -140,11 +156,13 @@ abstract class _$$CardModelImplCopyWith<$Res>
   @useResult
   $Res call({
     int? id,
+    int? deckId,
     String name,
     String typology,
     String meaning,
     List<String> videosSigns,
     LsfDictionaryName sourceDictionnary,
+    List<String>? tags,
     int? dictionnarySignId,
     DateTime? createdAt,
   });
@@ -165,11 +183,13 @@ class __$$CardModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? deckId = freezed,
     Object? name = null,
     Object? typology = null,
     Object? meaning = null,
     Object? videosSigns = null,
     Object? sourceDictionnary = null,
+    Object? tags = freezed,
     Object? dictionnarySignId = freezed,
     Object? createdAt = freezed,
   }) {
@@ -179,6 +199,11 @@ class __$$CardModelImplCopyWithImpl<$Res>
             freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
+                    as int?,
+        deckId:
+            freezed == deckId
+                ? _value.deckId
+                : deckId // ignore: cast_nullable_to_non_nullable
                     as int?,
         name:
             null == name
@@ -205,6 +230,11 @@ class __$$CardModelImplCopyWithImpl<$Res>
                 ? _value.sourceDictionnary
                 : sourceDictionnary // ignore: cast_nullable_to_non_nullable
                     as LsfDictionaryName,
+        tags:
+            freezed == tags
+                ? _value._tags
+                : tags // ignore: cast_nullable_to_non_nullable
+                    as List<String>?,
         dictionnarySignId:
             freezed == dictionnarySignId
                 ? _value.dictionnarySignId
@@ -222,23 +252,29 @@ class __$$CardModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$CardModelImpl implements _CardModel {
+class _$CardModelImpl extends _CardModel {
   const _$CardModelImpl({
     this.id,
+    this.deckId,
     required this.name,
     required this.typology,
     required this.meaning,
     required final List<String> videosSigns,
     required this.sourceDictionnary,
+    final List<String>? tags,
     this.dictionnarySignId,
     this.createdAt,
-  }) : _videosSigns = videosSigns;
+  }) : _videosSigns = videosSigns,
+       _tags = tags,
+       super._();
 
   factory _$CardModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$CardModelImplFromJson(json);
 
   @override
   final int? id;
+  @override
+  final int? deckId;
   @override
   final String name;
   @override
@@ -255,6 +291,16 @@ class _$CardModelImpl implements _CardModel {
 
   @override
   final LsfDictionaryName sourceDictionnary;
+  final List<String>? _tags;
+  @override
+  List<String>? get tags {
+    final value = _tags;
+    if (value == null) return null;
+    if (_tags is EqualUnmodifiableListView) return _tags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final int? dictionnarySignId;
   @override
@@ -262,7 +308,7 @@ class _$CardModelImpl implements _CardModel {
 
   @override
   String toString() {
-    return 'CardModel(id: $id, name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt)';
+    return 'CardModel(id: $id, deckId: $deckId, name: $name, typology: $typology, meaning: $meaning, videosSigns: $videosSigns, sourceDictionnary: $sourceDictionnary, tags: $tags, dictionnarySignId: $dictionnarySignId, createdAt: $createdAt)';
   }
 
   @override
@@ -271,6 +317,7 @@ class _$CardModelImpl implements _CardModel {
         (other.runtimeType == runtimeType &&
             other is _$CardModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.deckId, deckId) || other.deckId == deckId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.typology, typology) ||
                 other.typology == typology) &&
@@ -281,6 +328,7 @@ class _$CardModelImpl implements _CardModel {
             ) &&
             (identical(other.sourceDictionnary, sourceDictionnary) ||
                 other.sourceDictionnary == sourceDictionnary) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.dictionnarySignId, dictionnarySignId) ||
                 other.dictionnarySignId == dictionnarySignId) &&
             (identical(other.createdAt, createdAt) ||
@@ -292,11 +340,13 @@ class _$CardModelImpl implements _CardModel {
   int get hashCode => Object.hash(
     runtimeType,
     id,
+    deckId,
     name,
     typology,
     meaning,
     const DeepCollectionEquality().hash(_videosSigns),
     sourceDictionnary,
+    const DeepCollectionEquality().hash(_tags),
     dictionnarySignId,
     createdAt,
   );
@@ -315,23 +365,28 @@ class _$CardModelImpl implements _CardModel {
   }
 }
 
-abstract class _CardModel implements CardModel {
+abstract class _CardModel extends CardModel {
   const factory _CardModel({
     final int? id,
+    final int? deckId,
     required final String name,
     required final String typology,
     required final String meaning,
     required final List<String> videosSigns,
     required final LsfDictionaryName sourceDictionnary,
+    final List<String>? tags,
     final int? dictionnarySignId,
     final DateTime? createdAt,
   }) = _$CardModelImpl;
+  const _CardModel._() : super._();
 
   factory _CardModel.fromJson(Map<String, dynamic> json) =
       _$CardModelImpl.fromJson;
 
   @override
   int? get id;
+  @override
+  int? get deckId;
   @override
   String get name;
   @override
@@ -342,6 +397,8 @@ abstract class _CardModel implements CardModel {
   List<String> get videosSigns;
   @override
   LsfDictionaryName get sourceDictionnary;
+  @override
+  List<String>? get tags;
   @override
   int? get dictionnarySignId;
   @override

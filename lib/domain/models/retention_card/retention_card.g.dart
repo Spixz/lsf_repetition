@@ -8,6 +8,7 @@ part of 'retention_card.dart';
 
 _$RetentionCardImpl _$$RetentionCardImplFromJson(Map<String, dynamic> json) =>
     _$RetentionCardImpl(
+      cardId: (json['cardId'] as num?)?.toInt(),
       due: DateTime.parse(json['due'] as String),
       lastReview: DateTime.parse(json['lastReview'] as String),
       stability: (json['stability'] as num?)?.toDouble() ?? 0,
@@ -23,6 +24,7 @@ _$RetentionCardImpl _$$RetentionCardImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$RetentionCardImplToJson(_$RetentionCardImpl instance) =>
     <String, dynamic>{
+      'cardId': instance.cardId,
       'due': instance.due.toIso8601String(),
       'lastReview': instance.lastReview.toIso8601String(),
       'stability': instance.stability,

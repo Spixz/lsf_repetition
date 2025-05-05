@@ -4,7 +4,6 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_search_result.dart';
-import 'package:apprendre_lsf/domain/database/converters/retention_card_converters.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
 
 part 'drift_database.g.dart';
@@ -28,29 +27,39 @@ class DecksTable extends Table {
 
 class CardsTable extends Table {
   IntColumn get id => integer().autoIncrement()();
+  IntColumn get deckId => integer().nullable()();
   TextColumn get name => text().withLength(min: 1)();
   TextColumn get typology => text().withLength(min: 1)();
   TextColumn get meaning => text().withLength(min: 1)();
   TextColumn get videosSigns => text().map(ListString.converter)();
   IntColumn get sourceDictionnary => intEnum<LsfDictionaryName>()();
   IntColumn get dictionnarySignId => integer().nullable()();
+  TextColumn get tags =>
+      text().map(ListString.converter).clientDefault(() => "[]").nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-@TableIndex(name: 'deck_id', columns: {#deckId})
-class CardDeckInfoTable extends Table {
+@TableIndex(name: 'card_id', columns: {#cardId})
+class RetentionTable extends Table {
   IntColumn get cardId =>
       integer().references(CardsTable, #id, onDelete: KeyAction.cascade)();
-  IntColumn get deckId => integer().references(DecksTable, #id).nullable()();
-  TextColumn get tags =>
-      text().map(ListString.converter).clientDefault(() => "[]").nullable()();
-  TextColumn get retentionCard => text().map(const RetentionCardConverter())();
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get due => dateTime()();
+  DateTimeColumn get lastReview => dateTime()();
+  RealColumn get stability => real().clientDefault(() => 0.0)();
+  RealColumn get difficulty => real().clientDefault(() => 0.0)();
+  IntColumn get elapsedDays => integer().clientDefault(() => 0)();
+  IntColumn get scheduledDays => integer().clientDefault(() => 0)();
+  IntColumn get reps => integer().clientDefault(() => 0)();
+  IntColumn get lapses => integer().clientDefault(() => 0)();
+  IntColumn get state =>
+      intEnum<RetentionState>().clientDefault(
+        () => RetentionState.newState.index,
+      )();
 }
 
 //nullable()();
 
-@DriftDatabase(tables: [DecksTable, CardsTable, CardDeckInfoTable])
+@DriftDatabase(tables: [DecksTable, CardsTable, RetentionTable])
 class AppDriftDatabase extends _$AppDriftDatabase {
   AppDriftDatabase() : super(_openConnection());
 

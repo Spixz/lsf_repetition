@@ -1,13 +1,11 @@
+import 'package:apprendre_lsf/domain/mappers/retention_card_fsrs_card.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/domain/database/drift_database.dart';
 import 'package:apprendre_lsf/domain/mappers/cards_table_card_model_mapper.dart';
 import 'package:apprendre_lsf/domain/mappers/decks_table_deck_model_mapper.dart';
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/domain/mappers/deck_infos_table_deck_infos_model_mapper.dart';
-import 'package:apprendre_lsf/domain/models/card_model/card_deck_infos.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/utils/exceptions.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
@@ -71,18 +69,18 @@ class DecksRepository {
     final db = _driftDatabase;
     final query = db.select(db.cardsTable).join([
       innerJoin(
-        db.cardDeckInfoTable,
-        db.cardDeckInfoTable.cardId.isExp(db.cardsTable.id),
+        db.retentionTable,
+        db.retentionTable.cardId.isExp(db.cardsTable.id),
       ),
     ]);
-    final simple = db.select(db.cardsTable).watch();
+    // final simple = db.select(db.cardsTable).watch();
 
     return query.watch().map((rows) {
       return rows.map((row) {
         return FullCard(
           card: row.readTable(db.cardsTable).toCardModel(),
-          deckInfos:
-              row.readTableOrNull(db.cardDeckInfoTable)?.toCardDeckInfo(),
+          retentionCard:
+              row.readTableOrNull(db.retentionTable)?.toRetentionCard(),
         );
       }).toList();
     }).asBroadcastStream();
@@ -99,20 +97,22 @@ class DecksRepository {
 
   Future<List<FullCard>> getCardsOfADeck(int deckId) async {
     final db = _driftDatabase;
-    final query = db.select(db.cardDeckInfoTable)
-      ..where((info) => info.deckId.equals(deckId));
+    final query = db.select(db.cardsTable)
+      ..where((card) => card.deckId.equals(deckId));
     // ..orderBy([(card) => OrderingTerm(expression: card.name)]);
+
     final joinedQuery = query.join([
       innerJoin(
-        db.cardsTable,
-        db.cardsTable.id.isExp(db.cardDeckInfoTable.cardId),
+        db.retentionTable,
+        db.retentionTable.cardId.isExp(db.cardsTable.id),
       ),
     ]);
+
     final joinedQueryResult = await joinedQuery.get();
     final result = joinedQueryResult.map(
       (row) => FullCard(
         card: row.readTable(db.cardsTable).toCardModel(),
-        deckInfos: row.readTable(db.cardDeckInfoTable).toCardDeckInfo(),
+        retentionCard: row.readTable(db.retentionTable).toRetentionCard(),
       ),
     );
 
@@ -121,17 +121,19 @@ class DecksRepository {
 
   /// Store a FullCard in the DB by storing each part in different table.
   ///
-  /// FullCard.[CardModel] in [CardsTable].
-  /// FullCard.[CardDeckInfo] in [CardDeckInfoTable].
-  /// The insert of [CardModel] inside [CardTable] is made first so it's id can be
-  /// use to make the link with the [CardDeckInfo].
+  /// [CardModel] FullCard.card stored in drift [CardsTable].
+  /// [RetentionCard] FullCard.retentionCard in drift [RetentionTable].
+  /// The insert of [CardModel] inside [CardsTable] is made first so it's id can be
+  /// use to make the link with the [RetentionTable].
   Future<int> createCard({required FullCard fullCard}) async {
     final card = fullCard.card.toCompanion();
     final cardId = await _driftDatabase.cardsTable.insertOne(card);
 
-    if (fullCard.deckInfos != null) {
-      final deckInfos = fullCard.deckInfos!.copyWith(cardId: cardId);
-      await _driftDatabase.cardDeckInfoTable.insertOne(deckInfos.toCompanion());
+    if (fullCard.retentionCard != null) {
+      final retention = fullCard.retentionCard!.copyWith(cardId: cardId);
+      await _driftDatabase.retentionTable.insertOne(
+        retention.toRetentionTableDatas(),
+      );
     }
     return cardId;
   }
@@ -160,9 +162,9 @@ class DecksRepository {
     int? newValue,
   }) async {
     final db = _driftDatabase;
-    (db.update(db.cardDeckInfoTable)..where(
-      (info) => info.deckId.isIn(cardsIds),
-    )).write(CardDeckInfoTableCompanion(deckId: Value(newValue)));
+    (db.update(db.cardsTable)..where(
+      (card) => card.id.isIn(cardsIds),
+    )).write(CardsTableCompanion(deckId: Value(newValue)));
   }
 
   /// Stored card

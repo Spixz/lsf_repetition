@@ -22,7 +22,7 @@ FullCard _$FullCardFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FullCard {
   CardModel get card => throw _privateConstructorUsedError;
-  CardDeckInfo? get deckInfos => throw _privateConstructorUsedError;
+  RetentionCard? get retentionCard => throw _privateConstructorUsedError;
 
   /// Serializes this FullCard to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,10 +39,10 @@ abstract class $FullCardCopyWith<$Res> {
   factory $FullCardCopyWith(FullCard value, $Res Function(FullCard) then) =
       _$FullCardCopyWithImpl<$Res, FullCard>;
   @useResult
-  $Res call({CardModel card, CardDeckInfo? deckInfos});
+  $Res call({CardModel card, RetentionCard? retentionCard});
 
   $CardModelCopyWith<$Res> get card;
-  $CardDeckInfoCopyWith<$Res>? get deckInfos;
+  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
@@ -59,7 +59,7 @@ class _$FullCardCopyWithImpl<$Res, $Val extends FullCard>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? card = null, Object? deckInfos = freezed}) {
+  $Res call({Object? card = null, Object? retentionCard = freezed}) {
     return _then(
       _value.copyWith(
             card:
@@ -67,11 +67,11 @@ class _$FullCardCopyWithImpl<$Res, $Val extends FullCard>
                     ? _value.card
                     : card // ignore: cast_nullable_to_non_nullable
                         as CardModel,
-            deckInfos:
-                freezed == deckInfos
-                    ? _value.deckInfos
-                    : deckInfos // ignore: cast_nullable_to_non_nullable
-                        as CardDeckInfo?,
+            retentionCard:
+                freezed == retentionCard
+                    ? _value.retentionCard
+                    : retentionCard // ignore: cast_nullable_to_non_nullable
+                        as RetentionCard?,
           )
           as $Val,
     );
@@ -91,13 +91,13 @@ class _$FullCardCopyWithImpl<$Res, $Val extends FullCard>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CardDeckInfoCopyWith<$Res>? get deckInfos {
-    if (_value.deckInfos == null) {
+  $RetentionCardCopyWith<$Res>? get retentionCard {
+    if (_value.retentionCard == null) {
       return null;
     }
 
-    return $CardDeckInfoCopyWith<$Res>(_value.deckInfos!, (value) {
-      return _then(_value.copyWith(deckInfos: value) as $Val);
+    return $RetentionCardCopyWith<$Res>(_value.retentionCard!, (value) {
+      return _then(_value.copyWith(retentionCard: value) as $Val);
     });
   }
 }
@@ -111,12 +111,12 @@ abstract class _$$FullCardImplCopyWith<$Res>
   ) = __$$FullCardImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({CardModel card, CardDeckInfo? deckInfos});
+  $Res call({CardModel card, RetentionCard? retentionCard});
 
   @override
   $CardModelCopyWith<$Res> get card;
   @override
-  $CardDeckInfoCopyWith<$Res>? get deckInfos;
+  $RetentionCardCopyWith<$Res>? get retentionCard;
 }
 
 /// @nodoc
@@ -132,7 +132,7 @@ class __$$FullCardImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? card = null, Object? deckInfos = freezed}) {
+  $Res call({Object? card = null, Object? retentionCard = freezed}) {
     return _then(
       _$FullCardImpl(
         card:
@@ -140,11 +140,11 @@ class __$$FullCardImplCopyWithImpl<$Res>
                 ? _value.card
                 : card // ignore: cast_nullable_to_non_nullable
                     as CardModel,
-        deckInfos:
-            freezed == deckInfos
-                ? _value.deckInfos
-                : deckInfos // ignore: cast_nullable_to_non_nullable
-                    as CardDeckInfo?,
+        retentionCard:
+            freezed == retentionCard
+                ? _value.retentionCard
+                : retentionCard // ignore: cast_nullable_to_non_nullable
+                    as RetentionCard?,
       ),
     );
   }
@@ -153,7 +153,7 @@ class __$$FullCardImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$FullCardImpl extends _FullCard {
-  const _$FullCardImpl({required this.card, this.deckInfos}) : super._();
+  const _$FullCardImpl({required this.card, this.retentionCard}) : super._();
 
   factory _$FullCardImpl.fromJson(Map<String, dynamic> json) =>
       _$$FullCardImplFromJson(json);
@@ -161,11 +161,11 @@ class _$FullCardImpl extends _FullCard {
   @override
   final CardModel card;
   @override
-  final CardDeckInfo? deckInfos;
+  final RetentionCard? retentionCard;
 
   @override
   String toString() {
-    return 'FullCard(card: $card, deckInfos: $deckInfos)';
+    return 'FullCard(card: $card, retentionCard: $retentionCard)';
   }
 
   @override
@@ -174,13 +174,13 @@ class _$FullCardImpl extends _FullCard {
         (other.runtimeType == runtimeType &&
             other is _$FullCardImpl &&
             (identical(other.card, card) || other.card == card) &&
-            (identical(other.deckInfos, deckInfos) ||
-                other.deckInfos == deckInfos));
+            (identical(other.retentionCard, retentionCard) ||
+                other.retentionCard == retentionCard));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, card, deckInfos);
+  int get hashCode => Object.hash(runtimeType, card, retentionCard);
 
   /// Create a copy of FullCard
   /// with the given fields replaced by the non-null parameter values.
@@ -199,7 +199,7 @@ class _$FullCardImpl extends _FullCard {
 abstract class _FullCard extends FullCard {
   const factory _FullCard({
     required final CardModel card,
-    final CardDeckInfo? deckInfos,
+    final RetentionCard? retentionCard,
   }) = _$FullCardImpl;
   const _FullCard._() : super._();
 
@@ -209,7 +209,7 @@ abstract class _FullCard extends FullCard {
   @override
   CardModel get card;
   @override
-  CardDeckInfo? get deckInfos;
+  RetentionCard? get retentionCard;
 
   /// Create a copy of FullCard
   /// with the given fields replaced by the non-null parameter values.

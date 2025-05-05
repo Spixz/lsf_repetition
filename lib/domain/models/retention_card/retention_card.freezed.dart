@@ -21,6 +21,7 @@ RetentionCard _$RetentionCardFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RetentionCard {
+  int? get cardId => throw _privateConstructorUsedError;
   DateTime get due => throw _privateConstructorUsedError;
   DateTime get lastReview => throw _privateConstructorUsedError;
   double get stability => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $RetentionCardCopyWith<$Res> {
   ) = _$RetentionCardCopyWithImpl<$Res, RetentionCard>;
   @useResult
   $Res call({
+    int? cardId,
     DateTime due,
     DateTime lastReview,
     double stability,
@@ -76,6 +78,7 @@ class _$RetentionCardCopyWithImpl<$Res, $Val extends RetentionCard>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? cardId = freezed,
     Object? due = null,
     Object? lastReview = null,
     Object? stability = null,
@@ -88,6 +91,11 @@ class _$RetentionCardCopyWithImpl<$Res, $Val extends RetentionCard>
   }) {
     return _then(
       _value.copyWith(
+            cardId:
+                freezed == cardId
+                    ? _value.cardId
+                    : cardId // ignore: cast_nullable_to_non_nullable
+                        as int?,
             due:
                 null == due
                     ? _value.due
@@ -149,6 +157,7 @@ abstract class _$$RetentionCardImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
+    int? cardId,
     DateTime due,
     DateTime lastReview,
     double stability,
@@ -175,6 +184,7 @@ class __$$RetentionCardImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? cardId = freezed,
     Object? due = null,
     Object? lastReview = null,
     Object? stability = null,
@@ -187,6 +197,11 @@ class __$$RetentionCardImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$RetentionCardImpl(
+        cardId:
+            freezed == cardId
+                ? _value.cardId
+                : cardId // ignore: cast_nullable_to_non_nullable
+                    as int?,
         due:
             null == due
                 ? _value.due
@@ -241,6 +256,7 @@ class __$$RetentionCardImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RetentionCardImpl implements _RetentionCard {
   _$RetentionCardImpl({
+    this.cardId,
     required this.due,
     required this.lastReview,
     this.stability = 0,
@@ -255,6 +271,8 @@ class _$RetentionCardImpl implements _RetentionCard {
   factory _$RetentionCardImpl.fromJson(Map<String, dynamic> json) =>
       _$$RetentionCardImplFromJson(json);
 
+  @override
+  final int? cardId;
   @override
   final DateTime due;
   @override
@@ -283,7 +301,7 @@ class _$RetentionCardImpl implements _RetentionCard {
 
   @override
   String toString() {
-    return 'RetentionCard(due: $due, lastReview: $lastReview, stability: $stability, difficulty: $difficulty, elapsedDays: $elapsedDays, scheduledDays: $scheduledDays, reps: $reps, lapses: $lapses, state: $state)';
+    return 'RetentionCard(cardId: $cardId, due: $due, lastReview: $lastReview, stability: $stability, difficulty: $difficulty, elapsedDays: $elapsedDays, scheduledDays: $scheduledDays, reps: $reps, lapses: $lapses, state: $state)';
   }
 
   @override
@@ -291,6 +309,7 @@ class _$RetentionCardImpl implements _RetentionCard {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RetentionCardImpl &&
+            (identical(other.cardId, cardId) || other.cardId == cardId) &&
             (identical(other.due, due) || other.due == due) &&
             (identical(other.lastReview, lastReview) ||
                 other.lastReview == lastReview) &&
@@ -311,6 +330,7 @@ class _$RetentionCardImpl implements _RetentionCard {
   @override
   int get hashCode => Object.hash(
     runtimeType,
+    cardId,
     due,
     lastReview,
     stability,
@@ -338,6 +358,7 @@ class _$RetentionCardImpl implements _RetentionCard {
 
 abstract class _RetentionCard implements RetentionCard {
   factory _RetentionCard({
+    final int? cardId,
     required final DateTime due,
     required final DateTime lastReview,
     final double stability,
@@ -352,6 +373,8 @@ abstract class _RetentionCard implements RetentionCard {
   factory _RetentionCard.fromJson(Map<String, dynamic> json) =
       _$RetentionCardImpl.fromJson;
 
+  @override
+  int? get cardId;
   @override
   DateTime get due;
   @override

@@ -330,6 +330,15 @@ class $CardsTableTable extends CardsTable
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _deckIdMeta = const VerificationMeta('deckId');
+  @override
+  late final GeneratedColumn<int> deckId = GeneratedColumn<int>(
+    'deck_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -395,6 +404,16 @@ class $CardsTableTable extends CardsTable
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>?, String> tags =
+      GeneratedColumn<String>(
+        'tags',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        clientDefault: () => "[]",
+      ).withConverter<List<String>?>($CardsTableTable.$convertertagsn);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -410,12 +429,14 @@ class $CardsTableTable extends CardsTable
   @override
   List<GeneratedColumn> get $columns => [
     id,
+    deckId,
     name,
     typology,
     meaning,
     videosSigns,
     sourceDictionnary,
     dictionnarySignId,
+    tags,
     createdAt,
   ];
   @override
@@ -432,6 +453,12 @@ class $CardsTableTable extends CardsTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('deck_id')) {
+      context.handle(
+        _deckIdMeta,
+        deckId.isAcceptableOrUnknown(data['deck_id']!, _deckIdMeta),
+      );
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -486,6 +513,10 @@ class $CardsTableTable extends CardsTable
             DriftSqlType.int,
             data['${effectivePrefix}id'],
           )!,
+      deckId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}deck_id'],
+      ),
       name:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
@@ -517,6 +548,12 @@ class $CardsTableTable extends CardsTable
         DriftSqlType.int,
         data['${effectivePrefix}dictionnary_sign_id'],
       ),
+      tags: $CardsTableTable.$convertertagsn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}tags'],
+        ),
+      ),
       createdAt:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
@@ -536,31 +573,42 @@ class $CardsTableTable extends CardsTable
   $convertersourceDictionnary = const EnumIndexConverter<LsfDictionaryName>(
     LsfDictionaryName.values,
   );
+  static JsonTypeConverter2<List<String>, String, Object?> $convertertags =
+      ListString.converter;
+  static JsonTypeConverter2<List<String>?, String?, Object?> $convertertagsn =
+      JsonTypeConverter2.asNullable($convertertags);
 }
 
 class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   final int id;
+  final int? deckId;
   final String name;
   final String typology;
   final String meaning;
   final List<String> videosSigns;
   final LsfDictionaryName sourceDictionnary;
   final int? dictionnarySignId;
+  final List<String>? tags;
   final DateTime createdAt;
   const CardsTableData({
     required this.id,
+    this.deckId,
     required this.name,
     required this.typology,
     required this.meaning,
     required this.videosSigns,
     required this.sourceDictionnary,
     this.dictionnarySignId,
+    this.tags,
     required this.createdAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || deckId != null) {
+      map['deck_id'] = Variable<int>(deckId);
+    }
     map['name'] = Variable<String>(name);
     map['typology'] = Variable<String>(typology);
     map['meaning'] = Variable<String>(meaning);
@@ -577,6 +625,11 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
     if (!nullToAbsent || dictionnarySignId != null) {
       map['dictionnary_sign_id'] = Variable<int>(dictionnarySignId);
     }
+    if (!nullToAbsent || tags != null) {
+      map['tags'] = Variable<String>(
+        $CardsTableTable.$convertertagsn.toSql(tags),
+      );
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -584,6 +637,8 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   CardsTableCompanion toCompanion(bool nullToAbsent) {
     return CardsTableCompanion(
       id: Value(id),
+      deckId:
+          deckId == null && nullToAbsent ? const Value.absent() : Value(deckId),
       name: Value(name),
       typology: Value(typology),
       meaning: Value(meaning),
@@ -593,6 +648,7 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
           dictionnarySignId == null && nullToAbsent
               ? const Value.absent()
               : Value(dictionnarySignId),
+      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
       createdAt: Value(createdAt),
     );
   }
@@ -604,6 +660,7 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CardsTableData(
       id: serializer.fromJson<int>(json['id']),
+      deckId: serializer.fromJson<int?>(json['deckId']),
       name: serializer.fromJson<String>(json['name']),
       typology: serializer.fromJson<String>(json['typology']),
       meaning: serializer.fromJson<String>(json['meaning']),
@@ -614,6 +671,9 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
         serializer.fromJson<int>(json['sourceDictionnary']),
       ),
       dictionnarySignId: serializer.fromJson<int?>(json['dictionnarySignId']),
+      tags: $CardsTableTable.$convertertagsn.fromJson(
+        serializer.fromJson<Object?>(json['tags']),
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -622,6 +682,7 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'deckId': serializer.toJson<int?>(deckId),
       'name': serializer.toJson<String>(name),
       'typology': serializer.toJson<String>(typology),
       'meaning': serializer.toJson<String>(meaning),
@@ -632,21 +693,27 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
         $CardsTableTable.$convertersourceDictionnary.toJson(sourceDictionnary),
       ),
       'dictionnarySignId': serializer.toJson<int?>(dictionnarySignId),
+      'tags': serializer.toJson<Object?>(
+        $CardsTableTable.$convertertagsn.toJson(tags),
+      ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
   CardsTableData copyWith({
     int? id,
+    Value<int?> deckId = const Value.absent(),
     String? name,
     String? typology,
     String? meaning,
     List<String>? videosSigns,
     LsfDictionaryName? sourceDictionnary,
     Value<int?> dictionnarySignId = const Value.absent(),
+    Value<List<String>?> tags = const Value.absent(),
     DateTime? createdAt,
   }) => CardsTableData(
     id: id ?? this.id,
+    deckId: deckId.present ? deckId.value : this.deckId,
     name: name ?? this.name,
     typology: typology ?? this.typology,
     meaning: meaning ?? this.meaning,
@@ -656,11 +723,13 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
         dictionnarySignId.present
             ? dictionnarySignId.value
             : this.dictionnarySignId,
+    tags: tags.present ? tags.value : this.tags,
     createdAt: createdAt ?? this.createdAt,
   );
   CardsTableData copyWithCompanion(CardsTableCompanion data) {
     return CardsTableData(
       id: data.id.present ? data.id.value : this.id,
+      deckId: data.deckId.present ? data.deckId.value : this.deckId,
       name: data.name.present ? data.name.value : this.name,
       typology: data.typology.present ? data.typology.value : this.typology,
       meaning: data.meaning.present ? data.meaning.value : this.meaning,
@@ -674,6 +743,7 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
           data.dictionnarySignId.present
               ? data.dictionnarySignId.value
               : this.dictionnarySignId,
+      tags: data.tags.present ? data.tags.value : this.tags,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -682,12 +752,14 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   String toString() {
     return (StringBuffer('CardsTableData(')
           ..write('id: $id, ')
+          ..write('deckId: $deckId, ')
           ..write('name: $name, ')
           ..write('typology: $typology, ')
           ..write('meaning: $meaning, ')
           ..write('videosSigns: $videosSigns, ')
           ..write('sourceDictionnary: $sourceDictionnary, ')
           ..write('dictionnarySignId: $dictionnarySignId, ')
+          ..write('tags: $tags, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -696,12 +768,14 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
   @override
   int get hashCode => Object.hash(
     id,
+    deckId,
     name,
     typology,
     meaning,
     videosSigns,
     sourceDictionnary,
     dictionnarySignId,
+    tags,
     createdAt,
   );
   @override
@@ -709,42 +783,50 @@ class CardsTableData extends DataClass implements Insertable<CardsTableData> {
       identical(this, other) ||
       (other is CardsTableData &&
           other.id == this.id &&
+          other.deckId == this.deckId &&
           other.name == this.name &&
           other.typology == this.typology &&
           other.meaning == this.meaning &&
           other.videosSigns == this.videosSigns &&
           other.sourceDictionnary == this.sourceDictionnary &&
           other.dictionnarySignId == this.dictionnarySignId &&
+          other.tags == this.tags &&
           other.createdAt == this.createdAt);
 }
 
 class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
   final Value<int> id;
+  final Value<int?> deckId;
   final Value<String> name;
   final Value<String> typology;
   final Value<String> meaning;
   final Value<List<String>> videosSigns;
   final Value<LsfDictionaryName> sourceDictionnary;
   final Value<int?> dictionnarySignId;
+  final Value<List<String>?> tags;
   final Value<DateTime> createdAt;
   const CardsTableCompanion({
     this.id = const Value.absent(),
+    this.deckId = const Value.absent(),
     this.name = const Value.absent(),
     this.typology = const Value.absent(),
     this.meaning = const Value.absent(),
     this.videosSigns = const Value.absent(),
     this.sourceDictionnary = const Value.absent(),
     this.dictionnarySignId = const Value.absent(),
+    this.tags = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   CardsTableCompanion.insert({
     this.id = const Value.absent(),
+    this.deckId = const Value.absent(),
     required String name,
     required String typology,
     required String meaning,
     required List<String> videosSigns,
     required LsfDictionaryName sourceDictionnary,
     this.dictionnarySignId = const Value.absent(),
+    this.tags = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
        typology = Value(typology),
@@ -753,44 +835,52 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
        sourceDictionnary = Value(sourceDictionnary);
   static Insertable<CardsTableData> custom({
     Expression<int>? id,
+    Expression<int>? deckId,
     Expression<String>? name,
     Expression<String>? typology,
     Expression<String>? meaning,
     Expression<String>? videosSigns,
     Expression<int>? sourceDictionnary,
     Expression<int>? dictionnarySignId,
+    Expression<String>? tags,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (deckId != null) 'deck_id': deckId,
       if (name != null) 'name': name,
       if (typology != null) 'typology': typology,
       if (meaning != null) 'meaning': meaning,
       if (videosSigns != null) 'videos_signs': videosSigns,
       if (sourceDictionnary != null) 'source_dictionnary': sourceDictionnary,
       if (dictionnarySignId != null) 'dictionnary_sign_id': dictionnarySignId,
+      if (tags != null) 'tags': tags,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
 
   CardsTableCompanion copyWith({
     Value<int>? id,
+    Value<int?>? deckId,
     Value<String>? name,
     Value<String>? typology,
     Value<String>? meaning,
     Value<List<String>>? videosSigns,
     Value<LsfDictionaryName>? sourceDictionnary,
     Value<int?>? dictionnarySignId,
+    Value<List<String>?>? tags,
     Value<DateTime>? createdAt,
   }) {
     return CardsTableCompanion(
       id: id ?? this.id,
+      deckId: deckId ?? this.deckId,
       name: name ?? this.name,
       typology: typology ?? this.typology,
       meaning: meaning ?? this.meaning,
       videosSigns: videosSigns ?? this.videosSigns,
       sourceDictionnary: sourceDictionnary ?? this.sourceDictionnary,
       dictionnarySignId: dictionnarySignId ?? this.dictionnarySignId,
+      tags: tags ?? this.tags,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -800,6 +890,9 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (deckId.present) {
+      map['deck_id'] = Variable<int>(deckId.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -825,6 +918,11 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
     if (dictionnarySignId.present) {
       map['dictionnary_sign_id'] = Variable<int>(dictionnarySignId.value);
     }
+    if (tags.present) {
+      map['tags'] = Variable<String>(
+        $CardsTableTable.$convertertagsn.toSql(tags.value),
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -835,24 +933,26 @@ class CardsTableCompanion extends UpdateCompanion<CardsTableData> {
   String toString() {
     return (StringBuffer('CardsTableCompanion(')
           ..write('id: $id, ')
+          ..write('deckId: $deckId, ')
           ..write('name: $name, ')
           ..write('typology: $typology, ')
           ..write('meaning: $meaning, ')
           ..write('videosSigns: $videosSigns, ')
           ..write('sourceDictionnary: $sourceDictionnary, ')
           ..write('dictionnarySignId: $dictionnarySignId, ')
+          ..write('tags: $tags, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 }
 
-class $CardDeckInfoTableTable extends CardDeckInfoTable
-    with TableInfo<$CardDeckInfoTableTable, CardDeckInfoTableData> {
+class $RetentionTableTable extends RetentionTable
+    with TableInfo<$RetentionTableTable, RetentionTableData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $CardDeckInfoTableTable(this.attachedDatabase, [this._alias]);
+  $RetentionTableTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _cardIdMeta = const VerificationMeta('cardId');
   @override
   late final GeneratedColumn<int> cardId = GeneratedColumn<int>(
@@ -865,67 +965,125 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
       'REFERENCES cards_table (id) ON DELETE CASCADE',
     ),
   );
-  static const VerificationMeta _deckIdMeta = const VerificationMeta('deckId');
+  static const VerificationMeta _dueMeta = const VerificationMeta('due');
   @override
-  late final GeneratedColumn<int> deckId = GeneratedColumn<int>(
-    'deck_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES decks_table (id)',
-    ),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<List<String>?, String> tags =
-      GeneratedColumn<String>(
-        'tags',
-        aliasedName,
-        true,
-        type: DriftSqlType.string,
-        requiredDuringInsert: false,
-        clientDefault: () => "[]",
-      ).withConverter<List<String>?>($CardDeckInfoTableTable.$convertertagsn);
-  @override
-  late final GeneratedColumnWithTypeConverter<RetentionCard, String>
-  retentionCard = GeneratedColumn<String>(
-    'retention_card',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<RetentionCard>(
-    $CardDeckInfoTableTable.$converterretentionCard,
-  );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta(
-    'createdAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-    'created_at',
+  late final GeneratedColumn<DateTime> due = GeneratedColumn<DateTime>(
+    'due',
     aliasedName,
     false,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: false,
-    defaultValue: currentDateAndTime,
+    requiredDuringInsert: true,
   );
+  static const VerificationMeta _lastReviewMeta = const VerificationMeta(
+    'lastReview',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastReview = GeneratedColumn<DateTime>(
+    'last_review',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _stabilityMeta = const VerificationMeta(
+    'stability',
+  );
+  @override
+  late final GeneratedColumn<double> stability = GeneratedColumn<double>(
+    'stability',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    clientDefault: () => 0.0,
+  );
+  static const VerificationMeta _difficultyMeta = const VerificationMeta(
+    'difficulty',
+  );
+  @override
+  late final GeneratedColumn<double> difficulty = GeneratedColumn<double>(
+    'difficulty',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    clientDefault: () => 0.0,
+  );
+  static const VerificationMeta _elapsedDaysMeta = const VerificationMeta(
+    'elapsedDays',
+  );
+  @override
+  late final GeneratedColumn<int> elapsedDays = GeneratedColumn<int>(
+    'elapsed_days',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    clientDefault: () => 0,
+  );
+  static const VerificationMeta _scheduledDaysMeta = const VerificationMeta(
+    'scheduledDays',
+  );
+  @override
+  late final GeneratedColumn<int> scheduledDays = GeneratedColumn<int>(
+    'scheduled_days',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    clientDefault: () => 0,
+  );
+  static const VerificationMeta _repsMeta = const VerificationMeta('reps');
+  @override
+  late final GeneratedColumn<int> reps = GeneratedColumn<int>(
+    'reps',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    clientDefault: () => 0,
+  );
+  static const VerificationMeta _lapsesMeta = const VerificationMeta('lapses');
+  @override
+  late final GeneratedColumn<int> lapses = GeneratedColumn<int>(
+    'lapses',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    clientDefault: () => 0,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<RetentionState, int> state =
+      GeneratedColumn<int>(
+        'state',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        clientDefault: () => RetentionState.newState.index,
+      ).withConverter<RetentionState>($RetentionTableTable.$converterstate);
   @override
   List<GeneratedColumn> get $columns => [
     cardId,
-    deckId,
-    tags,
-    retentionCard,
-    createdAt,
+    due,
+    lastReview,
+    stability,
+    difficulty,
+    elapsedDays,
+    scheduledDays,
+    reps,
+    lapses,
+    state,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'card_deck_info_table';
+  static const String $name = 'retention_table';
   @override
   VerificationContext validateIntegrity(
-    Insertable<CardDeckInfoTableData> instance, {
+    Insertable<RetentionTableData> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -938,16 +1096,62 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
     } else if (isInserting) {
       context.missing(_cardIdMeta);
     }
-    if (data.containsKey('deck_id')) {
+    if (data.containsKey('due')) {
       context.handle(
-        _deckIdMeta,
-        deckId.isAcceptableOrUnknown(data['deck_id']!, _deckIdMeta),
+        _dueMeta,
+        due.isAcceptableOrUnknown(data['due']!, _dueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dueMeta);
+    }
+    if (data.containsKey('last_review')) {
+      context.handle(
+        _lastReviewMeta,
+        lastReview.isAcceptableOrUnknown(data['last_review']!, _lastReviewMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lastReviewMeta);
+    }
+    if (data.containsKey('stability')) {
+      context.handle(
+        _stabilityMeta,
+        stability.isAcceptableOrUnknown(data['stability']!, _stabilityMeta),
       );
     }
-    if (data.containsKey('created_at')) {
+    if (data.containsKey('difficulty')) {
       context.handle(
-        _createdAtMeta,
-        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+        _difficultyMeta,
+        difficulty.isAcceptableOrUnknown(data['difficulty']!, _difficultyMeta),
+      );
+    }
+    if (data.containsKey('elapsed_days')) {
+      context.handle(
+        _elapsedDaysMeta,
+        elapsedDays.isAcceptableOrUnknown(
+          data['elapsed_days']!,
+          _elapsedDaysMeta,
+        ),
+      );
+    }
+    if (data.containsKey('scheduled_days')) {
+      context.handle(
+        _scheduledDaysMeta,
+        scheduledDays.isAcceptableOrUnknown(
+          data['scheduled_days']!,
+          _scheduledDaysMeta,
+        ),
+      );
+    }
+    if (data.containsKey('reps')) {
+      context.handle(
+        _repsMeta,
+        reps.isAcceptableOrUnknown(data['reps']!, _repsMeta),
+      );
+    }
+    if (data.containsKey('lapses')) {
+      context.handle(
+        _lapsesMeta,
+        lapses.isAcceptableOrUnknown(data['lapses']!, _lapsesMeta),
       );
     }
     return context;
@@ -956,112 +1160,149 @@ class $CardDeckInfoTableTable extends CardDeckInfoTable
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  CardDeckInfoTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  RetentionTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CardDeckInfoTableData(
+    return RetentionTableData(
       cardId:
           attachedDatabase.typeMapping.read(
             DriftSqlType.int,
             data['${effectivePrefix}card_id'],
           )!,
-      deckId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}deck_id'],
-      ),
-      tags: $CardDeckInfoTableTable.$convertertagsn.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}tags'],
-        ),
-      ),
-      retentionCard: $CardDeckInfoTableTable.$converterretentionCard.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}retention_card'],
-        )!,
-      ),
-      createdAt:
+      due:
           attachedDatabase.typeMapping.read(
             DriftSqlType.dateTime,
-            data['${effectivePrefix}created_at'],
+            data['${effectivePrefix}due'],
           )!,
+      lastReview:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.dateTime,
+            data['${effectivePrefix}last_review'],
+          )!,
+      stability:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.double,
+            data['${effectivePrefix}stability'],
+          )!,
+      difficulty:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.double,
+            data['${effectivePrefix}difficulty'],
+          )!,
+      elapsedDays:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}elapsed_days'],
+          )!,
+      scheduledDays:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}scheduled_days'],
+          )!,
+      reps:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}reps'],
+          )!,
+      lapses:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}lapses'],
+          )!,
+      state: $RetentionTableTable.$converterstate.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}state'],
+        )!,
+      ),
     );
   }
 
   @override
-  $CardDeckInfoTableTable createAlias(String alias) {
-    return $CardDeckInfoTableTable(attachedDatabase, alias);
+  $RetentionTableTable createAlias(String alias) {
+    return $RetentionTableTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<List<String>, String, Object?> $convertertags =
-      ListString.converter;
-  static JsonTypeConverter2<List<String>?, String?, Object?> $convertertagsn =
-      JsonTypeConverter2.asNullable($convertertags);
-  static JsonTypeConverter2<RetentionCard, String, Map<String, Object?>>
-  $converterretentionCard = const RetentionCardConverter();
+  static JsonTypeConverter2<RetentionState, int, int> $converterstate =
+      const EnumIndexConverter<RetentionState>(RetentionState.values);
 }
 
-class CardDeckInfoTableData extends DataClass
-    implements Insertable<CardDeckInfoTableData> {
+class RetentionTableData extends DataClass
+    implements Insertable<RetentionTableData> {
   final int cardId;
-  final int? deckId;
-  final List<String>? tags;
-  final RetentionCard retentionCard;
-  final DateTime createdAt;
-  const CardDeckInfoTableData({
+  final DateTime due;
+  final DateTime lastReview;
+  final double stability;
+  final double difficulty;
+  final int elapsedDays;
+  final int scheduledDays;
+  final int reps;
+  final int lapses;
+  final RetentionState state;
+  const RetentionTableData({
     required this.cardId,
-    this.deckId,
-    this.tags,
-    required this.retentionCard,
-    required this.createdAt,
+    required this.due,
+    required this.lastReview,
+    required this.stability,
+    required this.difficulty,
+    required this.elapsedDays,
+    required this.scheduledDays,
+    required this.reps,
+    required this.lapses,
+    required this.state,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['card_id'] = Variable<int>(cardId);
-    if (!nullToAbsent || deckId != null) {
-      map['deck_id'] = Variable<int>(deckId);
-    }
-    if (!nullToAbsent || tags != null) {
-      map['tags'] = Variable<String>(
-        $CardDeckInfoTableTable.$convertertagsn.toSql(tags),
-      );
-    }
+    map['due'] = Variable<DateTime>(due);
+    map['last_review'] = Variable<DateTime>(lastReview);
+    map['stability'] = Variable<double>(stability);
+    map['difficulty'] = Variable<double>(difficulty);
+    map['elapsed_days'] = Variable<int>(elapsedDays);
+    map['scheduled_days'] = Variable<int>(scheduledDays);
+    map['reps'] = Variable<int>(reps);
+    map['lapses'] = Variable<int>(lapses);
     {
-      map['retention_card'] = Variable<String>(
-        $CardDeckInfoTableTable.$converterretentionCard.toSql(retentionCard),
+      map['state'] = Variable<int>(
+        $RetentionTableTable.$converterstate.toSql(state),
       );
     }
-    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
-  CardDeckInfoTableCompanion toCompanion(bool nullToAbsent) {
-    return CardDeckInfoTableCompanion(
+  RetentionTableCompanion toCompanion(bool nullToAbsent) {
+    return RetentionTableCompanion(
       cardId: Value(cardId),
-      deckId:
-          deckId == null && nullToAbsent ? const Value.absent() : Value(deckId),
-      tags: tags == null && nullToAbsent ? const Value.absent() : Value(tags),
-      retentionCard: Value(retentionCard),
-      createdAt: Value(createdAt),
+      due: Value(due),
+      lastReview: Value(lastReview),
+      stability: Value(stability),
+      difficulty: Value(difficulty),
+      elapsedDays: Value(elapsedDays),
+      scheduledDays: Value(scheduledDays),
+      reps: Value(reps),
+      lapses: Value(lapses),
+      state: Value(state),
     );
   }
 
-  factory CardDeckInfoTableData.fromJson(
+  factory RetentionTableData.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CardDeckInfoTableData(
+    return RetentionTableData(
       cardId: serializer.fromJson<int>(json['cardId']),
-      deckId: serializer.fromJson<int?>(json['deckId']),
-      tags: $CardDeckInfoTableTable.$convertertagsn.fromJson(
-        serializer.fromJson<Object?>(json['tags']),
+      due: serializer.fromJson<DateTime>(json['due']),
+      lastReview: serializer.fromJson<DateTime>(json['lastReview']),
+      stability: serializer.fromJson<double>(json['stability']),
+      difficulty: serializer.fromJson<double>(json['difficulty']),
+      elapsedDays: serializer.fromJson<int>(json['elapsedDays']),
+      scheduledDays: serializer.fromJson<int>(json['scheduledDays']),
+      reps: serializer.fromJson<int>(json['reps']),
+      lapses: serializer.fromJson<int>(json['lapses']),
+      state: $RetentionTableTable.$converterstate.fromJson(
+        serializer.fromJson<int>(json['state']),
       ),
-      retentionCard: $CardDeckInfoTableTable.$converterretentionCard.fromJson(
-        serializer.fromJson<Map<String, Object?>>(json['retentionCard']),
-      ),
-      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -1069,126 +1310,202 @@ class CardDeckInfoTableData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'cardId': serializer.toJson<int>(cardId),
-      'deckId': serializer.toJson<int?>(deckId),
-      'tags': serializer.toJson<Object?>(
-        $CardDeckInfoTableTable.$convertertagsn.toJson(tags),
+      'due': serializer.toJson<DateTime>(due),
+      'lastReview': serializer.toJson<DateTime>(lastReview),
+      'stability': serializer.toJson<double>(stability),
+      'difficulty': serializer.toJson<double>(difficulty),
+      'elapsedDays': serializer.toJson<int>(elapsedDays),
+      'scheduledDays': serializer.toJson<int>(scheduledDays),
+      'reps': serializer.toJson<int>(reps),
+      'lapses': serializer.toJson<int>(lapses),
+      'state': serializer.toJson<int>(
+        $RetentionTableTable.$converterstate.toJson(state),
       ),
-      'retentionCard': serializer.toJson<Map<String, Object?>>(
-        $CardDeckInfoTableTable.$converterretentionCard.toJson(retentionCard),
-      ),
-      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  CardDeckInfoTableData copyWith({
+  RetentionTableData copyWith({
     int? cardId,
-    Value<int?> deckId = const Value.absent(),
-    Value<List<String>?> tags = const Value.absent(),
-    RetentionCard? retentionCard,
-    DateTime? createdAt,
-  }) => CardDeckInfoTableData(
+    DateTime? due,
+    DateTime? lastReview,
+    double? stability,
+    double? difficulty,
+    int? elapsedDays,
+    int? scheduledDays,
+    int? reps,
+    int? lapses,
+    RetentionState? state,
+  }) => RetentionTableData(
     cardId: cardId ?? this.cardId,
-    deckId: deckId.present ? deckId.value : this.deckId,
-    tags: tags.present ? tags.value : this.tags,
-    retentionCard: retentionCard ?? this.retentionCard,
-    createdAt: createdAt ?? this.createdAt,
+    due: due ?? this.due,
+    lastReview: lastReview ?? this.lastReview,
+    stability: stability ?? this.stability,
+    difficulty: difficulty ?? this.difficulty,
+    elapsedDays: elapsedDays ?? this.elapsedDays,
+    scheduledDays: scheduledDays ?? this.scheduledDays,
+    reps: reps ?? this.reps,
+    lapses: lapses ?? this.lapses,
+    state: state ?? this.state,
   );
-  CardDeckInfoTableData copyWithCompanion(CardDeckInfoTableCompanion data) {
-    return CardDeckInfoTableData(
+  RetentionTableData copyWithCompanion(RetentionTableCompanion data) {
+    return RetentionTableData(
       cardId: data.cardId.present ? data.cardId.value : this.cardId,
-      deckId: data.deckId.present ? data.deckId.value : this.deckId,
-      tags: data.tags.present ? data.tags.value : this.tags,
-      retentionCard:
-          data.retentionCard.present
-              ? data.retentionCard.value
-              : this.retentionCard,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      due: data.due.present ? data.due.value : this.due,
+      lastReview:
+          data.lastReview.present ? data.lastReview.value : this.lastReview,
+      stability: data.stability.present ? data.stability.value : this.stability,
+      difficulty:
+          data.difficulty.present ? data.difficulty.value : this.difficulty,
+      elapsedDays:
+          data.elapsedDays.present ? data.elapsedDays.value : this.elapsedDays,
+      scheduledDays:
+          data.scheduledDays.present
+              ? data.scheduledDays.value
+              : this.scheduledDays,
+      reps: data.reps.present ? data.reps.value : this.reps,
+      lapses: data.lapses.present ? data.lapses.value : this.lapses,
+      state: data.state.present ? data.state.value : this.state,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('CardDeckInfoTableData(')
+    return (StringBuffer('RetentionTableData(')
           ..write('cardId: $cardId, ')
-          ..write('deckId: $deckId, ')
-          ..write('tags: $tags, ')
-          ..write('retentionCard: $retentionCard, ')
-          ..write('createdAt: $createdAt')
+          ..write('due: $due, ')
+          ..write('lastReview: $lastReview, ')
+          ..write('stability: $stability, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('elapsedDays: $elapsedDays, ')
+          ..write('scheduledDays: $scheduledDays, ')
+          ..write('reps: $reps, ')
+          ..write('lapses: $lapses, ')
+          ..write('state: $state')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(cardId, deckId, tags, retentionCard, createdAt);
+  int get hashCode => Object.hash(
+    cardId,
+    due,
+    lastReview,
+    stability,
+    difficulty,
+    elapsedDays,
+    scheduledDays,
+    reps,
+    lapses,
+    state,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CardDeckInfoTableData &&
+      (other is RetentionTableData &&
           other.cardId == this.cardId &&
-          other.deckId == this.deckId &&
-          other.tags == this.tags &&
-          other.retentionCard == this.retentionCard &&
-          other.createdAt == this.createdAt);
+          other.due == this.due &&
+          other.lastReview == this.lastReview &&
+          other.stability == this.stability &&
+          other.difficulty == this.difficulty &&
+          other.elapsedDays == this.elapsedDays &&
+          other.scheduledDays == this.scheduledDays &&
+          other.reps == this.reps &&
+          other.lapses == this.lapses &&
+          other.state == this.state);
 }
 
-class CardDeckInfoTableCompanion
-    extends UpdateCompanion<CardDeckInfoTableData> {
+class RetentionTableCompanion extends UpdateCompanion<RetentionTableData> {
   final Value<int> cardId;
-  final Value<int?> deckId;
-  final Value<List<String>?> tags;
-  final Value<RetentionCard> retentionCard;
-  final Value<DateTime> createdAt;
+  final Value<DateTime> due;
+  final Value<DateTime> lastReview;
+  final Value<double> stability;
+  final Value<double> difficulty;
+  final Value<int> elapsedDays;
+  final Value<int> scheduledDays;
+  final Value<int> reps;
+  final Value<int> lapses;
+  final Value<RetentionState> state;
   final Value<int> rowid;
-  const CardDeckInfoTableCompanion({
+  const RetentionTableCompanion({
     this.cardId = const Value.absent(),
-    this.deckId = const Value.absent(),
-    this.tags = const Value.absent(),
-    this.retentionCard = const Value.absent(),
-    this.createdAt = const Value.absent(),
+    this.due = const Value.absent(),
+    this.lastReview = const Value.absent(),
+    this.stability = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.elapsedDays = const Value.absent(),
+    this.scheduledDays = const Value.absent(),
+    this.reps = const Value.absent(),
+    this.lapses = const Value.absent(),
+    this.state = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  CardDeckInfoTableCompanion.insert({
+  RetentionTableCompanion.insert({
     required int cardId,
-    this.deckId = const Value.absent(),
-    this.tags = const Value.absent(),
-    required RetentionCard retentionCard,
-    this.createdAt = const Value.absent(),
+    required DateTime due,
+    required DateTime lastReview,
+    this.stability = const Value.absent(),
+    this.difficulty = const Value.absent(),
+    this.elapsedDays = const Value.absent(),
+    this.scheduledDays = const Value.absent(),
+    this.reps = const Value.absent(),
+    this.lapses = const Value.absent(),
+    this.state = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : cardId = Value(cardId),
-       retentionCard = Value(retentionCard);
-  static Insertable<CardDeckInfoTableData> custom({
+       due = Value(due),
+       lastReview = Value(lastReview);
+  static Insertable<RetentionTableData> custom({
     Expression<int>? cardId,
-    Expression<int>? deckId,
-    Expression<String>? tags,
-    Expression<String>? retentionCard,
-    Expression<DateTime>? createdAt,
+    Expression<DateTime>? due,
+    Expression<DateTime>? lastReview,
+    Expression<double>? stability,
+    Expression<double>? difficulty,
+    Expression<int>? elapsedDays,
+    Expression<int>? scheduledDays,
+    Expression<int>? reps,
+    Expression<int>? lapses,
+    Expression<int>? state,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (cardId != null) 'card_id': cardId,
-      if (deckId != null) 'deck_id': deckId,
-      if (tags != null) 'tags': tags,
-      if (retentionCard != null) 'retention_card': retentionCard,
-      if (createdAt != null) 'created_at': createdAt,
+      if (due != null) 'due': due,
+      if (lastReview != null) 'last_review': lastReview,
+      if (stability != null) 'stability': stability,
+      if (difficulty != null) 'difficulty': difficulty,
+      if (elapsedDays != null) 'elapsed_days': elapsedDays,
+      if (scheduledDays != null) 'scheduled_days': scheduledDays,
+      if (reps != null) 'reps': reps,
+      if (lapses != null) 'lapses': lapses,
+      if (state != null) 'state': state,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  CardDeckInfoTableCompanion copyWith({
+  RetentionTableCompanion copyWith({
     Value<int>? cardId,
-    Value<int?>? deckId,
-    Value<List<String>?>? tags,
-    Value<RetentionCard>? retentionCard,
-    Value<DateTime>? createdAt,
+    Value<DateTime>? due,
+    Value<DateTime>? lastReview,
+    Value<double>? stability,
+    Value<double>? difficulty,
+    Value<int>? elapsedDays,
+    Value<int>? scheduledDays,
+    Value<int>? reps,
+    Value<int>? lapses,
+    Value<RetentionState>? state,
     Value<int>? rowid,
   }) {
-    return CardDeckInfoTableCompanion(
+    return RetentionTableCompanion(
       cardId: cardId ?? this.cardId,
-      deckId: deckId ?? this.deckId,
-      tags: tags ?? this.tags,
-      retentionCard: retentionCard ?? this.retentionCard,
-      createdAt: createdAt ?? this.createdAt,
+      due: due ?? this.due,
+      lastReview: lastReview ?? this.lastReview,
+      stability: stability ?? this.stability,
+      difficulty: difficulty ?? this.difficulty,
+      elapsedDays: elapsedDays ?? this.elapsedDays,
+      scheduledDays: scheduledDays ?? this.scheduledDays,
+      reps: reps ?? this.reps,
+      lapses: lapses ?? this.lapses,
+      state: state ?? this.state,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1199,23 +1516,34 @@ class CardDeckInfoTableCompanion
     if (cardId.present) {
       map['card_id'] = Variable<int>(cardId.value);
     }
-    if (deckId.present) {
-      map['deck_id'] = Variable<int>(deckId.value);
+    if (due.present) {
+      map['due'] = Variable<DateTime>(due.value);
     }
-    if (tags.present) {
-      map['tags'] = Variable<String>(
-        $CardDeckInfoTableTable.$convertertagsn.toSql(tags.value),
+    if (lastReview.present) {
+      map['last_review'] = Variable<DateTime>(lastReview.value);
+    }
+    if (stability.present) {
+      map['stability'] = Variable<double>(stability.value);
+    }
+    if (difficulty.present) {
+      map['difficulty'] = Variable<double>(difficulty.value);
+    }
+    if (elapsedDays.present) {
+      map['elapsed_days'] = Variable<int>(elapsedDays.value);
+    }
+    if (scheduledDays.present) {
+      map['scheduled_days'] = Variable<int>(scheduledDays.value);
+    }
+    if (reps.present) {
+      map['reps'] = Variable<int>(reps.value);
+    }
+    if (lapses.present) {
+      map['lapses'] = Variable<int>(lapses.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<int>(
+        $RetentionTableTable.$converterstate.toSql(state.value),
       );
-    }
-    if (retentionCard.present) {
-      map['retention_card'] = Variable<String>(
-        $CardDeckInfoTableTable.$converterretentionCard.toSql(
-          retentionCard.value,
-        ),
-      );
-    }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1225,12 +1553,17 @@ class CardDeckInfoTableCompanion
 
   @override
   String toString() {
-    return (StringBuffer('CardDeckInfoTableCompanion(')
+    return (StringBuffer('RetentionTableCompanion(')
           ..write('cardId: $cardId, ')
-          ..write('deckId: $deckId, ')
-          ..write('tags: $tags, ')
-          ..write('retentionCard: $retentionCard, ')
-          ..write('createdAt: $createdAt, ')
+          ..write('due: $due, ')
+          ..write('lastReview: $lastReview, ')
+          ..write('stability: $stability, ')
+          ..write('difficulty: $difficulty, ')
+          ..write('elapsedDays: $elapsedDays, ')
+          ..write('scheduledDays: $scheduledDays, ')
+          ..write('reps: $reps, ')
+          ..write('lapses: $lapses, ')
+          ..write('state: $state, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1242,11 +1575,10 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
   $AppDriftDatabaseManager get managers => $AppDriftDatabaseManager(this);
   late final $DecksTableTable decksTable = $DecksTableTable(this);
   late final $CardsTableTable cardsTable = $CardsTableTable(this);
-  late final $CardDeckInfoTableTable cardDeckInfoTable =
-      $CardDeckInfoTableTable(this);
-  late final Index deckId = Index(
-    'deck_id',
-    'CREATE INDEX deck_id ON card_deck_info_table (deck_id)',
+  late final $RetentionTableTable retentionTable = $RetentionTableTable(this);
+  late final Index cardId = Index(
+    'card_id',
+    'CREATE INDEX card_id ON retention_table (card_id)',
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -1255,8 +1587,8 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     decksTable,
     cardsTable,
-    cardDeckInfoTable,
-    deckId,
+    retentionTable,
+    cardId,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -1265,7 +1597,7 @@ abstract class _$AppDriftDatabase extends GeneratedDatabase {
         'cards_table',
         limitUpdateKind: UpdateKind.delete,
       ),
-      result: [TableUpdate('card_deck_info_table', kind: UpdateKind.delete)],
+      result: [TableUpdate('retention_table', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -1284,39 +1616,6 @@ typedef $$DecksTableTableUpdateCompanionBuilder =
       Value<String> description,
       Value<DateTime> createdAt,
     });
-
-final class $$DecksTableTableReferences
-    extends
-        BaseReferences<_$AppDriftDatabase, $DecksTableTable, DecksTableData> {
-  $$DecksTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<
-    $CardDeckInfoTableTable,
-    List<CardDeckInfoTableData>
-  >
-  _cardDeckInfoTableRefsTable(_$AppDriftDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.cardDeckInfoTable,
-        aliasName: $_aliasNameGenerator(
-          db.decksTable.id,
-          db.cardDeckInfoTable.deckId,
-        ),
-      );
-
-  $$CardDeckInfoTableTableProcessedTableManager get cardDeckInfoTableRefs {
-    final manager = $$CardDeckInfoTableTableTableManager(
-      $_db,
-      $_db.cardDeckInfoTable,
-    ).filter((f) => f.deckId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _cardDeckInfoTableRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
 
 class $$DecksTableTableFilterComposer
     extends Composer<_$AppDriftDatabase, $DecksTableTable> {
@@ -1346,31 +1645,6 @@ class $$DecksTableTableFilterComposer
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
-
-  Expression<bool> cardDeckInfoTableRefs(
-    Expression<bool> Function($$CardDeckInfoTableTableFilterComposer f) f,
-  ) {
-    final $$CardDeckInfoTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cardDeckInfoTable,
-      getReferencedColumn: (t) => t.deckId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$CardDeckInfoTableTableFilterComposer(
-            $db: $db,
-            $table: $db.cardDeckInfoTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$DecksTableTableOrderingComposer
@@ -1425,32 +1699,6 @@ class $$DecksTableTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
-
-  Expression<T> cardDeckInfoTableRefs<T extends Object>(
-    Expression<T> Function($$CardDeckInfoTableTableAnnotationComposer a) f,
-  ) {
-    final $$CardDeckInfoTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.cardDeckInfoTable,
-          getReferencedColumn: (t) => t.deckId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$CardDeckInfoTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.cardDeckInfoTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$DecksTableTableTableManager
@@ -1464,9 +1712,16 @@ class $$DecksTableTableTableManager
           $$DecksTableTableAnnotationComposer,
           $$DecksTableTableCreateCompanionBuilder,
           $$DecksTableTableUpdateCompanionBuilder,
-          (DecksTableData, $$DecksTableTableReferences),
+          (
+            DecksTableData,
+            BaseReferences<
+              _$AppDriftDatabase,
+              $DecksTableTable,
+              DecksTableData
+            >,
+          ),
           DecksTableData,
-          PrefetchHooks Function({bool cardDeckInfoTableRefs})
+          PrefetchHooks Function()
         > {
   $$DecksTableTableTableManager(_$AppDriftDatabase db, $DecksTableTable table)
     : super(
@@ -1509,44 +1764,11 @@ class $$DecksTableTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$DecksTableTableReferences(db, table, e),
+                          BaseReferences(db, table, e),
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({cardDeckInfoTableRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (cardDeckInfoTableRefs) db.cardDeckInfoTable,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (cardDeckInfoTableRefs)
-                    await $_getPrefetchedData<
-                      DecksTableData,
-                      $DecksTableTable,
-                      CardDeckInfoTableData
-                    >(
-                      currentTable: table,
-                      referencedTable: $$DecksTableTableReferences
-                          ._cardDeckInfoTableRefsTable(db),
-                      managerFromTypedResult:
-                          (p0) =>
-                              $$DecksTableTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).cardDeckInfoTableRefs,
-                      referencedItemsForCurrentItem:
-                          (item, referencedItems) =>
-                              referencedItems.where((e) => e.deckId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
+          prefetchHooksCallback: null,
         ),
       );
 }
@@ -1561,30 +1783,37 @@ typedef $$DecksTableTableProcessedTableManager =
       $$DecksTableTableAnnotationComposer,
       $$DecksTableTableCreateCompanionBuilder,
       $$DecksTableTableUpdateCompanionBuilder,
-      (DecksTableData, $$DecksTableTableReferences),
+      (
+        DecksTableData,
+        BaseReferences<_$AppDriftDatabase, $DecksTableTable, DecksTableData>,
+      ),
       DecksTableData,
-      PrefetchHooks Function({bool cardDeckInfoTableRefs})
+      PrefetchHooks Function()
     >;
 typedef $$CardsTableTableCreateCompanionBuilder =
     CardsTableCompanion Function({
       Value<int> id,
+      Value<int?> deckId,
       required String name,
       required String typology,
       required String meaning,
       required List<String> videosSigns,
       required LsfDictionaryName sourceDictionnary,
       Value<int?> dictionnarySignId,
+      Value<List<String>?> tags,
       Value<DateTime> createdAt,
     });
 typedef $$CardsTableTableUpdateCompanionBuilder =
     CardsTableCompanion Function({
       Value<int> id,
+      Value<int?> deckId,
       Value<String> name,
       Value<String> typology,
       Value<String> meaning,
       Value<List<String>> videosSigns,
       Value<LsfDictionaryName> sourceDictionnary,
       Value<int?> dictionnarySignId,
+      Value<List<String>?> tags,
       Value<DateTime> createdAt,
     });
 
@@ -1593,28 +1822,23 @@ final class $$CardsTableTableReferences
         BaseReferences<_$AppDriftDatabase, $CardsTableTable, CardsTableData> {
   $$CardsTableTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<
-    $CardDeckInfoTableTable,
-    List<CardDeckInfoTableData>
-  >
-  _cardDeckInfoTableRefsTable(_$AppDriftDatabase db) =>
+  static MultiTypedResultKey<$RetentionTableTable, List<RetentionTableData>>
+  _retentionTableRefsTable(_$AppDriftDatabase db) =>
       MultiTypedResultKey.fromTable(
-        db.cardDeckInfoTable,
+        db.retentionTable,
         aliasName: $_aliasNameGenerator(
           db.cardsTable.id,
-          db.cardDeckInfoTable.cardId,
+          db.retentionTable.cardId,
         ),
       );
 
-  $$CardDeckInfoTableTableProcessedTableManager get cardDeckInfoTableRefs {
-    final manager = $$CardDeckInfoTableTableTableManager(
+  $$RetentionTableTableProcessedTableManager get retentionTableRefs {
+    final manager = $$RetentionTableTableTableManager(
       $_db,
-      $_db.cardDeckInfoTable,
+      $_db.retentionTable,
     ).filter((f) => f.cardId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(
-      _cardDeckInfoTableRefsTable($_db),
-    );
+    final cache = $_typedResult.readTableOrNull(_retentionTableRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -1632,6 +1856,11 @@ class $$CardsTableTableFilterComposer
   });
   ColumnFilters<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get deckId => $composableBuilder(
+    column: $table.deckId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1667,27 +1896,33 @@ class $$CardsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
+  get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> cardDeckInfoTableRefs(
-    Expression<bool> Function($$CardDeckInfoTableTableFilterComposer f) f,
+  Expression<bool> retentionTableRefs(
+    Expression<bool> Function($$RetentionTableTableFilterComposer f) f,
   ) {
-    final $$CardDeckInfoTableTableFilterComposer composer = $composerBuilder(
+    final $$RetentionTableTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.cardDeckInfoTable,
+      referencedTable: $db.retentionTable,
       getReferencedColumn: (t) => t.cardId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$CardDeckInfoTableTableFilterComposer(
+          }) => $$RetentionTableTableFilterComposer(
             $db: $db,
-            $table: $db.cardDeckInfoTable,
+            $table: $db.retentionTable,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1709,6 +1944,11 @@ class $$CardsTableTableOrderingComposer
   });
   ColumnOrderings<int> get id => $composableBuilder(
     column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get deckId => $composableBuilder(
+    column: $table.deckId,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1742,6 +1982,11 @@ class $$CardsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get tags => $composableBuilder(
+    column: $table.tags,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -1759,6 +2004,9 @@ class $$CardsTableTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get deckId =>
+      $composableBuilder(column: $table.deckId, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -1786,32 +2034,34 @@ class $$CardsTableTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumnWithTypeConverter<List<String>?, String> get tags =>
+      $composableBuilder(column: $table.tags, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
-  Expression<T> cardDeckInfoTableRefs<T extends Object>(
-    Expression<T> Function($$CardDeckInfoTableTableAnnotationComposer a) f,
+  Expression<T> retentionTableRefs<T extends Object>(
+    Expression<T> Function($$RetentionTableTableAnnotationComposer a) f,
   ) {
-    final $$CardDeckInfoTableTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.cardDeckInfoTable,
-          getReferencedColumn: (t) => t.cardId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
+    final $$RetentionTableTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.retentionTable,
+      getReferencedColumn: (t) => t.cardId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RetentionTableTableAnnotationComposer(
+            $db: $db,
+            $table: $db.retentionTable,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
                 $removeJoinBuilderFromRootComposer,
-              }) => $$CardDeckInfoTableTableAnnotationComposer(
-                $db: $db,
-                $table: $db.cardDeckInfoTable,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
+          ),
+    );
     return f(composer);
   }
 }
@@ -1829,7 +2079,7 @@ class $$CardsTableTableTableManager
           $$CardsTableTableUpdateCompanionBuilder,
           (CardsTableData, $$CardsTableTableReferences),
           CardsTableData,
-          PrefetchHooks Function({bool cardDeckInfoTableRefs})
+          PrefetchHooks Function({bool retentionTableRefs})
         > {
   $$CardsTableTableTableManager(_$AppDriftDatabase db, $CardsTableTable table)
     : super(
@@ -1845,6 +2095,7 @@ class $$CardsTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> deckId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> typology = const Value.absent(),
                 Value<String> meaning = const Value.absent(),
@@ -1852,35 +2103,42 @@ class $$CardsTableTableTableManager
                 Value<LsfDictionaryName> sourceDictionnary =
                     const Value.absent(),
                 Value<int?> dictionnarySignId = const Value.absent(),
+                Value<List<String>?> tags = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => CardsTableCompanion(
                 id: id,
+                deckId: deckId,
                 name: name,
                 typology: typology,
                 meaning: meaning,
                 videosSigns: videosSigns,
                 sourceDictionnary: sourceDictionnary,
                 dictionnarySignId: dictionnarySignId,
+                tags: tags,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int?> deckId = const Value.absent(),
                 required String name,
                 required String typology,
                 required String meaning,
                 required List<String> videosSigns,
                 required LsfDictionaryName sourceDictionnary,
                 Value<int?> dictionnarySignId = const Value.absent(),
+                Value<List<String>?> tags = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => CardsTableCompanion.insert(
                 id: id,
+                deckId: deckId,
                 name: name,
                 typology: typology,
                 meaning: meaning,
                 videosSigns: videosSigns,
                 sourceDictionnary: sourceDictionnary,
                 dictionnarySignId: dictionnarySignId,
+                tags: tags,
                 createdAt: createdAt,
               ),
           withReferenceMapper:
@@ -1893,31 +2151,31 @@ class $$CardsTableTableTableManager
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({cardDeckInfoTableRefs = false}) {
+          prefetchHooksCallback: ({retentionTableRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (cardDeckInfoTableRefs) db.cardDeckInfoTable,
+                if (retentionTableRefs) db.retentionTable,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (cardDeckInfoTableRefs)
+                  if (retentionTableRefs)
                     await $_getPrefetchedData<
                       CardsTableData,
                       $CardsTableTable,
-                      CardDeckInfoTableData
+                      RetentionTableData
                     >(
                       currentTable: table,
                       referencedTable: $$CardsTableTableReferences
-                          ._cardDeckInfoTableRefsTable(db),
+                          ._retentionTableRefsTable(db),
                       managerFromTypedResult:
                           (p0) =>
                               $$CardsTableTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).cardDeckInfoTableRefs,
+                              ).retentionTableRefs,
                       referencedItemsForCurrentItem:
                           (item, referencedItems) =>
                               referencedItems.where((e) => e.cardId == item.id),
@@ -1943,35 +2201,45 @@ typedef $$CardsTableTableProcessedTableManager =
       $$CardsTableTableUpdateCompanionBuilder,
       (CardsTableData, $$CardsTableTableReferences),
       CardsTableData,
-      PrefetchHooks Function({bool cardDeckInfoTableRefs})
+      PrefetchHooks Function({bool retentionTableRefs})
     >;
-typedef $$CardDeckInfoTableTableCreateCompanionBuilder =
-    CardDeckInfoTableCompanion Function({
+typedef $$RetentionTableTableCreateCompanionBuilder =
+    RetentionTableCompanion Function({
       required int cardId,
-      Value<int?> deckId,
-      Value<List<String>?> tags,
-      required RetentionCard retentionCard,
-      Value<DateTime> createdAt,
+      required DateTime due,
+      required DateTime lastReview,
+      Value<double> stability,
+      Value<double> difficulty,
+      Value<int> elapsedDays,
+      Value<int> scheduledDays,
+      Value<int> reps,
+      Value<int> lapses,
+      Value<RetentionState> state,
       Value<int> rowid,
     });
-typedef $$CardDeckInfoTableTableUpdateCompanionBuilder =
-    CardDeckInfoTableCompanion Function({
+typedef $$RetentionTableTableUpdateCompanionBuilder =
+    RetentionTableCompanion Function({
       Value<int> cardId,
-      Value<int?> deckId,
-      Value<List<String>?> tags,
-      Value<RetentionCard> retentionCard,
-      Value<DateTime> createdAt,
+      Value<DateTime> due,
+      Value<DateTime> lastReview,
+      Value<double> stability,
+      Value<double> difficulty,
+      Value<int> elapsedDays,
+      Value<int> scheduledDays,
+      Value<int> reps,
+      Value<int> lapses,
+      Value<RetentionState> state,
       Value<int> rowid,
     });
 
-final class $$CardDeckInfoTableTableReferences
+final class $$RetentionTableTableReferences
     extends
         BaseReferences<
           _$AppDriftDatabase,
-          $CardDeckInfoTableTable,
-          CardDeckInfoTableData
+          $RetentionTableTable,
+          RetentionTableData
         > {
-  $$CardDeckInfoTableTableReferences(
+  $$RetentionTableTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -1979,7 +2247,7 @@ final class $$CardDeckInfoTableTableReferences
 
   static $CardsTableTable _cardIdTable(_$AppDriftDatabase db) =>
       db.cardsTable.createAlias(
-        $_aliasNameGenerator(db.cardDeckInfoTable.cardId, db.cardsTable.id),
+        $_aliasNameGenerator(db.retentionTable.cardId, db.cardsTable.id),
       );
 
   $$CardsTableTableProcessedTableManager get cardId {
@@ -1995,51 +2263,61 @@ final class $$CardDeckInfoTableTableReferences
       manager.$state.copyWith(prefetchedData: [item]),
     );
   }
-
-  static $DecksTableTable _deckIdTable(_$AppDriftDatabase db) =>
-      db.decksTable.createAlias(
-        $_aliasNameGenerator(db.cardDeckInfoTable.deckId, db.decksTable.id),
-      );
-
-  $$DecksTableTableProcessedTableManager? get deckId {
-    final $_column = $_itemColumn<int>('deck_id');
-    if ($_column == null) return null;
-    final manager = $$DecksTableTableTableManager(
-      $_db,
-      $_db.decksTable,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_deckIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
 }
 
-class $$CardDeckInfoTableTableFilterComposer
-    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
-  $$CardDeckInfoTableTableFilterComposer({
+class $$RetentionTableTableFilterComposer
+    extends Composer<_$AppDriftDatabase, $RetentionTableTable> {
+  $$RetentionTableTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnWithTypeConverterFilters<List<String>?, List<String>, String>
-  get tags => $composableBuilder(
-    column: $table.tags,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<RetentionCard, RetentionCard, String>
-  get retentionCard => $composableBuilder(
-    column: $table.retentionCard,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnFilters<DateTime> get due => $composableBuilder(
+    column: $table.due,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastReview => $composableBuilder(
+    column: $table.lastReview,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get stability => $composableBuilder(
+    column: $table.stability,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get elapsedDays => $composableBuilder(
+    column: $table.elapsedDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get scheduledDays => $composableBuilder(
+    column: $table.scheduledDays,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get reps => $composableBuilder(
+    column: $table.reps,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lapses => $composableBuilder(
+    column: $table.lapses,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<RetentionState, RetentionState, int>
+  get state => $composableBuilder(
+    column: $table.state,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   $$CardsTableTableFilterComposer get cardId {
@@ -2064,52 +2342,59 @@ class $$CardDeckInfoTableTableFilterComposer
     );
     return composer;
   }
-
-  $$DecksTableTableFilterComposer get deckId {
-    final $$DecksTableTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.deckId,
-      referencedTable: $db.decksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$DecksTableTableFilterComposer(
-            $db: $db,
-            $table: $db.decksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$CardDeckInfoTableTableOrderingComposer
-    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
-  $$CardDeckInfoTableTableOrderingComposer({
+class $$RetentionTableTableOrderingComposer
+    extends Composer<_$AppDriftDatabase, $RetentionTableTable> {
+  $$RetentionTableTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get tags => $composableBuilder(
-    column: $table.tags,
+  ColumnOrderings<DateTime> get due => $composableBuilder(
+    column: $table.due,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get retentionCard => $composableBuilder(
-    column: $table.retentionCard,
+  ColumnOrderings<DateTime> get lastReview => $composableBuilder(
+    column: $table.lastReview,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-    column: $table.createdAt,
+  ColumnOrderings<double> get stability => $composableBuilder(
+    column: $table.stability,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get elapsedDays => $composableBuilder(
+    column: $table.elapsedDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get scheduledDays => $composableBuilder(
+    column: $table.scheduledDays,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get reps => $composableBuilder(
+    column: $table.reps,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get lapses => $composableBuilder(
+    column: $table.lapses,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get state => $composableBuilder(
+    column: $table.state,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2135,51 +2420,51 @@ class $$CardDeckInfoTableTableOrderingComposer
     );
     return composer;
   }
-
-  $$DecksTableTableOrderingComposer get deckId {
-    final $$DecksTableTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.deckId,
-      referencedTable: $db.decksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$DecksTableTableOrderingComposer(
-            $db: $db,
-            $table: $db.decksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$CardDeckInfoTableTableAnnotationComposer
-    extends Composer<_$AppDriftDatabase, $CardDeckInfoTableTable> {
-  $$CardDeckInfoTableTableAnnotationComposer({
+class $$RetentionTableTableAnnotationComposer
+    extends Composer<_$AppDriftDatabase, $RetentionTableTable> {
+  $$RetentionTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumnWithTypeConverter<List<String>?, String> get tags =>
-      $composableBuilder(column: $table.tags, builder: (column) => column);
+  GeneratedColumn<DateTime> get due =>
+      $composableBuilder(column: $table.due, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<RetentionCard, String> get retentionCard =>
-      $composableBuilder(
-        column: $table.retentionCard,
-        builder: (column) => column,
-      );
+  GeneratedColumn<DateTime> get lastReview => $composableBuilder(
+    column: $table.lastReview,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<double> get stability =>
+      $composableBuilder(column: $table.stability, builder: (column) => column);
+
+  GeneratedColumn<double> get difficulty => $composableBuilder(
+    column: $table.difficulty,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get elapsedDays => $composableBuilder(
+    column: $table.elapsedDays,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get scheduledDays => $composableBuilder(
+    column: $table.scheduledDays,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get reps =>
+      $composableBuilder(column: $table.reps, builder: (column) => column);
+
+  GeneratedColumn<int> get lapses =>
+      $composableBuilder(column: $table.lapses, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<RetentionState, int> get state =>
+      $composableBuilder(column: $table.state, builder: (column) => column);
 
   $$CardsTableTableAnnotationComposer get cardId {
     final $$CardsTableTableAnnotationComposer composer = $composerBuilder(
@@ -2203,98 +2488,90 @@ class $$CardDeckInfoTableTableAnnotationComposer
     );
     return composer;
   }
-
-  $$DecksTableTableAnnotationComposer get deckId {
-    final $$DecksTableTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.deckId,
-      referencedTable: $db.decksTable,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$DecksTableTableAnnotationComposer(
-            $db: $db,
-            $table: $db.decksTable,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
 }
 
-class $$CardDeckInfoTableTableTableManager
+class $$RetentionTableTableTableManager
     extends
         RootTableManager<
           _$AppDriftDatabase,
-          $CardDeckInfoTableTable,
-          CardDeckInfoTableData,
-          $$CardDeckInfoTableTableFilterComposer,
-          $$CardDeckInfoTableTableOrderingComposer,
-          $$CardDeckInfoTableTableAnnotationComposer,
-          $$CardDeckInfoTableTableCreateCompanionBuilder,
-          $$CardDeckInfoTableTableUpdateCompanionBuilder,
-          (CardDeckInfoTableData, $$CardDeckInfoTableTableReferences),
-          CardDeckInfoTableData,
-          PrefetchHooks Function({bool cardId, bool deckId})
+          $RetentionTableTable,
+          RetentionTableData,
+          $$RetentionTableTableFilterComposer,
+          $$RetentionTableTableOrderingComposer,
+          $$RetentionTableTableAnnotationComposer,
+          $$RetentionTableTableCreateCompanionBuilder,
+          $$RetentionTableTableUpdateCompanionBuilder,
+          (RetentionTableData, $$RetentionTableTableReferences),
+          RetentionTableData,
+          PrefetchHooks Function({bool cardId})
         > {
-  $$CardDeckInfoTableTableTableManager(
+  $$RetentionTableTableTableManager(
     _$AppDriftDatabase db,
-    $CardDeckInfoTableTable table,
+    $RetentionTableTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer:
-              () => $$CardDeckInfoTableTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
+              () => $$RetentionTableTableFilterComposer($db: db, $table: table),
           createOrderingComposer:
-              () => $$CardDeckInfoTableTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
+              () =>
+                  $$RetentionTableTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer:
-              () => $$CardDeckInfoTableTableAnnotationComposer(
+              () => $$RetentionTableTableAnnotationComposer(
                 $db: db,
                 $table: table,
               ),
           updateCompanionCallback:
               ({
                 Value<int> cardId = const Value.absent(),
-                Value<int?> deckId = const Value.absent(),
-                Value<List<String>?> tags = const Value.absent(),
-                Value<RetentionCard> retentionCard = const Value.absent(),
-                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> due = const Value.absent(),
+                Value<DateTime> lastReview = const Value.absent(),
+                Value<double> stability = const Value.absent(),
+                Value<double> difficulty = const Value.absent(),
+                Value<int> elapsedDays = const Value.absent(),
+                Value<int> scheduledDays = const Value.absent(),
+                Value<int> reps = const Value.absent(),
+                Value<int> lapses = const Value.absent(),
+                Value<RetentionState> state = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CardDeckInfoTableCompanion(
+              }) => RetentionTableCompanion(
                 cardId: cardId,
-                deckId: deckId,
-                tags: tags,
-                retentionCard: retentionCard,
-                createdAt: createdAt,
+                due: due,
+                lastReview: lastReview,
+                stability: stability,
+                difficulty: difficulty,
+                elapsedDays: elapsedDays,
+                scheduledDays: scheduledDays,
+                reps: reps,
+                lapses: lapses,
+                state: state,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required int cardId,
-                Value<int?> deckId = const Value.absent(),
-                Value<List<String>?> tags = const Value.absent(),
-                required RetentionCard retentionCard,
-                Value<DateTime> createdAt = const Value.absent(),
+                required DateTime due,
+                required DateTime lastReview,
+                Value<double> stability = const Value.absent(),
+                Value<double> difficulty = const Value.absent(),
+                Value<int> elapsedDays = const Value.absent(),
+                Value<int> scheduledDays = const Value.absent(),
+                Value<int> reps = const Value.absent(),
+                Value<int> lapses = const Value.absent(),
+                Value<RetentionState> state = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
-              }) => CardDeckInfoTableCompanion.insert(
+              }) => RetentionTableCompanion.insert(
                 cardId: cardId,
-                deckId: deckId,
-                tags: tags,
-                retentionCard: retentionCard,
-                createdAt: createdAt,
+                due: due,
+                lastReview: lastReview,
+                stability: stability,
+                difficulty: difficulty,
+                elapsedDays: elapsedDays,
+                scheduledDays: scheduledDays,
+                reps: reps,
+                lapses: lapses,
+                state: state,
                 rowid: rowid,
               ),
           withReferenceMapper:
@@ -2303,11 +2580,11 @@ class $$CardDeckInfoTableTableTableManager
                       .map(
                         (e) => (
                           e.readTable(table),
-                          $$CardDeckInfoTableTableReferences(db, table, e),
+                          $$RetentionTableTableReferences(db, table, e),
                         ),
                       )
                       .toList(),
-          prefetchHooksCallback: ({cardId = false, deckId = false}) {
+          prefetchHooksCallback: ({cardId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -2331,25 +2608,11 @@ class $$CardDeckInfoTableTableTableManager
                       state.withJoin(
                             currentTable: table,
                             currentColumn: table.cardId,
-                            referencedTable: $$CardDeckInfoTableTableReferences
+                            referencedTable: $$RetentionTableTableReferences
                                 ._cardIdTable(db),
                             referencedColumn:
-                                $$CardDeckInfoTableTableReferences
+                                $$RetentionTableTableReferences
                                     ._cardIdTable(db)
-                                    .id,
-                          )
-                          as T;
-                }
-                if (deckId) {
-                  state =
-                      state.withJoin(
-                            currentTable: table,
-                            currentColumn: table.deckId,
-                            referencedTable: $$CardDeckInfoTableTableReferences
-                                ._deckIdTable(db),
-                            referencedColumn:
-                                $$CardDeckInfoTableTableReferences
-                                    ._deckIdTable(db)
                                     .id,
                           )
                           as T;
@@ -2366,19 +2629,19 @@ class $$CardDeckInfoTableTableTableManager
       );
 }
 
-typedef $$CardDeckInfoTableTableProcessedTableManager =
+typedef $$RetentionTableTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDriftDatabase,
-      $CardDeckInfoTableTable,
-      CardDeckInfoTableData,
-      $$CardDeckInfoTableTableFilterComposer,
-      $$CardDeckInfoTableTableOrderingComposer,
-      $$CardDeckInfoTableTableAnnotationComposer,
-      $$CardDeckInfoTableTableCreateCompanionBuilder,
-      $$CardDeckInfoTableTableUpdateCompanionBuilder,
-      (CardDeckInfoTableData, $$CardDeckInfoTableTableReferences),
-      CardDeckInfoTableData,
-      PrefetchHooks Function({bool cardId, bool deckId})
+      $RetentionTableTable,
+      RetentionTableData,
+      $$RetentionTableTableFilterComposer,
+      $$RetentionTableTableOrderingComposer,
+      $$RetentionTableTableAnnotationComposer,
+      $$RetentionTableTableCreateCompanionBuilder,
+      $$RetentionTableTableUpdateCompanionBuilder,
+      (RetentionTableData, $$RetentionTableTableReferences),
+      RetentionTableData,
+      PrefetchHooks Function({bool cardId})
     >;
 
 class $AppDriftDatabaseManager {
@@ -2388,6 +2651,6 @@ class $AppDriftDatabaseManager {
       $$DecksTableTableTableManager(_db, _db.decksTable);
   $$CardsTableTableTableManager get cardsTable =>
       $$CardsTableTableTableManager(_db, _db.cardsTable);
-  $$CardDeckInfoTableTableTableManager get cardDeckInfoTable =>
-      $$CardDeckInfoTableTableTableManager(_db, _db.cardDeckInfoTable);
+  $$RetentionTableTableTableManager get retentionTable =>
+      $$RetentionTableTableTableManager(_db, _db.retentionTable);
 }

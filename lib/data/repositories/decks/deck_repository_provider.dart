@@ -47,11 +47,10 @@ final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
     final filteredCards =
         allCards.value!.where((card) {
           if (filter.retentionState != null &&
-              card.deckInfos?.retentionCard.state != filter.retentionState) {
+              card.retentionCard?.state != filter.retentionState) {
             return false;
           }
-          if (filter.deck != null &&
-              card.deckInfos?.deckId != filter.deck!.id) {
+          if (filter.deck != null && card.card.deckId != filter.deck!.id) {
             return false;
           }
           return true;

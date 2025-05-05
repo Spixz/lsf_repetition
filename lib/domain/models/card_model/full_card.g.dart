@@ -9,13 +9,16 @@ part of 'full_card.dart';
 _$FullCardImpl _$$FullCardImplFromJson(Map<String, dynamic> json) =>
     _$FullCardImpl(
       card: CardModel.fromJson(json['card'] as Map<String, dynamic>),
-      deckInfos:
-          json['deckInfos'] == null
+      retentionCard:
+          json['retentionCard'] == null
               ? null
-              : CardDeckInfo.fromJson(
-                json['deckInfos'] as Map<String, dynamic>,
+              : RetentionCard.fromJson(
+                json['retentionCard'] as Map<String, dynamic>,
               ),
     );
 
 Map<String, dynamic> _$$FullCardImplToJson(_$FullCardImpl instance) =>
-    <String, dynamic>{'card': instance.card, 'deckInfos': instance.deckInfos};
+    <String, dynamic>{
+      'card': instance.card,
+      'retentionCard': instance.retentionCard,
+    };
