@@ -52,11 +52,15 @@
     "SortByCreationDate": "Sort by creation date",
 
     "DECK-VIEW": "",
+    "NoDeckYet": "Aucun deck pour le moment",
     "DeckDeletion": "Supprimer le deck",
     "ConfirmationDeckDeletion": "Êtes-vous sur de vouloir supprimer '{}' ?",
     "DeleteCardsItContain": "Supprimer les {} cartes qu'il contient",
     "DeckDeletionSuccess": "Deck supprimé",
     "DeckDeletionError": "Erreur durant la suppression du deck",
+
+    "PROGRESS-SCREEN": "",
+    "Progress": "Progression",
     
     "BOTTOM-NAVIGATION-BAR": "",
     "MyCards": "Mes cartes",

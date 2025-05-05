@@ -32,6 +32,9 @@ class _ListDecks extends ConsumerWidget {
 
     return allDecks.when(
       data: (decks) {
+        if (decks.isEmpty) {
+          return CenteredMessage(message: context.tr("NoDeckYet"));
+        }
         return ListView.builder(
           itemCount: decks.length,
           itemBuilder: (context, index) {

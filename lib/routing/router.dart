@@ -1,3 +1,4 @@
+import 'package:apprendre_lsf/ui/progress/progress_screen.dart';
 import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,14 +39,21 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       path: Routes.library.path,
       name: Routes.library.name,
       pageBuilder: (context, state) {
-        return NoTransitionPage(child: LibraryScreen());
+        return const NoTransitionPage(child: LibraryScreen());
       },
     ),
     GoRoute(
       path: Routes.searchDictionariesResults.path,
       name: Routes.searchDictionariesResults.name,
       pageBuilder: (context, state) {
-        return NoTransitionPage(child: DictionariesSearchScreen());
+        return const NoTransitionPage(child: DictionariesSearchScreen());
+      },
+    ),
+    GoRoute(
+      path: Routes.progress.path,
+      name: Routes.progress.name,
+      pageBuilder: (context, state) {
+        return const NoTransitionPage(child: ProgressScreen());
       },
     ),
     GoRoute(

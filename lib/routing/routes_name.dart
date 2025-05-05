@@ -19,6 +19,7 @@ abstract final class Routes {
     'Search in dictionaries results',
     '/searchDictionariesResults',
   );
+  static const progress = SingleRoute('Progress', '/progress');
   static const settings = SingleRoute('Settings', '/settings');
 
   static const all = [
@@ -27,5 +28,7 @@ abstract final class Routes {
     createCard,
     library,
     searchDictionariesResults,
+    progress,
+    settings,
   ];
 }

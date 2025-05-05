@@ -8,17 +8,17 @@ import 'package:go_router/go_router.dart';
 class MyBottomNavigationBar extends ConsumerWidget {
   MyBottomNavigationBar({super.key});
 
-  final _tabOrder = [Routes.searchDictionariesResults, Routes.library];
+  final _tabOrder = [Routes.searchDictionariesResults, Routes.library, Routes.progress];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final actualRoute = ref.watch<SingleRoute>(actualRouteProvider);
-    final destinationIndex = _tabOrder.indexWhere(
+    final actualRouteIndex = _tabOrder.indexWhere(
       (route) => route == actualRoute,
     );
 
     return NavigationBar(
-      selectedIndex: (destinationIndex == -1) ? 0 : destinationIndex,
+      selectedIndex: (actualRouteIndex == -1) ? 0 : actualRouteIndex,
       destinations: [
         NavigationDestination(
           icon: Icon(Icons.travel_explore_rounded),
@@ -27,6 +27,10 @@ class MyBottomNavigationBar extends ConsumerWidget {
         NavigationDestination(
           icon: Icon(Icons.library_books),
           label: context.tr("MyCards"),
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.timeline),
+          label: context.tr("Progress"),
         ),
       ],
       onDestinationSelected:
