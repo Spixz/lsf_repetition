@@ -43,7 +43,7 @@ extension RetentionCardExtension on RetentionCard {
 }
 
 extension FsrsCardExtension on fsrs.Card {
-  RetentionCard toFsrsCard() => RetentionCard(
+  RetentionCard toRetentionCard() => RetentionCard(
     due: due,
     lastReview: lastReview,
     stability: stability,

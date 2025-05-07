@@ -72,8 +72,7 @@ class DecksRepository {
         db.retentionTable,
         db.retentionTable.cardId.isExp(db.cardsTable.id),
       ),
-    ]);
-    // final simple = db.select(db.cardsTable).watch();
+    ])..orderBy([OrderingTerm.desc(db.cardsTable.createdAt)]);
 
     return query.watch().map((rows) {
       return rows.map((row) {
@@ -90,23 +89,48 @@ class DecksRepository {
     return getAllCardsStream().first;
   }
 
-  // Future<List<FullCard>> getDueCards() {
-  //       final db = _driftDatabase;
-  //   final dueCardIds = db.managers.cardDeckInfoTable.filter((infos) => infos.retentionCard.xxx))
-  // }
-
   Future<List<FullCard>> getCardsOfADeck(int deckId) async {
     final db = _driftDatabase;
-    final query = db.select(db.cardsTable)
-      ..where((card) => card.deckId.equals(deckId));
-    // ..orderBy([(card) => OrderingTerm(expression: card.name)]);
+    final query =
+        db.select(db.cardsTable)
+          ..where((card) => card.deckId.equals(deckId))
+          ..orderBy([(card) => OrderingTerm.desc(card.createdAt)]);
 
+    return _joinCardsRetentionToCardsTable(query);
+  }
+
+  Future<List<FullCard>> _joinCardsRetentionToCardsTable(
+    SimpleSelectStatement query,
+  ) async {
+    final db = _driftDatabase;
     final joinedQuery = query.join([
       innerJoin(
         db.retentionTable,
         db.retentionTable.cardId.isExp(db.cardsTable.id),
       ),
-    ]);
+    ])..orderBy([OrderingTerm.desc(db.cardsTable.createdAt)]);
+
+    final joinedQueryResult = await joinedQuery.get();
+    final result = joinedQueryResult.map(
+      (row) => FullCard(
+        card: row.readTable(db.cardsTable).toCardModel(),
+        retentionCard: row.readTable(db.retentionTable).toRetentionCard(),
+      ),
+    );
+
+    return result.toList();
+  }
+
+  Future<List<FullCard>> _joinCardsTableToCardRetention(
+    SimpleSelectStatement query,
+  ) async {
+    final db = _driftDatabase;
+    final joinedQuery = query.join([
+      innerJoin(
+        db.cardsTable,
+        db.cardsTable.id.isExp(db.retentionTable.cardId),
+      ),
+    ])..orderBy([OrderingTerm.desc(db.cardsTable.createdAt)]);
 
     final joinedQueryResult = await joinedQuery.get();
     final result = joinedQueryResult.map(
@@ -145,11 +169,22 @@ class DecksRepository {
     // final createdCardsId = createResp.whereType<AsyncData>().map((data) => data.value as int);
   }
 
-  // Future<void> setCardRetention({int cardId, RetentionCard retention}) async {
-  //   await _driftDatabase.managers.cardDeckInfoTable
-  //       .filter((card) => card.cardId.id.equals(cardId))
-  //       .update((card) => card(retentionCard: Value(retention)));
-  // }
+  Future<void> updateRetentionCard(RetentionCard retention) async {
+    final cardId = retention.cardId;
+    if (cardId == null) return;
+
+    await _driftDatabase.managers.retentionTable
+        .filter((retItem) => retItem.cardId.id.equals(retention.cardId))
+        .update((retItem) => retention.toRetentionTableDatas());
+  }
+
+  Future<List<FullCard>> getDueCards() {
+    final db = _driftDatabase;
+    final now = (DateTime.now().millisecondsSinceEpoch / 1000).toInt();
+    final query = db.select(db.retentionTable)
+      ..where((retention) => retention.due.unixepoch.isSmallerThanValue(now));
+    return _joinCardsTableToCardRetention(query);
+  }
 
   Future<void> deleteCards({required List<int> cardsIds}) async {
     await _driftDatabase.cardsTable.deleteWhere(

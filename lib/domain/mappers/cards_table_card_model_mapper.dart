@@ -30,6 +30,7 @@ extension CardToCardsTableCompanion on CardModel {
       videosSigns: videosSigns,
       sourceDictionnary: sourceDictionnary,
       tags: Value(tags),
+      createdAt: createdAt != null ? Value(createdAt!) : Value.absent(),
       //todo : pb avec dictionnarySignId
     );
   }

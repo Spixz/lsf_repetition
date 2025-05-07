@@ -13,7 +13,6 @@ class FullCard with _$FullCard {
   const factory FullCard({required CardModel card, RetentionCard? retentionCard}) =
       _FullCard;
 
-
   bool get belongToADeck => card.deckId != null;
 
   factory FullCard.fromJson(Map<String, dynamic> json) =>

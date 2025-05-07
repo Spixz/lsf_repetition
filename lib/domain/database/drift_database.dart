@@ -62,6 +62,7 @@ class RetentionTable extends Table {
 @DriftDatabase(tables: [DecksTable, CardsTable, RetentionTable])
 class AppDriftDatabase extends _$AppDriftDatabase {
   AppDriftDatabase() : super(_openConnection());
+  AppDriftDatabase.executor(QueryExecutor super.e);
 
   @override
   int get schemaVersion => 1;
