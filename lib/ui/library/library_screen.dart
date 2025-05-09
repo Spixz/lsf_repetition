@@ -1,14 +1,15 @@
-import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
-import 'package:apprendre_lsf/ui/library/providers/library_on_dispose_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/routing/navigation_bar.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar.dart';
 import 'package:apprendre_lsf/ui/library/list_cards_view.dart';
 import 'package:apprendre_lsf/ui/library/list_deck_view.dart';
+import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
+import 'package:apprendre_lsf/ui/library/providers/library_on_dispose_provider.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar_central_button.dart';
+import 'package:apprendre_lsf/utils/extensions/buildcontext_extension.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
@@ -31,14 +32,22 @@ class LibraryScreen extends ConsumerWidget {
             ),
             TabBar(
               tabs: myTabs,
+              overlayColor: WidgetStatePropertyAll(Colors.transparent),
+              dividerHeight: 0,
               onTap: (index) {
                 if (index == LibraryTab.decks.index) {
                   ref.read(cardsFilterProvider.notifier).updateDeck(null);
                 }
               },
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(width: 2.0, color: context.primaryColor),
+                insets: EdgeInsets.fromLTRB(0, 0.0, 0.0, 45.0),
+              ),
             ),
           ],
         ),
+        floatingActionButton: NavbarCentralButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: MyBottomNavigationBar(),
       ),
     );

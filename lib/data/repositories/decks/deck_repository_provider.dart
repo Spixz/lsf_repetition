@@ -33,6 +33,10 @@ final getCardsOfADeckProvider = AutoDisposeFutureProviderFamily<
   int
 >((ref, deckId) => ref.watch(decksRepositoryProvider).getCardsOfADeck(deckId));
 
+final dueCardsProvider = FutureProvider(
+  (ref) => ref.watch(decksRepositoryProvider).getDueCards(),
+);
+
 final cardsFilterProvider = NotifierProvider<CardsFilterNotifier, CardsFilter>(
   CardsFilterNotifier.new,
 );

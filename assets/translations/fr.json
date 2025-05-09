@@ -61,9 +61,20 @@
 
     "PROGRESS-SCREEN": "",
     "Progress": "Progression",
-    
+
     "BOTTOM-NAVIGATION-BAR": "",
-    "MyCards": "Mes cartes",
+    "StudyMode": "Mode étude",
+    "PracticeMode": "Mode entraînement",
+    "MyProgress": "Mes progrès",
+    "SpacedRepetition": "Répétiton espacée",
+    "StudyModeInfosDialog": "Le mode « Révision » utilise un algorithme de répétition espacée (FSRS) pour aider à mémoriser les signes et leur signification sur le long terme.",
+    "WhatIsSpacedRepetion": "La répétition espacée est une méthode d’apprentissage qui optimise la mémorisation à long terme en espaçant les révisions dans le temps, de façon à revoir chaque information juste avant qu’elle ne soit oubliée. Elle permet de gagner du temps en ne révisant que les éléments les plus susceptibles d’être oubliés, évitant ainsi de passer en revue l’ensemble des cartes à chaque session. Des études montrent que cette méthode donne de meilleurs résultats que la révision en bloc, avec 62 à 64 % des utilisateurs obtenant des performances supérieures.",
+    "StudyModeDialog": "@:StudyModeInfosDialog\n\n@:WhatIsSpacedRepetion",
+    "PracticeModeDialog": "Le mode Entraînement permet de réviser des cartes sans affecter le système de répétition espacée. Les cartes vues pendant l’entraînement ne seront donc pas considérées comme révisées par l’algorithme, et la date de leur prochaine révision restera inchangée",
+    "LearnMore": "En apprendre plus",
+    "Close": "Fermer",
+    
+    "REVISION-SCREEN": "",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "Une erreur non attendue s'est produite",

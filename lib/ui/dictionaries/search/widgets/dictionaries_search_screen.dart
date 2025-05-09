@@ -1,5 +1,6 @@
-import 'package:apprendre_lsf/routing/navigation_bar.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_single_result.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar_central_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -50,6 +51,8 @@ class DictionariesSearchScreen extends ConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: NavbarCentralButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomNavigationBar(),
     );
   }

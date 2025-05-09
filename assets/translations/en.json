@@ -63,7 +63,18 @@
     "Progress": "Progress",
 
     "BOTTOM-NAVIGATION-BAR": "",
-    "MyCards": "My cards",
+    "StudyMode": "Study mode",
+    "PracticeMode": "Training mode",
+    "MyProgress": "My progress",
+    "SpacedRepetition": "Spaced repetition",
+    "StudyModeInfosDialog": "The Review mode uses a spaced repetition algorithm (FSRS) to help memorize signs and their meanings over the long term.",
+    "WhatIsSpacedRepetion": "Spaced repetition is a learning method that optimizes long-term memory by spacing out review sessions so that each piece of information is revisited just before it is forgotten. It saves time by focusing only on the items most likely to be forgotten, avoiding the need to review all cards in every session. Studies show that this method yields better results than massed repetition, with 62 to 64% of users achieving higher performance.",
+    "StudyModeDialog": "@:StudyModeInfosDialog\n\n@:WhatIsSpacedRepetion",
+    "PracticeModeDialog": "Training mode allows reviewing cards without affecting the spaced repetition system. Cards reviewed in this mode won’t be marked as studied by the algorithm, so their next scheduled review date will remain unchanged.",
+    "LearnMore": "Learn more",
+    "Close": "Close",
+    
+    "REVISION-SCREEN": "",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "An unexpected error has occurred",
