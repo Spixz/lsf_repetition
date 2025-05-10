@@ -111,7 +111,7 @@ void main() {
       "test4",
     );
 
-    expect(container.read(revisionLogicProvider).cardsLeft, 1);
+    expect(container.read(revisionLogicProvider).cardsLeft, 2);
   });
 
   test('Test removed of the due to list after answer', () async {
@@ -147,7 +147,7 @@ void main() {
       "test3",
     );
 
-    expect(container.read(revisionLogicProvider).cardsLeft, 0);
+    expect(container.read(revisionLogicProvider).cardsLeft, 1);
   });
 
   test('Test review is done', () async {

@@ -6,7 +6,7 @@ import 'package:video_player/video_player.dart';
 
 import 'package:apprendre_lsf/domain/models/lsf_dictionary/lsf_dictionary_media.dart';
 
-final indexVideoSelectedProvider = StateProvider((ref) => 0);
+final indexVideoSelectedDialogMeaningProvider = StateProvider((ref) => 0);
 
 final generateVideosControllersProvider =
     AutoDisposeAsyncNotifierProviderFamily<

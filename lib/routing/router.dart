@@ -1,8 +1,8 @@
-import 'package:apprendre_lsf/ui/progress/progress_screen.dart';
-import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
 import 'package:flutter/widgets.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/domain/models/card_model/card.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
@@ -11,9 +11,11 @@ import 'package:apprendre_lsf/ui/home/home_screen.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_search_screen.dart';
 import 'package:apprendre_lsf/routing/route_provider.dart';
 import 'package:apprendre_lsf/ui/library/library_screen.dart';
+import 'package:apprendre_lsf/ui/progress/progress_screen.dart';
+import 'package:apprendre_lsf/ui/review/review_screen.dart';
+import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
 
 final initialLocation = Routes.searchDictionariesResults;
-// final initialLocation = Routes.library;
 
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,
@@ -50,6 +52,14 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       },
     ),
     GoRoute(
+      path: Routes.review.path,
+      name: Routes.review.name,
+      builder: (context, state) {
+        final title = state.pathParameters['title'] ?? context.tr("Review");
+        return ReviewScreen(title: title);
+      },
+    ),
+    GoRoute(
       path: Routes.progress.path,
       name: Routes.progress.name,
       pageBuilder: (context, state) {
@@ -72,5 +82,6 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
       );
       ref.read(actualRouteProvider.notifier).state = actualRoute;
     });
+    return null;
   },
 );

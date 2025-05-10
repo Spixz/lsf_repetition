@@ -89,6 +89,17 @@ class DecksRepository {
     return getAllCardsStream().first;
   }
 
+  Future<List<FullCard>> getCardsAddedSinceXDays(int days) {
+    final db = _driftDatabase;
+    final selectSince = DateTime.now().subtract(Duration(days: days));
+    final query =
+        db.select(db.cardsTable)
+          ..where((card) => card.createdAt.isBiggerThanValue(selectSince))
+          ..orderBy([(card) => OrderingTerm.desc(card.createdAt)]);
+          
+    return _joinCardsRetentionToCardsTable(query);
+  }
+
   Future<List<FullCard>> getCardsOfADeck(int deckId) async {
     final db = _driftDatabase;
     final query =

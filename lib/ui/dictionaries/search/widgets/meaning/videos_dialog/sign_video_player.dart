@@ -28,9 +28,10 @@ class SignVideoPlayer extends ConsumerWidget {
 
     return chewieController.when(
       data: (controller) {
-        /*final aspectRatio =
-    chewieController.videoPlayerController.value.aspectRatio;
-    final videoHeight = videoWidth / aspectRatio;*/
+        // En vrai je peux pas toucher a hauteur car c'est la with
+        //qui decide. Si je set la height, je perdrait l'aspect ratio.
+        final aspectRatio = controller.videoPlayerController.value.aspectRatio;
+        print("aspect ration $aspectRatio");
         final videoWidth = context.width * 100 / 60;
 
         return SizedBox(

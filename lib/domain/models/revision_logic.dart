@@ -56,7 +56,7 @@ class BlancLogic extends RevisionLogic {
 
     state = RevisionState(
       cardToRevise: _cardsToRevise.firstOrNull,
-      cardsLeft: _cardsToRevise.length - 1,
+      cardsLeft: _cardsToRevise.length,
     );
     return state;
   }
@@ -91,7 +91,7 @@ class BlancLogic extends RevisionLogic {
 
       state = RevisionState(
         cardToRevise: _cardsToRevise.firstOrNull,
-        cardsLeft: _cardsToRevise.length - 1,
+        cardsLeft: _cardsToRevise.length,
       );
       return state;
     } catch (_) {
@@ -126,7 +126,7 @@ class FSRSRevisionLogic extends RevisionLogic {
 
     state = RevisionState(
       cardToRevise: cardLefts.firstOrNull,
-      cardsLeft: cardLefts.length - 1,
+      cardsLeft: cardLefts.length,
     );
     return state;
   }
@@ -152,7 +152,7 @@ class FSRSRevisionLogic extends RevisionLogic {
 
     state = RevisionState(
       cardToRevise: cardLefts.firstOrNull,
-      cardsLeft: cardLefts.length - 1,
+      cardsLeft: cardLefts.length,
     );
     return state;
   }

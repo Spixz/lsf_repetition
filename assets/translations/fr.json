@@ -31,6 +31,9 @@
     "Decks": "Decks",
     "Card": "Carte",
     "Cards": "Cartes",
+    "CardsLeft": "Cartes restantes",
+    "NbCardsLeft": "{} cartes restantes",
+    "MyCards": "Mes cartes",
     "Next": "Suivant",
 
     "LIST-CARD-VIEW": "",
@@ -64,7 +67,9 @@
 
     "BOTTOM-NAVIGATION-BAR": "",
     "StudyMode": "Mode étude",
+    "Study": "Étude",
     "PracticeMode": "Mode entraînement",
+    "Practice": "Practice",
     "MyProgress": "Mes progrès",
     "SpacedRepetition": "Répétiton espacée",
     "StudyModeInfosDialog": "Le mode « Révision » utilise un algorithme de répétition espacée (FSRS) pour aider à mémoriser les signes et leur signification sur le long terme.",
@@ -73,8 +78,16 @@
     "PracticeModeDialog": "Le mode Entraînement permet de réviser des cartes sans affecter le système de répétition espacée. Les cartes vues pendant l’entraînement ne seront donc pas considérées comme révisées par l’algorithme, et la date de leur prochaine révision restera inchangée",
     "LearnMore": "En apprendre plus",
     "Close": "Fermer",
+    "CardsAddSince": "Revoir les cartes ajoutées au cours des X derniers jours",
+    "ErrorMissingField": "Le champ {} est manquant.",
+    "NeedPositiveNumber": "Le nombre doit être strictement positif.",
+    "NoCardsAddedSinceXLastsDays": "Vous n’avez ajouté aucune carte au cours des {} derniers jours.",
     
     "REVISION-SCREEN": "",
+    "XLeft": "{} restantes",
+    "ReviewDone": "Révision terminée !",
+    "ShowTheAnswer": "Afficher la réponse",
+    "Review": "Révision",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "Une erreur non attendue s'est produite",

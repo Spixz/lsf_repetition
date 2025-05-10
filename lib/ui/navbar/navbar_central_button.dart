@@ -1,16 +1,19 @@
 import 'dart:async';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
+import 'package:flutter/material.dart';
+
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/data/repositories/decks/deck_repository_provider.dart';
 import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar_ui_providers.dart';
+import 'package:apprendre_lsf/utils/textfield_state.dart';
 
 class NavbarCentralButton extends ConsumerWidget {
   const NavbarCentralButton({super.key});
@@ -70,9 +73,10 @@ class NavbarCentralButton extends ConsumerWidget {
       foregroundColor: Colors.white,
       label: context.tr("PracticeMode"),
       onTap:
-          () => {
-            //todo: dialog choisi les x denieres cards
-          },
+          () => showDialog(
+            context: context,
+            builder: (context) => _PracticeModeDialog(),
+          ),
       onLongPress:
           () => showDialog(
             context: context,
@@ -138,5 +142,78 @@ class NavbarCentralButton extends ConsumerWidget {
                 ),
           ),
     );
+  }
+}
+
+class _PracticeModeDialog extends ConsumerStatefulWidget {
+  const _PracticeModeDialog({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __PracticeModeDialogState();
+}
+
+class __PracticeModeDialogState extends ConsumerState<_PracticeModeDialog> {
+  @override
+  void initState() {
+    ref.listenManual(cardsAddSinceProvider, _onFormStateChange);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final formState = ref.watch(cardsAddSinceProvider);
+
+    return AlertDialog(
+      title: Text(context.tr("PracticeMode")),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(context.tr("CardsAddSince")),
+          TextFormField(
+            keyboardType: TextInputType.number,
+            autocorrect: false,
+            initialValue: formState.defaultValue,
+            onChanged: ref.read(cardsAddSinceProvider.notifier).onChange,
+            onFieldSubmitted: ref.read(cardsAddSinceProvider.notifier).validate,
+          ),
+          if (formState.error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 13),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  context.tr(
+                    formState.error!.i18nIndex,
+                    args: formState.error!.args,
+                  ),
+                  style: TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              ),
+            ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => context.pop(),
+          child: Text(context.tr("Close")),
+        ),
+        TextButton(
+          onPressed:
+              () => ref.read(cardsAddSinceProvider.notifier).validate(''),
+          child: Text(context.tr("Validate")),
+        ),
+      ],
+    );
+  }
+
+  void _onFormStateChange(_, TextFieldState state) {
+    if (state.validated) {
+      context.pop();
+      context.pushNamed(
+        Routes.review.name,
+        pathParameters: {"title": context.tr("Practice")},
+      );
+    }
   }
 }

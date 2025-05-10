@@ -20,7 +20,7 @@ abstract final class Routes {
     '/searchDictionariesResults',
   );
   static const progress = SingleRoute('Progress', '/progress');
-  static const review = SingleRoute('Review', '/review');
+  static const review = SingleRoute('Review', '/review/:title');
   static const settings = SingleRoute('Settings', '/settings');
 
   static const all = [

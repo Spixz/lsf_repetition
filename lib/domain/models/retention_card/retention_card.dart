@@ -12,6 +12,7 @@ enum RetentionRating {
   easy(4);
 
   const RetentionRating(this.val);
+  static RetentionRating fromIndex(int index) => RetentionRating.values[index];
 
   final int val;
 }

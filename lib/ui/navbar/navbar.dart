@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:apprendre_lsf/utils/extensions/buildcontext_extension.dart';
 import 'package:apprendre_lsf/routing/route_provider.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
+import 'package:apprendre_lsf/core/size.dart';
 
 class MyBottomNavigationBar extends ConsumerWidget {
   MyBottomNavigationBar({super.key});
@@ -31,7 +32,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
     final selectedColor = context.primaryColor;
 
     return AnimatedBottomNavigationBar.builder(
-      height: 70,
+      height: navbarHeight,
       backgroundColor: Color.fromRGBO(243, 237, 248, 1),
       shadow: Shadow(
         color: Colors.black.withAlpha(12),
@@ -50,7 +51,6 @@ class MyBottomNavigationBar extends ConsumerWidget {
       gapLocation: GapLocation.center,
       notchSmoothness: NotchSmoothness.smoothEdge,
       onTap: (index) => context.replaceNamed(_tabOrder[index].name),
-      //other params
     );
   }
 }

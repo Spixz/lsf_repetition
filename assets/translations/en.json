@@ -31,6 +31,9 @@
     "Decks": "Decks",
     "Card": "Card",
     "Cards": "Cards",
+    "CardsLeft": "Cards left",
+    "NbCardsLeft": "{} cards left",
+    "MyCards": "My cards",
     "Next": "Next",
     
     "LIST-CARD-VIEW": "",
@@ -64,7 +67,9 @@
 
     "BOTTOM-NAVIGATION-BAR": "",
     "StudyMode": "Study mode",
+    "Study": "Study",
     "PracticeMode": "Training mode",
+    "Practice": "Practice",
     "MyProgress": "My progress",
     "SpacedRepetition": "Spaced repetition",
     "StudyModeInfosDialog": "The Review mode uses a spaced repetition algorithm (FSRS) to help memorize signs and their meanings over the long term.",
@@ -73,8 +78,16 @@
     "PracticeModeDialog": "Training mode allows reviewing cards without affecting the spaced repetition system. Cards reviewed in this mode won’t be marked as studied by the algorithm, so their next scheduled review date will remain unchanged.",
     "LearnMore": "Learn more",
     "Close": "Close",
+    "CardsAddSince": "Review cards added in the last X days",
+    "ErrorMissingField": "The {} field is missing.",
+    "NeedPositiveNumber": "The number must be strictly positive.",
+    "NoCardsAddedSinceXLastsDays": "You haven’t added any cards in the last {} days.",
     
     "REVISION-SCREEN": "",
+    "XLeft": "{} left",
+    "ReviewDone": "Review done !",
+    "ShowTheAnswer": "Show the answer",
+    "Review": "Review",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "An unexpected error has occurred",

@@ -103,7 +103,7 @@ void main() {
     );
     expect(
       container.read(revisionLogicProvider).cardsLeft,
-      allStoredCards.length - 1,
+      allStoredCards.length,
     );
   });
 
@@ -190,6 +190,7 @@ void main() {
     container.read(selectedRevisionModeProvider.notifier).state =
         RevisionMode.blanc;
     await container.read(revisionLogicProvider.notifier).init(allStoredCards);
+    //4 Cards to study
 
     await container
         .read(revisionLogicProvider.notifier)
@@ -206,11 +207,17 @@ void main() {
         .read(revisionLogicProvider.notifier)
         .submitAnswer(RetentionRating.easy);
 
+    // The first card revised is now the first one
     expect(
       container.read(revisionLogicProvider).cardToRevise,
       allStoredCards.first,
     );
-    // cause after two easy the card is removed
+    // Anserwing easy a second time should remove it
+    // cause after two easy answer the card is removed
+    await container
+        .read(revisionLogicProvider.notifier)
+        .submitAnswer(RetentionRating.easy);
+
     expect(
       container.read(revisionLogicProvider).cardsLeft,
       allStoredCards.length - 1,

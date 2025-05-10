@@ -19,7 +19,7 @@ class DialogMeaningVideos extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<String> videosSign = fullcard.card.videosSigns;
+    final List<String> videosSigns = fullcard.card.videosSigns;
 
     return SafeArea(
       child: Container(
@@ -28,11 +28,11 @@ class DialogMeaningVideos extends ConsumerWidget {
           children: [
             Column(
               children: [
-                Expanded(child: _Carousel(videoUrls: videosSign)),
+                Expanded(child: _Carousel(videoUrls: videosSigns)),
                 _ActionsBar(card: fullcard.card),
               ],
             ),
-            _CarouselPositionIndicator(lenght: videosSign.length),
+            _CarouselPositionIndicator(lenght: videosSigns.length),
             _closeButton(context),
           ],
         ),
@@ -72,7 +72,7 @@ class _Carousel extends ConsumerWidget {
         height: 500,
         padEnds: false,
         onPageChanged: (index, reason) {
-          ref.read(indexVideoSelectedProvider.notifier).state = index;
+          ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state = index;
         },
       ),
       items: videoUrls.map(SignVideoPlayer.fromMedia).toList(),
@@ -95,7 +95,7 @@ class _CarouselPositionIndicator extends ConsumerWidget {
         width: context.width,
         child: _CarouselDot(
           itemCount: lenght,
-          indexSelectedItem: ref.watch(indexVideoSelectedProvider),
+          indexSelectedItem: ref.watch(indexVideoSelectedDialogMeaningProvider),
         ),
       ),
     );

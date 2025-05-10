@@ -7,6 +7,7 @@ import 'package:apprendre_lsf/domain/models/revision_logic.dart';
 
 final selectedRevisionModeProvider = StateProvider((_) => RevisionMode.blanc);
 
+
 final revisionLogicProvider =
     NotifierProvider<RevisionLogicNotifier, RevisionState>(
       RevisionLogicNotifier.new,
@@ -32,6 +33,10 @@ class RevisionLogicNotifier extends Notifier<RevisionState> {
     state = await logic.init(cards);
   }
 
+  void reset() {
+    state = RevisionStateInitial();
+  }
+
   Future submitAnswer(RetentionRating rating) async {
     state = await logic.submitAnswer(rating);
   }
@@ -41,29 +46,3 @@ class RevisionLogicNotifier extends Notifier<RevisionState> {
       state.cardToRevise == null &&
       state.cardsLeft <= 0;
 }
-
-
-
-// UI :
-// @override
-// Widget build() {
-// 	final revSate = ref.watch<RevisionProvider>;
-// 	final showSignFirst = ref.watch<bool>(showSignFirstProvider);
-
-// 	//ne sera logiquement plus RevisionStateInitial après le 1er submitAnswer
-// 	if (revSate is not RevisionError) {
-// 		return RevisionError();	
-// 	}
-// 	if (revSate is not RevisionStateInitial && revState.cardToRevise == null) {
-// 		return RevisionEnd();
-// 	}
-// 	return Column(
-// 			children: [
-// 				ToogleQuestionMode(showSignFirst),
-// 				Question(revSate.cardToRevise),
-// 			]
-// 		)
-// 		onTap() => ref.read<RevisionProvider>.submitAnswer(user_answer);
-// 	}
-// }
-
