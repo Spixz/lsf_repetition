@@ -14,13 +14,21 @@ import 'package:apprendre_lsf/ui/core/empty.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/ui/navbar/navbar_ui_providers.dart';
 import 'package:apprendre_lsf/utils/textfield_state.dart';
+import 'package:apprendre_lsf/domain/models/revision_logic.dart';
+import 'package:apprendre_lsf/ui/review/providers/review_providers.dart';
 
-class NavbarCentralButton extends ConsumerWidget {
+class NavbarCentralButton extends ConsumerStatefulWidget {
   const NavbarCentralButton({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final dueCards = ref.watch(dueCardsProvider);
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _NavbarCentralButtonState();
+}
+
+class _NavbarCentralButtonState extends ConsumerState<NavbarCentralButton> {
+  @override
+  Widget build(BuildContext context) {
+    final dueCards = ref.watch(dueCardsStreamProvider);
 
     return dueCards.when(
       data: (cards) {
@@ -58,10 +66,11 @@ class NavbarCentralButton extends ConsumerWidget {
       label: context.tr("MyProgress"),
       visible: true,
       onTap: () async {
-        Future.delayed(
-          Duration(milliseconds: 200),
-          () => context.pushNamed(Routes.progress.name),
-        );
+        Future.delayed(Duration(milliseconds: 200), () {
+          if (context.mounted) {
+            context.pushNamed(Routes.progress.name);
+          }
+        });
       },
     );
   }
@@ -116,7 +125,18 @@ class NavbarCentralButton extends ConsumerWidget {
       //     blurRadius: 8,
       //   ),
       // ],
-      onTap: () {},
+      onTap: () async {
+        ref.read(selectedRevisionModeProvider.notifier).state =
+            RevisionMode.fsrs;
+        await ref.read(revisionLogicProvider.notifier).init(null);
+        if (mounted) {
+          // context.pop();
+          context.pushNamed(
+            Routes.review.name,
+            pathParameters: {"title": context.tr("Review")},
+          );
+        }
+      },
       onLongPress:
           () => showDialog(
             context: context,

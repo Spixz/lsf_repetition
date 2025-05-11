@@ -1,4 +1,3 @@
-import 'package:apprendre_lsf/domain/mappers/retention_card_fsrs_card.dart';
 import 'package:drift/drift.dart';
 
 import 'package:apprendre_lsf/domain/database/drift_database.dart';
@@ -9,6 +8,7 @@ import 'package:apprendre_lsf/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/domain/models/card_model/full_card.dart';
 import 'package:apprendre_lsf/utils/exceptions.dart';
 import 'package:apprendre_lsf/domain/models/retention_card/retention_card.dart';
+import 'package:apprendre_lsf/domain/mappers/retention_card_fsrs_card.dart';
 
 class DecksRepository {
   final AppDriftDatabase _driftDatabase;
@@ -96,7 +96,7 @@ class DecksRepository {
         db.select(db.cardsTable)
           ..where((card) => card.createdAt.isBiggerThanValue(selectSince))
           ..orderBy([(card) => OrderingTerm.desc(card.createdAt)]);
-          
+
     return _joinCardsRetentionToCardsTable(query);
   }
 
@@ -154,6 +154,32 @@ class DecksRepository {
     return result.toList();
   }
 
+  Stream<List<FullCard>> _joinCardsTableToCardRetentionStream(
+    SimpleSelectStatement query,
+  ) {
+    final db = _driftDatabase;
+    final joinedQuery = query.join([
+      innerJoin(
+        db.cardsTable,
+        db.cardsTable.id.isExp(db.retentionTable.cardId),
+      ),
+    ])..orderBy([OrderingTerm.desc(db.cardsTable.createdAt)]);
+
+    final joinedQueryResult = joinedQuery.watch();
+    return joinedQueryResult.map(
+      (List<TypedResult> streamContent) =>
+          streamContent
+              .map(
+                (row) => FullCard(
+                  card: row.readTable(db.cardsTable).toCardModel(),
+                  retentionCard:
+                      row.readTable(db.retentionTable).toRetentionCard(),
+                ),
+              )
+              .toList(),
+    );
+  }
+
   /// Store a FullCard in the DB by storing each part in different table.
   ///
   /// [CardModel] FullCard.card stored in drift [CardsTable].
@@ -195,6 +221,14 @@ class DecksRepository {
     final query = db.select(db.retentionTable)
       ..where((retention) => retention.due.unixepoch.isSmallerThanValue(now));
     return _joinCardsTableToCardRetention(query);
+  }
+
+  Stream<List<FullCard>> getDueCardsStream() {
+    final db = _driftDatabase;
+    final now = (DateTime.now().millisecondsSinceEpoch / 1000).toInt();
+    final query = db.select(db.retentionTable)
+      ..where((retention) => retention.due.unixepoch.isSmallerThanValue(now));
+    return _joinCardsTableToCardRetentionStream(query);
   }
 
   Future<void> deleteCards({required List<int> cardsIds}) async {

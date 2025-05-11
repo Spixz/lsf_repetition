@@ -1,8 +1,4 @@
-class TrError {
-  TrError({required this.i18nIndex, this.args = const []});
-  final String i18nIndex;
-  final List<String> args;
-}
+import 'package:apprendre_lsf/utils/tr_entry.dart';
 
 class TextFieldState {
   TextFieldState({
@@ -13,13 +9,13 @@ class TextFieldState {
   });
   final String value;
   final String? defaultValue;
-  final TrError? error;
+  final TrEntry? error;
   final bool validated;
 
   TextFieldState copyWith({
     String? value,
     String? defaultValue,
-    TrError? error,
+    TrEntry? error,
     bool? validated,
   }) {
     return TextFieldState(

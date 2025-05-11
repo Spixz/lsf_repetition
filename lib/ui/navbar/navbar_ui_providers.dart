@@ -4,6 +4,7 @@ import 'package:apprendre_lsf/utils/textfield_state.dart';
 import 'package:apprendre_lsf/domain/models/revision_logic.dart';
 import 'package:apprendre_lsf/global_providers.dart';
 import 'package:apprendre_lsf/ui/review/providers/review_providers.dart';
+import 'package:apprendre_lsf/utils/tr_entry.dart';
 
 final cardsAddSinceProvider = AutoDisposeNotifierProvider(
   CardsAddSinceNotifier.new,
@@ -27,14 +28,14 @@ class CardsAddSinceNotifier extends AutoDisposeNotifier<TextFieldState> {
   void validate(String _) {
     if (state.value.isEmpty) {
       state = state.copyWith(
-        error: TrError(i18nIndex: "ErrorMissingField"),
+        error: TrEntry(i18nIndex: "ErrorMissingField"),
       );
       return;
     }
     int? nbDays = int.tryParse(state.value);
     if (nbDays == null || nbDays <= 0) {
       state = state.copyWith(
-        error: TrError(i18nIndex: "NeedPositiveNumber"),
+        error: TrEntry(i18nIndex: "NeedPositiveNumber"),
       );
       return;
     }
@@ -49,7 +50,7 @@ class CardsAddSinceNotifier extends AutoDisposeNotifier<TextFieldState> {
 
     if (cardsToRevise.isEmpty) {
       state = state.copyWith(
-        error: TrError(
+        error: TrEntry(
           i18nIndex: "NoCardsAddedSinceXLastsDays",
           args: [state.value.toString()],
         ),

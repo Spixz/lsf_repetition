@@ -8,20 +8,28 @@ import 'package:apprendre_lsf/ui/review/providers/review_providers.dart';
 import 'package:apprendre_lsf/ui/review/rating_bar.dart';
 import 'package:apprendre_lsf/ui/review/review_card.dart';
 import 'package:apprendre_lsf/ui/review/providers/review_ui_providers.dart';
+import 'package:apprendre_lsf/domain/models/revision_logic.dart';
 
-class ReviewScreen extends ConsumerWidget {
-  const ReviewScreen({required this.title, super.key});
+class ReviewScreen extends ConsumerStatefulWidget {
+  ReviewScreen({required this.title, super.key});
   final String title;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final revisionState = ref.watch(revisionLogicProvider);
+  ConsumerState<ConsumerStatefulWidget> createState() => _ReviewScreenState();
+}
+
+class _ReviewScreenState extends ConsumerState<ReviewScreen> {
+  late RevisionState _revisionState;
+
+  @override
+  Widget build(BuildContext context) {
+    _revisionState = ref.watch(revisionLogicProvider);
     final revisonDone = ref.read(revisionLogicProvider.notifier).revisionDone;
     final showAnswer = ref.watch(showAnswerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(title, maxLines: 1),
+        title: FittedBox(child: Text(widget.title, maxLines: 1)),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -29,15 +37,10 @@ class ReviewScreen extends ConsumerWidget {
             Navigator.of(context).pop();
           },
         ),
-        // backgroundColor: Color.fromRGBO(115, 17, 195, 1),
-        // bottom: PreferredSize(
-        //   preferredSize: const Size.fromHeight(10.0),
-        //   child: Text("salut"),
-        // ),
       ),
       body: Column(
         children: [
-          _header(context, revisionState.cardsLeft),
+          _header(context),
           Expanded(child: ReviewCard()),
           if (!revisonDone) _bottomBar(showAnswer),
         ],
@@ -45,22 +48,21 @@ class ReviewScreen extends ConsumerWidget {
     );
   }
 
-  Widget _header(BuildContext context, int cardsLeft) {
+  Widget _header(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _displayCardsLeft(context, cardsLeft),
-          _SwapAnswerAndQuesion(),
-        ],
+        children: [_displayCardsLeft(context), _SwapAnswerAndQuestion()],
       ),
     );
   }
 
-  Widget _displayCardsLeft(BuildContext context, int left) {
-    return Text(context.tr("XLeft", args: [left.toString()]));
+  Widget _displayCardsLeft(BuildContext context) {
+    return Text(
+      context.tr("XLeft", args: [_revisionState.cardsLeft.toString()]),
+    );
   }
 
   Widget _bottomBar(bool showAnswer) {
@@ -69,8 +71,8 @@ class ReviewScreen extends ConsumerWidget {
   }
 }
 
-class _SwapAnswerAndQuesion extends ConsumerWidget {
-  const _SwapAnswerAndQuesion({super.key});
+class _SwapAnswerAndQuestion extends ConsumerWidget {
+  const _SwapAnswerAndQuestion({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

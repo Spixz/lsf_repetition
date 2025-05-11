@@ -88,6 +88,15 @@
     "ReviewDone": "Révision terminée !",
     "ShowTheAnswer": "Afficher la réponse",
     "Review": "Révision",
+    "RatingBar": {
+      "min": "{} min",
+      "hour": "{} h",
+      "day": "{} j"
+    },
+    "again": "Encore",
+    "hard": "Difficile",
+    "good": "Correct",
+    "easy": "Facile",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "Une erreur non attendue s'est produite",

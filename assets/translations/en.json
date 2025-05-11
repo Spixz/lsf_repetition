@@ -88,6 +88,15 @@
     "ReviewDone": "Review done !",
     "ShowTheAnswer": "Show the answer",
     "Review": "Review",
+    "RatingBar": {
+      "min": "{} min",
+      "hour": "{} h",
+      "day": "{} d"
+    },
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "An unexpected error has occurred",
