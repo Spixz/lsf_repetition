@@ -1,6 +1,3 @@
-import 'package:apprendre_lsf/ui/navbar/navbar.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_single_result.dart';
-import 'package:apprendre_lsf/ui/navbar/navbar_central_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -14,6 +11,9 @@ import 'package:apprendre_lsf/ui/core/customs_snackbars.dart';
 import 'package:apprendre_lsf/data/repositories/dictionaries/lsf_dictionaries_providers.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/providers/dictionaries_search_provider.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_searchbar.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar.dart';
+import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_single_result.dart';
+import 'package:apprendre_lsf/ui/navbar/navbar_central_button.dart';
 
 /// Dictionary search page.
 ///
@@ -34,22 +34,25 @@ class DictionariesSearchScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          DictionariesSearchbar(),
-          searchResult.when(
-            loading: () => _loadingIndicator(context),
-            data: (data) {
-              if (searchQuery.isEmpty) return _emptyQuery(context);
-              if (data.isEmpty) return _noResults(context);
+      body: SafeArea(
+        child: CustomScrollView(
+          physics: ClampingScrollPhysics(),
+          slivers: [
+            DictionariesSearchbar(),
+            searchResult.when(
+              loading: () => _loadingIndicator(context),
+              data: (data) {
+                if (searchQuery.isEmpty) return _emptyQuery(context);
+                if (data.isEmpty) return _noResults(context);
 
-              return MultiSliver(
-                children: data.map(DictionariesSingleResult.new).toList(),
-              );
-            },
-            error: (error, stackTrace) => SliverToBoxAdapter(child: Empty()),
-          ),
-        ],
+                return MultiSliver(
+                  children: data.map(DictionariesSingleResult.new).toList(),
+                );
+              },
+              error: (error, stackTrace) => SliverToBoxAdapter(child: Empty()),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: NavbarCentralButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

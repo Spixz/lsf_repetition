@@ -10,7 +10,10 @@ class ProgressScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(),
-      body: Text("Progress screen"),
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: Text("Progress screen")),
       // floatingActionButton: NavbarCentralButton(),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // bottomNavigationBar: MyBottomNavigationBar(),

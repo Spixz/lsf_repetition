@@ -38,12 +38,16 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
           },
         ),
       ),
-      body: Column(
-        children: [
-          _header(context),
-          Expanded(child: ReviewCard()),
-          if (!revisonDone) _bottomBar(showAnswer),
-        ],
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: Column(
+          children: [
+            _header(context),
+            Expanded(child: ReviewCard()),
+            if (!revisonDone) _bottomBar(showAnswer),
+          ],
+        ),
       ),
     );
   }

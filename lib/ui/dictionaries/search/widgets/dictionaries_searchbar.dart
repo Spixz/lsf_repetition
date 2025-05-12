@@ -14,16 +14,17 @@ class DictionariesSearchbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      sliver: SliverAppBar(
-        clipBehavior: Clip.none,
-        shape: const StadiumBorder(),
-        scrolledUnderElevation: 0.0,
-        titleSpacing: 0.0,
-        backgroundColor: Colors.transparent,
-        floating: true,
-        title: SearchAnchor.bar(
+    return SliverAppBar(
+      floating: true,
+      pinned: true,
+      clipBehavior: Clip.none,
+      shape: const StadiumBorder(),
+      scrolledUnderElevation: 0.0,
+      titleSpacing: 0.0,
+      backgroundColor: Colors.transparent,
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+        child: SearchAnchor.bar(
           viewHintText: context.tr("Search"),
           onChanged:
               (value) => ref
@@ -89,8 +90,10 @@ class SuggestionList extends ConsumerWidget {
             title: Text(result.word),
             onTap: () {
               ref.read(selectedSuggestionProvider.notifier).state = result.word;
-              FocusManager.instance.primaryFocus?.unfocus();
               controller.closeView(result.word);
+              Future.delayed(Duration(milliseconds: 0), () {
+                FocusManager.instance.primaryFocus?.unfocus();
+              });
             },
           ),
         );

@@ -1,7 +1,6 @@
 //jean host raison et sentiment
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 
 import 'package:apprendre_lsf/data/services/dictionaries/dictionary_service.dart';
 import 'package:apprendre_lsf/data/services/dictionaries/elix/model/elix_search_result.dart';
@@ -12,56 +11,46 @@ import 'package:apprendre_lsf/utils/has_nested_property.dart';
 const elixApi = 'api.elix-lsf.fr';
 
 class ElixService implements DictionaryService {
-  ElixService({String? host, int? port, HttpClient Function()? clientFactory})
+  ElixService({String? host, HttpClient Function()? clientFactory})
     : _host = host ?? 'dico.elix-lsf.fr',
-      _port = port ?? 80,
       _clientFactory = clientFactory ?? HttpClient.new;
 
   final String _host;
-  final int _port;
   final HttpClient Function() _clientFactory;
 
   @override
   Future<List<ElixSearchResult>> searchDefinition(String query) async {
     final client = _clientFactory();
-    try {
-      if (query.isEmpty) {
-        throw Exception('Query cannot be empty');
-      }
-
-      final encodedQuery = Uri.encodeQueryComponent(query);
-      final HttpClientRequest request = await client.get(
-        _host,
-        _port,
-        '/dictionnaire/$encodedQuery',
-      );
-      final HttpClientResponse response = await request.close();
-
-      if (response.statusCode != HttpStatus.ok) {
-        response.drain();
-        throw HttpException(
-          "Invalid response: ${response.statusCode}",
-          uri: request.uri,
-        );
-      }
-
-      final String html = await response.transform(utf8.decoder).join();
-      final String? jsonResponse = extractJsonFromHtml(html);
-
-      if (jsonResponse == null) {
-        throw Exception('Json response not found inside the elix result page');
-      }
-
-      final parsedJson = jsonDecode(jsonResponse) as Map<String, dynamic>;
-      final result = elixJsonResponseToElixSearchResults(parsedJson);
-      return result;
-    } on JsonParseException catch (exception) {
-      return throw exception;
-    } on Exception catch (exception) {
-      return throw exception;
-    } finally {
-      client.close();
+    if (query.isEmpty) {
+      throw Exception('Query cannot be empty');
     }
+
+    final encodedQuery = Uri.encodeQueryComponent(query);
+    final HttpClientRequest request = await client.getUrl(
+      Uri.https(_host, "/dictionnaire/$encodedQuery"),
+    );
+    final HttpClientResponse response = await request.close();
+
+    if (response.statusCode != HttpStatus.ok) {
+      response.drain();
+      throw HttpException(
+        "Invalid response: ${response.statusCode}",
+        uri: request.uri,
+      );
+    }
+
+    final String html = await response.transform(utf8.decoder).join();
+    final String? jsonResponse = extractJsonFromHtml(html);
+
+    if (jsonResponse == null) {
+      throw Exception('Json response not found inside the elix result page');
+    }
+
+    final parsedJson = jsonDecode(jsonResponse) as Map<String, dynamic>;
+    final result = elixJsonResponseToElixSearchResults(parsedJson);
+
+    client.close();
+    return result;
   }
 
   @override
@@ -71,46 +60,39 @@ class ElixService implements DictionaryService {
     required int page,
   }) async {
     final client = _clientFactory();
-    try {
-      if (query.isEmpty) {
-        throw Exception('Query cannot be empty');
-      }
-      if (limit <= 0 || page <= 0) {
-        return throw Exception('Limit and page must be positive');
-      }
-
-      final encodedQuery = Uri.encodeQueryComponent(query);
-      final HttpClientRequest request = await client.get(
-        elixApi,
-        _port,
-        '/suggests?q=$encodedQuery&limit=$limit&fuzzy=$page',
-      );
-      final HttpClientResponse response = await request.close();
-
-      if (response.statusCode != HttpStatus.ok) {
-        final errorBody = await response.transform(utf8.decoder).join();
-        throw HttpException(
-          "Invalid response: ${response.statusCode}, body: $errorBody",
-          uri: request.uri,
-        );
-      }
-
-      final String rawResponse = await response.transform(utf8.decoder).join();
-      final jsonResponse = jsonDecode(rawResponse) as Map<String, dynamic>;
-      final hints = ElixSuggestionResponse.safeFromJson(jsonResponse);
-
-      if (hints == null) {
-        throw Exception('Invalid api response structure');
-      }
-      return hints.data;
-    } on JsonParseException catch (_) {
-      rethrow;
-    } on Exception catch (exception, st) {
-      debugPrintStack(stackTrace: st, label: exception.toString());
-      rethrow;
-    } finally {
-      client.close();
+    if (query.isEmpty) {
+      throw Exception('Query cannot be empty');
     }
+    if (limit <= 0 || page <= 0) {
+      return throw Exception('Limit and page must be positive');
+    }
+
+    final HttpClientRequest request = await client.getUrl(
+      Uri.https(elixApi, '/suggests', {
+        "q": query,
+        "limit": limit.toString(),
+        "fuzzy": page.toString(),
+      }),
+    );
+    final HttpClientResponse response = await request.close();
+
+    if (response.statusCode != HttpStatus.ok) {
+      final errorBody = await response.transform(utf8.decoder).join();
+      throw HttpException(
+        "Invalid response: ${response.statusCode}, body: $errorBody",
+        uri: request.uri,
+      );
+    }
+
+    final String rawResponse = await response.transform(utf8.decoder).join();
+    final jsonResponse = jsonDecode(rawResponse) as Map<String, dynamic>;
+    final hints = ElixSuggestionResponse.safeFromJson(jsonResponse);
+
+    if (hints == null) {
+      throw Exception('Invalid api response structure');
+    }
+    client.close();
+    return hints.data;
   }
 }
 

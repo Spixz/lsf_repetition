@@ -31,13 +31,17 @@ class CreateCardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(actions: [_ValidateButton(card: cardToCreate)]),
-      body: Stack(
-        children: [
-          PageView(
-            onPageChanged: onChange,
-            children: <Widget>[SizedBox.expand(child: SelectDecks())],
-          ),
-        ],
+      body: SafeArea(
+        top: false,
+        bottom: true,
+        child: Stack(
+          children: [
+            PageView(
+              onPageChanged: onChange,
+              children: <Widget>[SizedBox.expand(child: SelectDecks())],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: _FAB(),
     );

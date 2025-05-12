@@ -25,26 +25,28 @@ class LibraryScreen extends ConsumerWidget {
     return DefaultTabController(
       length: myTabs.length,
       child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: TabBarView(children: [ListDecksView(), ListCardsView()]),
-            ),
-            TabBar(
-              tabs: myTabs,
-              overlayColor: WidgetStatePropertyAll(Colors.transparent),
-              dividerHeight: 0,
-              onTap: (index) {
-                if (index == LibraryTab.decks.index) {
-                  ref.read(cardsFilterProvider.notifier).updateDeck(null);
-                }
-              },
-              indicator: UnderlineTabIndicator(
-                borderSide: BorderSide(width: 2.0, color: context.primaryColor),
-                insets: EdgeInsets.fromLTRB(0, 0.0, 0.0, 45.0),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: TabBarView(children: [ListDecksView(), ListCardsView()]),
               ),
-            ),
-          ],
+              TabBar(
+                tabs: myTabs,
+                overlayColor: WidgetStatePropertyAll(Colors.transparent),
+                dividerHeight: 0,
+                onTap: (index) {
+                  if (index == LibraryTab.decks.index) {
+                    ref.read(cardsFilterProvider.notifier).updateDeck(null);
+                  }
+                },
+                indicator: UnderlineTabIndicator(
+                  borderSide: BorderSide(width: 2.0, color: context.primaryColor),
+                  insets: EdgeInsets.fromLTRB(0, 0.0, 0.0, 45.0),
+                ),
+              ),
+            ],
+          ),
         ),
         floatingActionButton: NavbarCentralButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
