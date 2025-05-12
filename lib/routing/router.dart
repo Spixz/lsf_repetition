@@ -16,6 +16,7 @@ import 'package:apprendre_lsf/ui/review/review_screen.dart';
 import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
 
 final initialLocation = Routes.searchDictionariesResults;
+// final initialLocation = Routes.progress;
 
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,

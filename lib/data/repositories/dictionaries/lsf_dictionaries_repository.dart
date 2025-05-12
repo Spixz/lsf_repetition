@@ -42,7 +42,7 @@ class LsfDictionariesRepository {
       );
       results.insertAll(0, searchHints);
     }
-
+    
     return results;
   }
 }

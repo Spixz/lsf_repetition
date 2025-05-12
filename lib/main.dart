@@ -17,8 +17,7 @@ void main() async {
       supportedLocales: [Locale('fr'), Locale('en')],
       path: 'assets/translations',
       fallbackLocale: Locale('fr'),
-      // child: ProviderScope(observers: [MyObserver()], child: MyApp()),
-      child: ProviderScope(observers: [/*MyObserver()*/], child: MyApp()),
+      child: ProviderScope(observers: [MyObserver()], child: MyApp()),
     ),
   );
 }

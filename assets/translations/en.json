@@ -97,6 +97,12 @@
     "hard": "Hard",
     "good": "Good",
     "easy": "Easy",
+
+    "MY-PROGRESS-SCREEN": "",
+    "Total": "Total",
+    "Statistics": "Statistics",
+    "AddedSigns": "Signs added",
+    "SignsLearned": "Signs learned",
   
     "SNACKBARS": "",
     "unexpectedErrorHasOccurred": "An unexpected error has occurred",

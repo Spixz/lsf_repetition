@@ -42,7 +42,7 @@ class _SearchBar extends ConsumerWidget {
     final filteredCards = ref.watch(cardsFilterProvider);
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 14, top: 8, right: 14),
       child: SearchAnchor(
         builder: (context, _) {
           return SearchBar(

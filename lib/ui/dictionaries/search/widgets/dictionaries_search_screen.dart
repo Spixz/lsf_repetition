@@ -35,23 +35,30 @@ class DictionariesSearchScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: CustomScrollView(
-          physics: ClampingScrollPhysics(),
-          slivers: [
-            DictionariesSearchbar(),
-            searchResult.when(
-              loading: () => _loadingIndicator(context),
-              data: (data) {
-                if (searchQuery.isEmpty) return _emptyQuery(context);
-                if (data.isEmpty) return _noResults(context);
+        child: Padding(
+          padding: const EdgeInsets.only(left: 6, top: 8, right: 6),
+          child: CustomScrollView(
+            physics: ClampingScrollPhysics(),
+            slivers: [
+              DictionariesSearchbar(),
+              searchResult.when(
+                loading: () => _loadingIndicator(context),
+                data: (data) {
+                  if (searchQuery.isEmpty) return _emptyQuery(context);
+                  if (data.isEmpty) return _noResults(context);
 
-                return MultiSliver(
-                  children: data.map(DictionariesSingleResult.new).toList(),
-                );
-              },
-              error: (error, stackTrace) => SliverToBoxAdapter(child: Empty()),
-            ),
-          ],
+                  return MultiSliver(
+                    children: [
+                      SliverToBoxAdapter(child: SizedBox(height: 10)),
+                      ...data.map(DictionariesSingleResult.new),
+                    ],
+                  );
+                },
+                error:
+                    (error, stackTrace) => SliverToBoxAdapter(child: Empty()),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: NavbarCentralButton(),

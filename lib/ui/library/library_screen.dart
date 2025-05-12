@@ -23,6 +23,7 @@ class LibraryScreen extends ConsumerWidget {
     ref.watch(libraryOnDisposeProvider);
 
     return DefaultTabController(
+      initialIndex: 1,
       length: myTabs.length,
       child: Scaffold(
         body: SafeArea(

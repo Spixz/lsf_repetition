@@ -37,12 +37,14 @@ final dueCardsStreamProvider = AutoDisposeStreamProvider(
   (ref) => ref.watch(decksRepositoryProvider).getDueCardsStream(),
 );
 
-final cardsFilterProvider = NotifierProvider<CardsFilterNotifier, CardsFilter>(
-  CardsFilterNotifier.new,
-);
+final cardsFilterProvider =
+    AutoDisposeNotifierProvider<CardsFilterNotifier, CardsFilter>(
+      CardsFilterNotifier.new,
+      name: "Cards Filter Provider"
+    );
 
 //TODO : convert this filter in drift query to improve performance
-final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
+final filteredCardsProvider = AutoDisposeProvider<AsyncValue<List<FullCard>>>((ref) {
   final allCards = ref.watch(allCardsProvider);
   final filter = ref.watch(cardsFilterProvider);
 
@@ -84,7 +86,7 @@ final filteredCardsProvider = Provider<AsyncValue<List<FullCard>>>((ref) {
   return allCards;
 });
 
-class CardsFilterNotifier extends Notifier<CardsFilter> {
+class CardsFilterNotifier extends AutoDisposeNotifier<CardsFilter> {
   @override
   CardsFilter build() => CardsFilter();
 

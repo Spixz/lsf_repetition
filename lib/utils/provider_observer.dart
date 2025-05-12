@@ -1,34 +1,36 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyObserver extends ProviderObserver {
   @override
-  void didAddProvider(
-    ProviderBase<Object?> provider,
-    Object? value,
-    ProviderContainer container,
-  ) {
-    print(
-      "Provider $provider (${provider.name ?? ''}) was initialized with $value",
-    );
-  }
+  // void didAddProvider(
+  //   ProviderBase<Object?> provider,
+  //   Object? value,
+  //   ProviderContainer container,
+  // ) {
+  //   print(
+  //     "Provider $provider (${provider.name ?? ''}) was initialized with $value",
+  //   );
+  // }
 
-  @override
-  void didDisposeProvider(
-    ProviderBase<Object?> provider,
-    ProviderContainer container,
-  ) {
-    print('Provider $provider was disposed');
-  }
+  // @override
+  // void didDisposeProvider(
+  //   ProviderBase<Object?> provider,
+  //   ProviderContainer container,
+  // ) {
+  //   print('Provider $provider was disposed');
+  // }
 
-  @override
-  void didUpdateProvider(
-    ProviderBase<Object?> provider,
-    Object? previousValue,
-    Object? newValue,
-    ProviderContainer container,
-  ) {
-    print('Provider $provider updated from $previousValue to $newValue');
-  }
+  // @override
+  // void didUpdateProvider(
+  //   ProviderBase<Object?> provider,
+  //   Object? previousValue,
+  //   Object? newValue,
+  //   ProviderContainer container,
+  // ) {
+  //   print('Provider $provider updated from $previousValue to $newValue');
+  // }
 
   @override
   void providerDidFail(
@@ -37,6 +39,10 @@ class MyObserver extends ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    print('Provider $provider threw $error at $stackTrace');
+    debugPrint(
+      '❌ Erreur dans Provider `${provider.name ?? provider.runtimeType}`',
+    );
+    debugPrint('$error');
+    debugPrint('$stackTrace');
   }
 }

@@ -1,4 +1,5 @@
 import 'package:apprendre_lsf/domain/models/card_model/full_card_mapper.dart';
+import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,18 +87,23 @@ class _SingleResultHeader extends StatelessWidget {
     return TweenAnimationBuilder<Color?>(
       tween: ColorTween(
         begin: null,
-        end: isPinned ? Colors.pink : Colors.transparent,
+        // end: Color.fromRGBO(211, 189, 245, 1),
+        end: Color.fromRGBO(234, 221, 255, 1),
+        // end: isPinned ? Color.fromRGBO(211, 189, 245, 1) : Colors.transparent,
       ),
       duration: const Duration(milliseconds: 300),
       builder: (context, color, child) {
         return Container(
           height: 60.0,
-          color: color,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(15),
+          ),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             "${result.name} (${result.typology})",
-            style: TextStyle(color: Colors.black, fontSize: isPinned ? 15 : 18),
+            style: TextStyle(color: Colors.black, fontSize:  18),
           ),
         );
       },
