@@ -1,14 +1,15 @@
+import 'package:flutter/material.dart';
+
+import 'package:chewie/chewie.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:apprendre_lsf/core/app_colors.dart';
 import 'package:apprendre_lsf/data/services/video_processing/ffmpeg_video_processing.dart';
 import 'package:apprendre_lsf/ui/core/centered_message.dart';
-import 'package:apprendre_lsf/ui/core/empty.dart';
+import 'package:apprendre_lsf/ui/core/loading_circle.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
-import 'package:chewie/chewie.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Displays a zoomed-in video player centered on the person signing.
 ///
@@ -31,7 +32,7 @@ class SignVideoPlayer extends ConsumerWidget {
         // En vrai je peux pas toucher a hauteur car c'est la with
         //qui decide. Si je set la height, je perdrait l'aspect ratio.
         final aspectRatio = controller.videoPlayerController.value.aspectRatio;
-        print("aspect ration $aspectRatio");
+        // print("aspect ration $aspectRatio");
         final videoWidth = context.width * 100 / 60;
 
         return SizedBox(
@@ -52,7 +53,7 @@ class SignVideoPlayer extends ConsumerWidget {
           fontSize: 20,
         );
       },
-      loading: () => Empty(),
+      loading: () => LoadingCircle(),
     );
   }
 }

@@ -33,19 +33,22 @@ class DialogMeaningVideos extends ConsumerWidget {
               ],
             ),
             _CarouselPositionIndicator(lenght: videosSigns.length),
-            _closeButton(context),
+            _closeButton(context, ref),
           ],
         ),
       ),
     );
   }
 
-  Widget _closeButton(BuildContext context) {
+  Widget _closeButton(BuildContext context, WidgetRef ref) {
     return Positioned(
       top: 10,
       right: 10,
       child: IconButton(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state = 0;
+          Navigator.of(context).pop();
+        },
         icon: Icon(Icons.close, color: Colors.white, size: 40),
       ),
     );
@@ -72,7 +75,8 @@ class _Carousel extends ConsumerWidget {
         height: 500,
         padEnds: false,
         onPageChanged: (index, reason) {
-          ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state = index;
+          ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state =
+              index;
         },
       ),
       items: videoUrls.map(SignVideoPlayer.fromMedia).toList(),
@@ -169,10 +173,7 @@ class _ActionsBar extends ConsumerWidget {
           children: [
             _buildButton(
               context.tr("SaveTheSign"),
-              () => context.pushNamed(
-                Routes.createCard.name,
-                extra: card
-              ),
+              () => context.pushNamed(Routes.createCard.name, extra: card),
             ),
             _buildButton(context.tr("AddToTrainingList")),
           ],

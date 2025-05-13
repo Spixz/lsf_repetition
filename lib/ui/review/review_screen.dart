@@ -11,7 +11,7 @@ import 'package:apprendre_lsf/ui/review/providers/review_ui_providers.dart';
 import 'package:apprendre_lsf/domain/models/revision_logic.dart';
 
 class ReviewScreen extends ConsumerStatefulWidget {
-  ReviewScreen({required this.title, super.key});
+  const ReviewScreen({required this.title, super.key});
   final String title;
 
   @override
@@ -98,7 +98,10 @@ class _ShowAnswerBt extends ConsumerWidget {
     final showAnswer = ref.watch(showAnswerProvider);
 
     return InkWell(
-      onTap: () => ref.read(showAnswerProvider.notifier).state = !showAnswer,
+      onTap: () {
+        ref.read(indexVideoSelectedRevisionScreenProvider.notifier).state = 0;
+        ref.read(showAnswerProvider.notifier).state = !showAnswer;
+      },
       child: Container(
         height: navbarHeight,
         width: double.infinity,
