@@ -38,7 +38,7 @@ final dueCardsStreamProvider = AutoDisposeStreamProvider(
 );
 
 final cardsFilterProvider =
-    AutoDisposeNotifierProvider<CardsFilterNotifier, CardsFilter>(
+    NotifierProvider<CardsFilterNotifier, CardsFilter>(
       CardsFilterNotifier.new,
       name: "Cards Filter Provider"
     );
@@ -86,7 +86,7 @@ final filteredCardsProvider = AutoDisposeProvider<AsyncValue<List<FullCard>>>((r
   return allCards;
 });
 
-class CardsFilterNotifier extends AutoDisposeNotifier<CardsFilter> {
+class CardsFilterNotifier extends Notifier<CardsFilter> {
   @override
   CardsFilter build() => CardsFilter();
 

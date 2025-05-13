@@ -33,12 +33,27 @@ class ListCardsView extends ConsumerWidget {
   }
 }
 
-class _SearchBar extends ConsumerWidget {
-  _SearchBar({super.key});
-  final OverlayPortalController overlayController = OverlayPortalController();
+class _SearchBar extends ConsumerStatefulWidget {
+  const _SearchBar({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => __SearchBarState();
+}
+
+class __SearchBarState extends ConsumerState<_SearchBar> {
+  final OverlayPortalController overlayController = OverlayPortalController();
+  late TextEditingController queryController;
+
+  @override
+  void initState() {
+    super.initState();
+    queryController = TextEditingController(
+      text: ref.read(cardsFilterProvider).name,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final filteredCards = ref.watch(cardsFilterProvider);
 
     return Padding(
@@ -46,6 +61,7 @@ class _SearchBar extends ConsumerWidget {
       child: SearchAnchor(
         builder: (context, _) {
           return SearchBar(
+            controller: queryController,
             padding: const WidgetStatePropertyAll<EdgeInsets>(
               EdgeInsets.symmetric(horizontal: 16.0),
             ),
@@ -143,7 +159,7 @@ class _SelectedDeckChip extends ConsumerWidget {
       return Empty();
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+      padding: const EdgeInsets.only(left: 15, top: 17, right: 15, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
