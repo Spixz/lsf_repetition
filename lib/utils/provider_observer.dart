@@ -10,7 +10,7 @@ class MyObserver extends ProviderObserver {
   //   ProviderContainer container,
   // ) {
   //   print(
-  //     "Provider $provider (${provider.name ?? ''}) was initialized with $value",
+  //     "Provider $provider (${provider.name}) was initialized with $value",
   //   );
   // }
 
@@ -19,7 +19,7 @@ class MyObserver extends ProviderObserver {
   //   ProviderBase<Object?> provider,
   //   ProviderContainer container,
   // ) {
-  //   print('Provider $provider was disposed');
+  //   print('Provider $provider (${provider.name}) was disposed');
   // }
 
   // @override

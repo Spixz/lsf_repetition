@@ -25,9 +25,8 @@ class ElixService implements DictionaryService {
       throw Exception('Query cannot be empty');
     }
 
-    final encodedQuery = Uri.encodeQueryComponent(query);
     final HttpClientRequest request = await client.getUrl(
-      Uri.https(_host, "/dictionnaire/$encodedQuery"),
+      Uri.https(_host, "/dictionnaire/$query"),
     );
     final HttpClientResponse response = await request.close();
 

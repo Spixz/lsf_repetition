@@ -31,21 +31,26 @@ class ProgressScreen extends ConsumerWidget {
             spacing: 30,
             children: [
               Text(context.tr("Total"), style: TextStyle(fontSize: 24)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _CardInfos(
-                      value: totalAddedCards.toString(),
-                      label: context.tr("AddedSigns"),
-                    ),
-                    _separator(),
-                    _CardInfos(
-                      value: totalLearnedCards.toString(),
-                      label: context.tr("SignsLearned"),
-                    ),
-                  ],
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  width: 250,
+                  height: 65,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _CardInfos(
+                        value: totalAddedCards.toString(),
+                        label: context.tr("AddedSigns"),
+                      ),
+                      _separator(),
+                      _CardInfos(
+                        value: totalLearnedCards.toString(),
+                        label: context.tr("SignsLearned"),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

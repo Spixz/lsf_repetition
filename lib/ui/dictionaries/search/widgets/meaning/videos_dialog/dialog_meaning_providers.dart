@@ -64,7 +64,11 @@ final generateVideoControllerProvider =
         looping: true,
         showControls: false,
       );
+      ref.onDispose(() {
+        chewieContoller.dispose();
+        videoPlayerController.dispose();
+      });
       chewieContoller.play();
-      // throw Exception("erreur mec");
+
       return chewieContoller;
     });
