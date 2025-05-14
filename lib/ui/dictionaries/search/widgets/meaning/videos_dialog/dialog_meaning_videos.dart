@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:gradient_elevated_button/gradient_elevated_button.dart';
 
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/sign_video_player.dart';
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/dialog_meaning_providers.dart';
@@ -23,7 +23,7 @@ class DialogMeaningVideos extends ConsumerWidget {
 
     return SafeArea(
       child: Container(
-        color: Colors.black.withAlpha(130),
+        color: Colors.black.withAlpha(150),
         child: Stack(
           children: [
             Column(
@@ -62,24 +62,15 @@ class _Carousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // return PageView.builder(
-    //   itemCount: signs.length,
-    //   itemBuilder: (_, index) {
-    //     return SignVideoPlayer(video: signs[index]);
-    //   },
-    // );
-    return CarouselSlider(
-      options: CarouselOptions(
-        enableInfiniteScroll: false,
-        viewportFraction: 1,
-        height: 500,
-        padEnds: false,
-        onPageChanged: (index, reason) {
-          ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state =
-              index;
-        },
-      ),
-      items: videoUrls.map(SignVideoPlayer.fromMedia).toList(),
+    return PageView.builder(
+      itemCount: videoUrls.length,
+      onPageChanged: (index) {
+        ref.read(indexVideoSelectedDialogMeaningProvider.notifier).state =
+            index;
+      },
+      itemBuilder: (_, index) {
+        return Align(child: SignVideoPlayer(videoUrl: videoUrls[index]));
+      },
     );
   }
 }
@@ -115,21 +106,6 @@ class _CarouselDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView.builder(
-    //     itemCount: widget.itemCount,
-    //     itemBuilder: (_, index) {
-    //       final bool isSelected = widget.indexSelectedItem == index;
-
-    //       return AnimatedContainer(
-    //         duration: Duration(milliseconds: 100),
-    //         decoration: BoxDecoration(
-    //             shape: BoxShape.circle,
-    //             color: isSelected ? Colors.grey : Colors.grey.shade300),
-    //         width: isSelected ? 20 : 10,
-    //         height: isSelected ? 20 : 10,
-    //       );
-    //     });
-
     List<Widget> dots =
         Iterable.generate(itemCount, (index) {
           final bool isSelected = indexSelectedItem == index;
@@ -163,9 +139,14 @@ class _ActionsBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 80,
-      color: Colors.blue.shade100,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+      ),
       child: Container(
-        // decoration: BoxDecoration(boxShadow: kElevationToShadow[4]),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           spacing: 10,
@@ -185,14 +166,20 @@ class _ActionsBar extends ConsumerWidget {
   Widget _buildButton(String text, [void Function()? onTap]) => Expanded(
     child: SizedBox(
       height: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
+      child: GradientElevatedButton(
+        onPressed: onTap,
+        style: GradientElevatedButton.styleFrom(
+          backgroundGradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(202, 220, 246, 1),
+              Color.fromRGBO(169, 171, 229, 1),
+            ],
+          ),
           padding: EdgeInsets.symmetric(horizontal: 16),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
-        onPressed: onTap,
         child: Text(text, textAlign: TextAlign.center),
       ),
     ),

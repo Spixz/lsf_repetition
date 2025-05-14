@@ -184,6 +184,7 @@ class _PopUpMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton(
+      padding: EdgeInsets.only(left: 30),
       itemBuilder:
           (context) => [
             PopupMenuItem(

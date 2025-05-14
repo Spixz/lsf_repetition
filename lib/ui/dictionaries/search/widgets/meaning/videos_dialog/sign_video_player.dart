@@ -29,16 +29,31 @@ class SignVideoPlayer extends ConsumerWidget {
 
     return chewieController.when(
       data: (controller) {
-        // En vrai je peux pas toucher a hauteur car c'est la with
-        //qui decide. Si je set la height, je perdrait l'aspect ratio.
         final aspectRatio = controller.videoPlayerController.value.aspectRatio;
-        // print("aspect ration $aspectRatio");
-        final videoWidth = context.width * 100 / 60;
+        // la vidéo occupe fait 160% de la width => la partie visible
+        // représente 60% de la vidéo.
+        final videoWidth = context.width + context.width * 0.6;
+        final cardHeight = videoWidth / aspectRatio;
 
-        return SizedBox(
-          // decoration: BoxDecoration(
-          // border: Border.all(color: Colors.blue.shade200, width: 4)),
-          child: ClipRect(
+        // return Container(
+        //   height: cardHeight,
+        //   margin: EdgeInsets.symmetric(horizontal: 10),
+        //   child: ClipRRect(
+        //     borderRadius: BorderRadius.circular(10),
+        //     child: InteractiveViewer(
+        //       constrained: false,
+        //       child: OverflowBox(
+        //         maxWidth: videoWidth,
+        //         child: Chewie(controller: controller),
+        //       ),
+        //     ),
+        //   ),
+        // );
+        return Container(
+          height: cardHeight,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
             child: OverflowBox(
               maxWidth: videoWidth,
               child: Chewie(controller: controller),

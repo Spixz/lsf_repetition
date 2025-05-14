@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:apprendre_lsf/ui/dictionaries/search/widgets/meaning/videos_dialog/sign_video_player.dart';
 import 'package:apprendre_lsf/ui/review/providers/review_ui_providers.dart';
@@ -14,18 +13,15 @@ class ReviewCarousel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        enableInfiniteScroll: false,
-        viewportFraction: 1,
-        height: double.infinity,
-        padEnds: false,
-        onPageChanged: (index, reason) {
-          ref.read(indexVideoSelectedRevisionScreenProvider.notifier).state =
-              index;
-        },
-      ),
-      items: videoUrls.map(SignVideoPlayer.fromMedia).toList(),
+    return PageView.builder(
+      itemCount: videoUrls.length,
+      onPageChanged: (index) {
+        ref.read(indexVideoSelectedRevisionScreenProvider.notifier).state =
+            index;
+      },
+      itemBuilder: (_, index) {
+        return Align(child: SignVideoPlayer(videoUrl: videoUrls[index]));
+      },
     );
   }
 }
