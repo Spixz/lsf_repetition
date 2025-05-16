@@ -4,16 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import 'package:apprendre_lsf/domain/models/card_model/card.dart';
+import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
-import 'package:apprendre_lsf/ui/cards/create/create_card_screen.dart';
-import 'package:apprendre_lsf/ui/home/home_screen.dart';
-import 'package:apprendre_lsf/ui/dictionaries/search/widgets/dictionaries_search_screen.dart';
+import 'package:apprendre_lsf/features/cards/view/pages/create_card_screen.dart';
+import 'package:apprendre_lsf/features/dictionaries/view/pages/dictionaries_search_screen.dart';
 import 'package:apprendre_lsf/routing/route_provider.dart';
-import 'package:apprendre_lsf/ui/library/library_screen.dart';
-import 'package:apprendre_lsf/ui/progress/progress_screen.dart';
-import 'package:apprendre_lsf/ui/review/review_screen.dart';
-import 'package:apprendre_lsf/ui/settings/settings_screen.dart';
+import 'package:apprendre_lsf/features/library/view/pages/library_screen.dart';
+import 'package:apprendre_lsf/features/user_progress/view/pages/progress_screen.dart';
+import 'package:apprendre_lsf/features/review_cards/view/pages/review_screen.dart';
+import 'package:apprendre_lsf/features/settings/view/pages/settings_screen.dart';
 
 final initialLocation = Routes.searchDictionariesResults;
 // final initialLocation = Routes.progress;
@@ -23,13 +22,6 @@ GoRouter createRouter(WidgetRef ref) => GoRouter(
   debugLogDiagnostics: true,
   // observers: [MyNavigatorObserver(ref)],
   routes: [
-    GoRoute(
-      path: Routes.home.path,
-      name: Routes.home.name,
-      builder: (context, state) {
-        return const HomeScreen();
-      },
-    ),
     GoRoute(
       path: Routes.createCard.path,
       name: Routes.createCard.name,

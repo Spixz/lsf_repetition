@@ -11,7 +11,6 @@ class SingleRoute {
 }
 
 abstract final class Routes {
-  static const home = SingleRoute('Home', '/home');
   static const login = SingleRoute('Login', '/login');
   static const createCard = SingleRoute('Create Card', '/createCard');
   static const library = SingleRoute('List Cards', '/cards');
@@ -24,7 +23,6 @@ abstract final class Routes {
   static const settings = SingleRoute('Settings', '/settings');
 
   static const all = [
-    home,
     login,
     createCard,
     library,
