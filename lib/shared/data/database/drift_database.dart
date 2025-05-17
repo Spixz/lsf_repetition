@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
 
 part 'drift_database.g.dart';

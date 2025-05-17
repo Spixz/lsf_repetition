@@ -32,7 +32,7 @@ class CardsFilterSettingsOverlay extends ConsumerWidget {
               border: Border(top: BorderSide(color: Colors.transparent)),
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
-            child: Column(
+            child: const Column(
               spacing: 10,
               children: [
                 _FilterByCreationDate(),
@@ -59,7 +59,7 @@ class CardsFilterSettingsOverlay extends ConsumerWidget {
 }
 
 class _FilterByCreationDate extends StatelessWidget {
-  const _FilterByCreationDate({super.key});
+  const _FilterByCreationDate();
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,6 @@ class _DateFilterChoiceTip extends ConsumerWidget {
   const _DateFilterChoiceTip({
     required this.label,
     required this.dateFilter,
-    super.key,
   });
 
   final String label;
@@ -128,7 +127,7 @@ class _DateFilterChoiceTip extends ConsumerWidget {
 }
 
 class _FilterByLearningState extends StatelessWidget {
-  const _FilterByLearningState({super.key});
+  const _FilterByLearningState();
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +173,6 @@ class _RetentionStateChoiceTip extends ConsumerWidget {
   const _RetentionStateChoiceTip({
     required this.label,
     required this.retentionState,
-    super.key,
   });
 
   final String label;

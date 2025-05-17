@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/core/size.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
-import 'package:apprendre_lsf/features/review_cards/data/providers/review_providers.dart';
+import 'package:apprendre_lsf/features/review_cards/data/providers/revision_usecase_notifier.dart';
 import 'package:apprendre_lsf/shared/domain/usescases/revision_logic.dart';
 import 'package:apprendre_lsf/utils/duration_formatter.dart';
 import 'package:apprendre_lsf/shared/data/revision/providers/selected_revision_mode_provider.dart';

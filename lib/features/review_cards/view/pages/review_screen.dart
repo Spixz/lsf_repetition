@@ -1,16 +1,14 @@
-import 'package:apprendre_lsf/features/review_cards/view/providers/index_selected_video_provider.dart';
-import 'package:apprendre_lsf/features/review_cards/view/providers/reverse_card_provider.dart';
-import 'package:apprendre_lsf/features/review_cards/view/providers/show_answer_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/core/size.dart';
-import 'package:apprendre_lsf/features/review_cards/data/providers/review_providers.dart';
+import 'package:apprendre_lsf/features/review_cards/data/providers/revision_usecase_notifier.dart';
 import 'package:apprendre_lsf/features/review_cards/view/widgets/rating_bar.dart';
 import 'package:apprendre_lsf/features/review_cards/view/widgets/review_card.dart';
 import 'package:apprendre_lsf/shared/domain/usescases/revision_logic.dart';
+import 'package:apprendre_lsf/features/review_cards/view/providers/review_ui_providers_export.dart';
 
 class ReviewScreen extends ConsumerStatefulWidget {
   const ReviewScreen({required this.title, super.key});
@@ -21,11 +19,11 @@ class ReviewScreen extends ConsumerStatefulWidget {
 }
 
 class _ReviewScreenState extends ConsumerState<ReviewScreen> {
-  late RevisionState _revisionState;
+  late RevisionState revisionState;
 
   @override
   Widget build(BuildContext context) {
-    _revisionState = ref.watch(revisionUsecaseProvider);
+    revisionState = ref.watch(revisionUsecaseProvider);
     final revisonDone = ref.read(revisionUsecaseProvider.notifier).revisionDone;
     final showAnswer = ref.watch(showAnswerProvider);
 
@@ -67,7 +65,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
   Widget _displayCardsLeft(BuildContext context) {
     return Text(
-      context.tr("XLeft", args: [_revisionState.cardsLeft.toString()]),
+      context.tr("XLeft", args: [revisionState.cardsLeft.toString()]),
     );
   }
 

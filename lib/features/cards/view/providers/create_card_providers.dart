@@ -45,15 +45,13 @@ class CreateCardNotifier extends Notifier<AsyncValue<bool>> {
           FullCard(card: card, retentionCard: RetentionCard.initial()),
         ];
       } else {
-        cardsToAdd =
-            deckIds
-                .map(
-                  (deckId) => FullCard(
-                    card: card.copyWith(deckId: deckId),
-                    retentionCard: RetentionCard.initial(),
-                  ),
-                )
-                .toList();
+        final cardsToAddInterable = deckIds.map(
+          (deckId) => FullCard(
+            card: card.copyWith(deckId: deckId),
+            retentionCard: RetentionCard.initial(),
+          ),
+        );
+        cardsToAdd = cardsToAddInterable.toList();
       }
 
       await cardsRepository.createCards(fullCards: cardsToAdd);

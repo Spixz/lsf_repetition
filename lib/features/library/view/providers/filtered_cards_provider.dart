@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/shared/data/cards/providers/cards_repository_provider.dart';
-import 'package:apprendre_lsf/shared/domain/models/card/cards_filter.dart';
-import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
 import 'package:apprendre_lsf/features/library/view/providers/card_filter_notifier.dart';
+import 'package:apprendre_lsf/shared/domain/models/card/card_export.dart';
 
 //TODO : convert this filter in drift query to improve performance
 final filteredCardsProvider = AutoDisposeProvider<AsyncValue<List<FullCard>>>((

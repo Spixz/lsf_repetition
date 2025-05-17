@@ -1,13 +1,14 @@
 
+import 'package:collection/collection.dart';
+
 import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
 import 'package:apprendre_lsf/shared/domain/usescases/revision_logic.dart';
-import 'package:collection/collection.dart';
 
 class TrainingRevisionUsecase extends RevisionLogic {
   TrainingRevisionUsecase({required super.cardsRepository});
 
-  final removeAfterXEasy = 2;
+  final removeAfterXEasy = 1;
   List<FullCard> _cardsToRevise = [];
   final List<FullCard> _cardInSuccess = [];
 

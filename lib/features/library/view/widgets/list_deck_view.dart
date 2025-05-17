@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,11 +7,9 @@ import 'package:text_scroll/text_scroll.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/shared/data/decks/providers/deck_repository_provider.dart';
-import 'package:apprendre_lsf/features/common_widgets/centered_message.dart';
-import 'package:apprendre_lsf/features/common_widgets/loading_circle.dart';
+import 'package:apprendre_lsf/common_widgets/common_widgets_export.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/features/common_widgets/customs_snackbars.dart';
 import 'package:apprendre_lsf/features/cards/view/providers/delete_deck_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/providers/checkbox_delete_deck_with_cards.dart';
 import 'package:apprendre_lsf/features/library/view/providers/library_on_dispose_provider.dart';
@@ -26,7 +26,7 @@ class ListDecksView extends ConsumerWidget {
 }
 
 class _ListDecks extends ConsumerWidget {
-  const _ListDecks({super.key});
+  const _ListDecks();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +76,7 @@ class _ListDecks extends ConsumerWidget {
 }
 
 class _PopUpMenu extends ConsumerWidget {
-  const _PopUpMenu({required this.deck, super.key});
+  const _PopUpMenu({required this.deck});
 
   final DeckModel deck;
 
@@ -99,15 +99,20 @@ class _PopUpMenu extends ConsumerWidget {
   }
 }
 
-class _DeleteDeckDialog extends ConsumerWidget {
-  const _DeleteDeckDialog({required this.deck, super.key});
-
+class _DeleteDeckDialog extends ConsumerStatefulWidget {
+  const _DeleteDeckDialog({required this.deck});
   final DeckModel deck;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __DeleteDeckDialogState();
+}
+
+class __DeleteDeckDialogState extends ConsumerState<_DeleteDeckDialog> {
+  @override
+  Widget build(BuildContext context) {
     final numberOfCards = ref
-        .watch(getCardsOfADeckProvider(deck.id!))
+        .watch(getCardsOfADeckProvider(widget.deck.id!))
         .maybeWhen(data: (cards) => cards.length, orElse: () => 0);
 
     ref.listen(
@@ -124,7 +129,7 @@ class _DeleteDeckDialog extends ConsumerWidget {
           Text(
             context.tr(
               "ConfirmationDeckDeletion",
-              args: [deck.name, "$numberOfCards"],
+              args: [widget.deck.name, "$numberOfCards"],
             ),
           ),
           Row(
@@ -157,10 +162,12 @@ class _DeleteDeckDialog extends ConsumerWidget {
             await ref
                 .read(deleteDeckNotifierProvider.notifier)
                 .call(
-                  deckIds: [deck.id!],
+                  deckIds: [widget.deck.id!],
                   deleteCards: ref.read(checkboxStatusDeleteWithCardsProvider),
                 );
-            Navigator.pop(context, 'Valid deletion');
+            if (mounted) {
+              Navigator.pop(context, 'Valid deletion');
+            }
           },
           child: Text(context.tr("Yes")),
         ),

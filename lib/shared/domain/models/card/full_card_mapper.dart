@@ -1,7 +1,7 @@
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_meaning.dart';
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_meaning.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_search_result.dart';
 
 class FullCardMapper {
   static FullCard fromLsfDictionnaryResults({
@@ -16,7 +16,6 @@ class FullCardMapper {
         videosSigns:
             selectedMeaning.wordSigns.map((sign) => sign.videoUrl).toList(),
         sourceDictionnary: searchOutput.dictionaryName,
-        dictionnarySignId: -1,
       ),
     );
   }

@@ -7,11 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:apprendre_lsf/shared/data/database/drift_database.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
 import 'package:apprendre_lsf/shared/domain/usescases/revision_logic.dart';
 import 'package:apprendre_lsf/global_providers.dart';
-import 'package:apprendre_lsf/features/review_cards/data/providers/review_providers.dart';
+import 'package:apprendre_lsf/features/review_cards/data/providers/revision_usecase_notifier.dart';
 
 final CardModel basicCard = CardModel(
   id: 1,

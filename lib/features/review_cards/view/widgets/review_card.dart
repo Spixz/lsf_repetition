@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
-import 'package:apprendre_lsf/features/common_widgets/empty.dart';
-import 'package:apprendre_lsf/features/review_cards/data/providers/review_providers.dart';
+import 'package:apprendre_lsf/common_widgets/empty.dart';
 import 'package:apprendre_lsf/features/review_cards/view/widgets/review_carousel.dart';
-import 'package:apprendre_lsf/features/review_cards/view/providers/reverse_card_provider.dart';
-import 'package:apprendre_lsf/features/review_cards/view/providers/show_answer_provider.dart';
+import 'package:apprendre_lsf/features/review_cards/data/providers/revision_usecase_notifier.dart';
+import 'package:apprendre_lsf/features/review_cards/view/providers/review_ui_providers_export.dart';
+
 
 class ReviewCard extends ConsumerWidget {
   const ReviewCard({super.key});

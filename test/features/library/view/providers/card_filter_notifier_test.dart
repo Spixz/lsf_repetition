@@ -6,7 +6,7 @@ import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/cards_filter.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_search_result.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
 import 'package:apprendre_lsf/features/library/view/providers/card_filter_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/providers/filtered_cards_provider.dart';

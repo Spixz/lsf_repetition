@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/features/common_widgets/customs_snackbars.dart';
+import 'package:apprendre_lsf/common_widgets/customs_snackbars.dart';
 import 'package:apprendre_lsf/features/cards/view/providers/create_deck_provider.dart';
 
 class CreateDeckDialog extends ConsumerStatefulWidget {

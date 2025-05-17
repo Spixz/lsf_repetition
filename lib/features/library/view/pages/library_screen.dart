@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/features/common_widgets/navbar/navbar.dart';
+import 'package:apprendre_lsf/common_widgets/navbar/navbar.dart';
 import 'package:apprendre_lsf/features/library/view/widgets/list_cards_view.dart';
 import 'package:apprendre_lsf/features/library/view/providers/library_on_dispose_provider.dart';
-import 'package:apprendre_lsf/features/common_widgets/navbar/navbar_central_button.dart';
+import 'package:apprendre_lsf/common_widgets/navbar/navbar_central_button.dart';
 import 'package:apprendre_lsf/utils/extensions/buildcontext_extension.dart';
 import 'package:apprendre_lsf/features/library/view/providers/card_filter_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/widgets/list_deck_view.dart';

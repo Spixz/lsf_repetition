@@ -7,7 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/features/cards/view/pages/create_card_screen.dart';
-import 'package:apprendre_lsf/features/dictionaries/view/pages/dictionaries_search_screen.dart';
+import 'package:apprendre_lsf/features/dictionary/view/pages/dictionaries_search_screen.dart';
 import 'package:apprendre_lsf/routing/route_provider.dart';
 import 'package:apprendre_lsf/features/library/view/pages/library_screen.dart';
 import 'package:apprendre_lsf/features/user_progress/view/pages/progress_screen.dart';

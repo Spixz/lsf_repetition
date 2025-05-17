@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:apprendre_lsf/features/dictionaries/domain/models/lsf_dictionary_search_result.dart';
+import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_search_result.dart';
 
 part 'card.freezed.dart';
 part 'card.g.dart';

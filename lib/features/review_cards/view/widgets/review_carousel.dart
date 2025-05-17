@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/features/dictionaries/view/widgets/meaning/videos_dialog/sign_video_player.dart';
+import 'package:apprendre_lsf/features/dictionary/view/widgets/meaning/videos_dialog/sign_video_player.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/features/review_cards/view/providers/index_selected_video_provider.dart';
 

@@ -6,19 +6,16 @@ import 'package:text_scroll/text_scroll.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import 'package:apprendre_lsf/shared/data/decks/providers/deck_repository_provider.dart';
-import 'package:apprendre_lsf/features/common_widgets/centered_message.dart';
-import 'package:apprendre_lsf/features/common_widgets/loading_circle.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
-import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
-import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
+import 'package:apprendre_lsf/shared/domain/models/card/card_export.dart';
 import 'package:apprendre_lsf/features/cards/view/providers/delete_cards_notifier.dart';
-import 'package:apprendre_lsf/features/common_widgets/customs_snackbars.dart';
 import 'package:apprendre_lsf/features/library/view/widgets/filters_overlay.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
-import 'package:apprendre_lsf/features/dictionaries/view/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
-import 'package:apprendre_lsf/features/common_widgets/empty.dart';
+import 'package:apprendre_lsf/features/dictionary/view/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';
 import 'package:apprendre_lsf/features/library/view/providers/card_filter_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/providers/filtered_cards_provider.dart';
+import 'package:apprendre_lsf/common_widgets/common_widgets_export.dart';
+import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
 
 class ListCardsView extends ConsumerWidget {
   const ListCardsView({super.key});
@@ -36,7 +33,7 @@ class ListCardsView extends ConsumerWidget {
 }
 
 class _SearchBar extends ConsumerStatefulWidget {
-  const _SearchBar({super.key});
+  const _SearchBar();
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => __SearchBarState();
@@ -109,7 +106,7 @@ class __SearchBarState extends ConsumerState<_SearchBar> {
 }
 
 class _ListCards extends ConsumerWidget {
-  const _ListCards({super.key});
+  const _ListCards();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -151,7 +148,7 @@ class _ListCards extends ConsumerWidget {
 }
 
 class _SelectedDeckChip extends ConsumerWidget {
-  const _SelectedDeckChip({super.key});
+  const _SelectedDeckChip();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -179,7 +176,7 @@ class _SelectedDeckChip extends ConsumerWidget {
 }
 
 class _PopUpMenu extends ConsumerWidget {
-  const _PopUpMenu({required this.card, super.key});
+  const _PopUpMenu({required this.card});
 
   final FullCard card;
 
@@ -204,7 +201,7 @@ class _PopUpMenu extends ConsumerWidget {
 }
 
 class _DeleteCardDialog extends ConsumerWidget {
-  const _DeleteCardDialog({required this.card, super.key});
+  const _DeleteCardDialog({required this.card});
 
   final FullCard card;
 

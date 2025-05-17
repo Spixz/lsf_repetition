@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:apprendre_lsf/features/common_widgets/empty.dart';
-import 'package:apprendre_lsf/features/user_progress/view/providers/progress_ui_providers.dart';
+import 'package:apprendre_lsf/common_widgets/empty.dart';
+import 'package:apprendre_lsf/features/user_progress/view/providers/total_added_cards_provider.dart';
+import 'package:apprendre_lsf/features/user_progress/view/providers/total_learned_cards_provider.dart';
 
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
@@ -74,7 +75,7 @@ class ProgressScreen extends ConsumerWidget {
 }
 
 class _CardInfos extends StatelessWidget {
-  const _CardInfos({required this.label, required this.value, super.key});
+  const _CardInfos({required this.label, required this.value});
   final String label;
   final String value;
 
