@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/common_widgets/empty.dart';
 import 'package:apprendre_lsf/features/cards/view/widgets/create_deck_dialog.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/create_card_providers.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/selected_decks_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/current_step_notifier.dart';
 
 class FAB extends ConsumerWidget {
   const FAB({super.key});

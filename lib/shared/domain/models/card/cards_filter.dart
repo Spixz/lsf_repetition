@@ -1,6 +1,7 @@
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
 import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
 
+// ignore: depend_on_referenced_packages
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cards_filter.freezed.dart';

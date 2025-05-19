@@ -4,11 +4,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/create_card_providers.dart';
 import 'package:apprendre_lsf/common_widgets/customs_snackbars.dart';
 import 'package:apprendre_lsf/features/cards/view/widgets/fab.dart';
 import 'package:apprendre_lsf/features/cards/view/widgets/select_decks.dart';
 import 'package:apprendre_lsf/features/cards/view/widgets/validate_button.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/create_card_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/current_step_notifier.dart';
 
 /// Page for selecting the decks to which the card will be added.
 ///
@@ -36,7 +37,7 @@ class CreateCardScreen extends ConsumerWidget {
           children: [
             PageView(
               onPageChanged: onStepChange,
-              children: <Widget>[SizedBox.expand(child: SelectDecks())],
+              children: [SizedBox.expand(child: SelectDecks())],
             ),
           ],
         ),

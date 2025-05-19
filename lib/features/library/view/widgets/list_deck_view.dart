@@ -10,7 +10,7 @@ import 'package:apprendre_lsf/shared/data/decks/providers/deck_repository_provid
 import 'package:apprendre_lsf/common_widgets/common_widgets_export.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/delete_deck_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/decks/delete_deck_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/providers/checkbox_delete_deck_with_cards.dart';
 import 'package:apprendre_lsf/features/library/view/providers/library_on_dispose_provider.dart';
 import 'package:apprendre_lsf/shared/data/cards/providers/cards_repository_provider.dart';

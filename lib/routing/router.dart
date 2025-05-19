@@ -8,14 +8,13 @@ import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/features/cards/view/pages/create_card_screen.dart';
 import 'package:apprendre_lsf/features/dictionary/view/pages/dictionaries_search_screen.dart';
-import 'package:apprendre_lsf/routing/route_provider.dart';
+import 'package:apprendre_lsf/routing/actual_route_provider.dart';
 import 'package:apprendre_lsf/features/library/view/pages/library_screen.dart';
 import 'package:apprendre_lsf/features/user_progress/view/pages/progress_screen.dart';
 import 'package:apprendre_lsf/features/review_cards/view/pages/review_screen.dart';
 import 'package:apprendre_lsf/features/settings/view/pages/settings_screen.dart';
 
 final initialLocation = Routes.searchDictionariesResults;
-// final initialLocation = Routes.progress;
 
 GoRouter createRouter(WidgetRef ref) => GoRouter(
   initialLocation: initialLocation.path,

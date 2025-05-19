@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:apprendre_lsf/features/dictionary/domain/models/lsf_dictionary_meaning.dart';
 

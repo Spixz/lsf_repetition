@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/create_card_providers.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/selected_decks_notifier.dart';
 import 'package:apprendre_lsf/shared/data/decks/providers/deck_repository_provider.dart';
 import 'package:apprendre_lsf/common_widgets/centered_message.dart';
 

@@ -5,9 +5,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:apprendre_lsf/common_widgets/empty.dart';
 import 'package:apprendre_lsf/shared/data/cards/providers/cards_repository_provider.dart';
-import 'package:apprendre_lsf/common_widgets/navbar/widgets/my_progress_button.dart';
+import 'package:apprendre_lsf/common_widgets/common_widgets_export.dart';
 import 'package:apprendre_lsf/common_widgets/navbar/widgets/study_mode_button.dart';
 import 'package:apprendre_lsf/common_widgets/navbar/widgets/training_mode_button.dart';
+import 'package:apprendre_lsf/common_widgets/navbar/widgets/my_progress_button.dart';
 
 class NavbarCentralButton extends ConsumerStatefulWidget {
   const NavbarCentralButton({super.key});

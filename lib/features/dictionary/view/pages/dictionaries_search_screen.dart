@@ -10,7 +10,6 @@ import 'package:apprendre_lsf/features/dictionary/view/widgets/dictionaries_sear
 import 'package:apprendre_lsf/features/dictionary/view/widgets/dictionaries_single_result.dart';
 import 'package:apprendre_lsf/features/dictionary/view/providers/selected_suggestion_provider.dart';
 import 'package:apprendre_lsf/features/dictionary/data/providers/search_definition_result_provider.dart';
-import 'package:apprendre_lsf/common_widgets/navbar/navbar_export.dart';
 
 /// Dictionary search page.
 ///

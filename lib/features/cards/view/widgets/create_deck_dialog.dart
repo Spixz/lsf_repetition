@@ -6,7 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/common_widgets/customs_snackbars.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/create_deck_provider.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/decks/create_deck_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/decks/deck_name_field_notifier.dart';
 
 class CreateDeckDialog extends ConsumerStatefulWidget {
   const CreateDeckDialog({super.key, required this.onSuccess});

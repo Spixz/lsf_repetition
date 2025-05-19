@@ -8,7 +8,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:apprendre_lsf/shared/data/decks/providers/deck_repository_provider.dart';
 import 'package:apprendre_lsf/utils/extensions/extensions.dart';
 import 'package:apprendre_lsf/shared/domain/models/card/card_export.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/delete_cards_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/delete_cards_notifier.dart';
 import 'package:apprendre_lsf/features/library/view/widgets/filters_overlay.dart';
 import 'package:apprendre_lsf/routing/routes_name.dart';
 import 'package:apprendre_lsf/features/dictionary/view/widgets/meaning/videos_dialog/dialog_meaning_videos.dart';

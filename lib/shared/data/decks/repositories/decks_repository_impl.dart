@@ -1,15 +1,10 @@
-import 'package:apprendre_lsf/shared/domain/repositories/deck_repository.dart';
 import 'package:drift/drift.dart';
 
 import 'package:apprendre_lsf/shared/data/database/drift_database.dart';
-import 'package:apprendre_lsf/shared/data/cards/mappers/cards_table_card_model_mapper.dart';
 import 'package:apprendre_lsf/shared/data/decks/mappers/decks_table_deck_model_mapper.dart';
-import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
 import 'package:apprendre_lsf/shared/domain/models/deck/deck_model.dart';
-import 'package:apprendre_lsf/shared/domain/models/card/full_card.dart';
 import 'package:apprendre_lsf/utils/exceptions.dart';
-import 'package:apprendre_lsf/shared/domain/models/retention_card/retention_card.dart';
-import 'package:apprendre_lsf/shared/data/cards/mappers/retention_card_fsrs_card.dart';
+import 'package:apprendre_lsf/shared/domain/repositories/deck_repository.dart';
 
 class DecksRepositoryImpl extends DeckRepository {
   final AppDriftDatabase _driftDatabase;
@@ -61,11 +56,13 @@ class DecksRepositoryImpl extends DeckRepository {
         .asBroadcastStream();
   }
 
+  @override
   Future<void> deleteDecks({required List<int> deckIds}) async {
     _driftDatabase.decksTable.deleteWhere((deck) => deck.id.isIn(deckIds));
   }
 
 
+  @override
   Future<void> updateParentDeck({
     required List<int> cardsIds,
     int? newValue,

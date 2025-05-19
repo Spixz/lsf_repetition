@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:apprendre_lsf/shared/domain/models/card/card.dart';
-import 'package:apprendre_lsf/features/cards/view/providers/create_card_providers.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/selected_decks_notifier.dart';
+import 'package:apprendre_lsf/features/cards/view/providers/cards/create_card_notifier.dart';
 
 class ValidateButton extends ConsumerWidget {
   const ValidateButton({required this.card, super.key});
@@ -22,7 +24,7 @@ class ValidateButton extends ConsumerWidget {
               .call(card: card, deckIds: selectedDecks);
         },
         child: Row(
-          children: [Text("Validate", style: TextStyle(fontSize: 16))],
+          children: [Text(context.tr("Validate"), style: TextStyle(fontSize: 16))],
         ),
       ),
     );
