@@ -12,7 +12,7 @@ class DeleteCardsNotifier extends AutoDisposeNotifier<AsyncValue<bool>> {
   Future call(List<int> cardsIds) async {
     state = AsyncLoading();
     state = await AsyncValue.guard<bool>(() async {
-      await ref.watch(cardsRepositoryProvider).deleteCards(cardsIds: cardsIds);
+      await ref.read(cardsRepositoryProvider).deleteCards(cardsIds: cardsIds);
       return true;
     });
   }

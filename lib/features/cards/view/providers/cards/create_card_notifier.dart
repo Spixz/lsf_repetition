@@ -19,7 +19,7 @@ class CreateCardNotifier extends Notifier<AsyncValue<bool>> {
   Future call({required CardModel card, required List<int> deckIds}) async {
     try {
       state = AsyncLoading();
-      final cardsRepository = ref.watch(cardsRepositoryProvider);
+      final cardsRepository = ref.read(cardsRepositoryProvider);
       List<FullCard> cardsToAdd;
 
       if (deckIds.isEmpty) {
