@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
@@ -18,10 +17,21 @@ class PracticeModeDialog extends ConsumerStatefulWidget {
 }
 
 class _PracticeModeDialogState extends ConsumerState<PracticeModeDialog> {
+  late ProviderSubscription<TextFieldState> providerSubscription;
+
   @override
   void initState() {
-    ref.listenManual(cardsAddSinceFieldProvider, _onFormStateChange);
+    providerSubscription = ref.listenManual(
+      cardsAddSinceFieldProvider,
+      _onFormStateChange,
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    providerSubscription.close();
+    super.dispose();
   }
 
   @override
@@ -39,7 +49,8 @@ class _PracticeModeDialogState extends ConsumerState<PracticeModeDialog> {
             autocorrect: false,
             initialValue: formState.defaultValue,
             onChanged: ref.read(cardsAddSinceFieldProvider.notifier).onChange,
-            onFieldSubmitted: ref.read(cardsAddSinceFieldProvider.notifier).validate,
+            onFieldSubmitted:
+                ref.read(cardsAddSinceFieldProvider.notifier).validate,
           ),
           if (formState.error != null)
             Padding(
