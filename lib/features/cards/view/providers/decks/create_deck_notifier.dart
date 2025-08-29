@@ -15,11 +15,8 @@ class CreateDeckNotifier extends Notifier<AsyncValue<int>> {
   Future call(DeckModel deckModel) async {
     final deckRepository = ref.watch(decksRepositoryProvider);
 
-    try {
-      final deckId = await deckRepository.createDeck(deck: deckModel);
-      state = AsyncValue.data(deckId);
-    } catch (err, st) {
-      state = AsyncValue.error(err, st);
-    }
+    state = await AsyncValue.guard(
+      () => deckRepository.createDeck(deck: deckModel),
+    );
   }
 }

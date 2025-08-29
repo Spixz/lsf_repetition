@@ -10,12 +10,10 @@ class DeleteCardsNotifier extends AutoDisposeNotifier<AsyncValue<bool>> {
   AsyncValue<bool> build() => AsyncValue.data(false);
 
   Future call(List<int> cardsIds) async {
-    try {
-      state = AsyncLoading();
+    state = AsyncLoading();
+    state = await AsyncValue.guard<bool>(() async {
       await ref.watch(cardsRepositoryProvider).deleteCards(cardsIds: cardsIds);
-      state = AsyncData(true);
-    } catch (err, st) {
-      state = AsyncError(err, st);
-    }
+      return true;
+    });
   }
 }
